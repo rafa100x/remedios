@@ -9,6 +9,8 @@ interface RecipeModalProps {
   onRate: (rating: number) => void;
   isFavorite: boolean;
   onToggleFavorite: () => void;
+  isShopping?: boolean;
+  onToggleShopping?: () => void;
 }
 
 const BOTICARIO_FACTS = [
@@ -21,7 +23,7 @@ const BOTICARIO_FACTS = [
   "Muchas de las proporciones alquímicas originales se medían no en gramos, sino en 'puñados' o 'pizcas', dependiendo de las manos del maestro boticario."
 ];
 
-export function RecipeModal({ recipe, onClose, rating, onRate, isFavorite, onToggleFavorite }: RecipeModalProps) {
+export function RecipeModal({ recipe, onClose, rating, onRate, isFavorite, onToggleFavorite, isShopping = false, onToggleShopping = () => {} }: RecipeModalProps) {
   const [generatedImage, setGeneratedImage] = useState<string | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -41,7 +43,25 @@ export function RecipeModal({ recipe, onClose, rating, onRate, isFavorite, onTog
     return Array.from(places).join(' • ');
   };
 
-  const fact = BOTICARIO_FACTS[recipe.id % BOTICARIO_FACTS.length];
+   const fact = BOTICARIO_FACTS[recipe.id % BOTICARIO_FACTS.length];
+
+   const handleShareWhatsApp = () => {
+      let text = `*${recipe.title}*\n_${getShortPurpose(recipe.purpose)}_\n\n`;
+      text += `*🍃 Los Botánicos:*\n`;
+      recipe.ingredients.forEach(ing => {
+         text += `• ${ing.amount} ${ing.es} (${ing.la})\n`;
+      });
+      text += `\n*🥣 La Preparación:*\n`;
+      recipe.instructions.forEach((inst, i) => {
+         text += `${i + 1}. ${inst}\n`;
+      });
+      text += `\n*Tratamiento (Dosis):*\n${recipe.dosage}\n\n`;
+      text += `*${getSourcing()}*\n\n`;
+      text += `Compartido desde El Grimorio 🌿`;
+      
+      const url = `https://wa.me/?text=${encodeURIComponent(text)}`;
+      window.open(url, '_blank');
+   };
 
   const handlePrintPDF = () => {
      const win = window.open('', '', 'width=900,height=700');
@@ -163,6 +183,15 @@ export function RecipeModal({ recipe, onClose, rating, onRate, isFavorite, onTog
           {/* Top Actions */}
           <div className="absolute top-4 right-4 md:top-8 md:right-8 z-50 flex items-center gap-2 md:gap-3">
              <button
+                onClick={handleShareWhatsApp}
+                className="bg-[#25D366]/90 backdrop-blur aspect-square opacity-100 border border-[#25D366]/30 text-white hover:bg-[#128C7E] w-10 h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center transition-all shadow-md"
+                title="Compartir por WhatsApp"
+             >
+                <svg className="w-5 h-5 md:w-6 md:h-6" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M17.498 14.382c-.301-.15-1.767-.867-2.04-.966-.274-.101-.473-.15-.673.15-.197.295-.771.963-.944 1.162-.175.195-.349.21-.646.06-.297-.15-1.265-.462-2.406-1.485-.888-.79-1.486-1.76-1.656-2.059-.173-.298-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 00-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z" />
+                </svg>
+             </button>
+             <button
                 onClick={handlePrintPDF}
                 className="bg-[#f4ead0]/80 backdrop-blur aspect-square opacity-90 border border-[#8a6a4b]/30 text-[#8a6a4b] hover:bg-white hover:text-[#2c1600] w-10 h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center transition-all shadow-md"
                 title="Descargar en PDF / Imprimir"
@@ -226,36 +255,58 @@ export function RecipeModal({ recipe, onClose, rating, onRate, isFavorite, onTog
                                ))}
                             </div>
                         </div>
-                        {/* Mobile Favorite toggle built into header */}
-                        <button 
-                          onClick={onToggleFavorite}
-                          className={`md:hidden flex items-center justify-center gap-2 px-4 py-2 rounded-full text-xs font-accent tracking-wider border transition-colors ${
-                            isFavorite 
-                              ? 'bg-[#311c0f] text-[#bf953f] border-[#bf953f]/50' 
-                              : 'bg-[#f4ead0]/60 text-[#5a3a22] border-[#8a6a4b]/20 backdrop-blur-sm'
-                          }`}
-                        >
-                           {isFavorite ? 'En tus Favoritos' : 'Guardar Remedio'}
-                        </button>
+                        {/* Mobile Actions built into header */}
+                        <div className="flex items-center gap-2 md:hidden">
+                           <button 
+                             onClick={onToggleFavorite}
+                             className={`flex items-center justify-center gap-2 px-4 py-2 rounded-full text-xs font-accent tracking-wider border transition-colors ${
+                               isFavorite 
+                                 ? 'bg-[#311c0f] text-[#bf953f] border-[#bf953f]/50' 
+                                 : 'bg-[#f4ead0]/60 text-[#5a3a22] border-[#8a6a4b]/20 backdrop-blur-sm'
+                             }`}
+                           >
+                              {isFavorite ? 'Guardado' : 'Guardar'}
+                           </button>
+                           <button 
+                             onClick={onToggleShopping}
+                             className={`flex items-center justify-center gap-2 px-4 py-2 rounded-full text-xs font-accent tracking-wider border transition-colors ${
+                               isShopping 
+                                 ? 'bg-[#556b3e] text-[#f4ead0] border-[#556b3e]/50' 
+                                 : 'bg-[#f4ead0]/60 text-[#5a3a22] border-[#8a6a4b]/20 backdrop-blur-sm'
+                             }`}
+                           >
+                              {isShopping ? 'En Insumos' : '+ Insumos'}
+                           </button>
+                        </div>
                     </div>
                 </div>
 
-                <div className="hidden md:block">
+                <div className="hidden md:flex flex-col gap-3">
+                   {/* Shopping Button Large */}
+                   <button
+                     onClick={onToggleShopping}
+                     title="Añadir a Lista de Insumos"
+                     className={`w-14 h-14 rounded-full flex items-center justify-center transition-all shadow-xl border ${
+                       isShopping 
+                         ? 'bg-[#556b3e] border-[#556b3e] text-[#f4ead0] shadow-[0_0_15px_rgba(85,107,62,0.4)]' 
+                         : 'bg-[#f4ead0] border-[#8a6a4b]/30 text-[#8a6a4b] hover:bg-white hover:scale-105'
+                     }`}
+                   >
+                     <svg className="w-5 h-5" fill={isShopping ? "currentColor" : "none"} viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                         <path strokeLinecap="round" strokeLinejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                     </svg>
+                   </button>
                    {/* Favorite Button Large */}
                    <button
                      onClick={onToggleFavorite}
-                     className={`w-16 h-16 rounded-full flex items-center justify-center transition-all border ${
+                     className={`w-14 h-14 rounded-full flex items-center justify-center transition-all shadow-xl border ${
                        isFavorite 
-                         ? 'bg-[#1a0f08] border-[#bf953f] text-[#bf953f] shadow-lg shadow-[#bf953f]/30' 
-                         : 'bg-white/50 backdrop-blur-md border-[#8a6a4b]/30 text-[#5a3a22] hover:bg-white'
+                         ? 'bg-[#311c0f] border-[#bf953f] text-[#bf953f] shadow-[0_0_15px_rgba(191,149,63,0.3)]' 
+                         : 'bg-[#f4ead0] border-[#8a6a4b]/30 text-[#8a6a4b] hover:bg-white hover:scale-105'
                      }`}
                    >
-                     <svg className="w-8 h-8 fill-current" viewBox="0 0 24 24">
-                       {isFavorite ? (
-                         <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
-                       ) : (
-                         <path fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                       )}
+                     <svg className="w-6 h-6" fill={isFavorite ? "currentColor" : "none"} viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                         <path strokeLinecap="round" strokeLinejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
                      </svg>
                    </button>
                 </div>

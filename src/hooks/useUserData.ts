@@ -6,6 +6,11 @@ export function useUserData() {
     return saved ? JSON.parse(saved) : [];
   });
 
+  const [shoppingList, setShoppingList] = useState<number[]>(() => {
+    const saved = localStorage.getItem('grimorio_shopping_list');
+    return saved ? JSON.parse(saved) : [];
+  });
+
   const [ratings, setRatings] = useState<Record<number, number>>(() => {
     const saved = localStorage.getItem('grimorio_ratings');
     return saved ? JSON.parse(saved) : {};
@@ -16,6 +21,10 @@ export function useUserData() {
   }, [favorites]);
 
   useEffect(() => {
+    localStorage.setItem('grimorio_shopping_list', JSON.stringify(shoppingList));
+  }, [shoppingList]);
+
+  useEffect(() => {
     localStorage.setItem('grimorio_ratings', JSON.stringify(ratings));
   }, [ratings]);
 
@@ -23,9 +32,13 @@ export function useUserData() {
     setFavorites(prev => prev.includes(id) ? prev.filter(f => f !== id) : [...prev, id]);
   };
 
-  const rateRecipe = (id: number, rating: number) => {
-    setRatings(prev => ({ ...prev, [id]: rating }));
+  const toggleShoppingList = (id: number) => {
+    setShoppingList(prev => prev.includes(id) ? prev.filter(f => f !== id) : [...prev, id]);
   };
 
-  return { favorites, toggleFavorite, ratings, rateRecipe };
+  return { favorites, toggleFavorite, shoppingList, toggleShoppingList, ratings, rateRecipe };
+
+  function rateRecipe (id: number, rating: number)  {
+    setRatings(prev => ({ ...prev, [id]: rating }));
+  };
 }

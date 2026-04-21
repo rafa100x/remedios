@@ -7,14 +7,21 @@ import { RecipeModal } from './components/RecipeModal';
 import { Header } from './components/Header';
 import { RecipeList } from './components/RecipeList';
 import { useUserData } from './hooks/useUserData';
+import { ShoppingListModal } from './components/ShoppingListModal';
+import { Library } from './components/Library';
+import { PaymentModal } from './components/PremiumBookModal';
+import { BookReader } from './components/BookReader';
 
 export default function App() {
   const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
   const [selectedRecipe, setSelectedRecipe] = useState<Recipe | null>(null);
+  const [selectedBook, setSelectedBook] = useState<any>(null); // Type any for now to avoid importing interface if not exported
+  const [readingBookId, setReadingBookId] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
-  const [view, setView] = useState<'home' | 'favorites'>('home');
+  const [view, setView] = useState<'home' | 'favorites' | 'library'>('home');
+  const [showShoppingList, setShowShoppingList] = useState(false);
 
-  const { favorites, toggleFavorite, ratings, rateRecipe } = useUserData();
+  const { favorites, toggleFavorite, shoppingList, toggleShoppingList, ratings, rateRecipe } = useUserData();
 
   const allRecipes = useMemo(() => categories.flatMap(c => c.recipes), []);
 
@@ -32,6 +39,10 @@ export default function App() {
     return allRecipes.filter(r => favorites.includes(r.id));
   }, [favorites, allRecipes]);
 
+  const shoppingRecipes = useMemo(() => {
+    return allRecipes.filter(r => shoppingList.includes(r.id));
+  }, [shoppingList, allRecipes]);
+
   const handleHome = () => {
     setSearchQuery('');
     setView('home');
@@ -44,16 +55,26 @@ export default function App() {
     setSelectedCategory(null);
   };
 
+  const handleShowLibrary = () => {
+    setSearchQuery('');
+    setView('library');
+    setSelectedCategory(null);
+  };
+
   return (
-    <div className="min-h-screen bg-surface text-tertiary font-body relative overflow-x-hidden selection:bg-primary-container selection:text-primary pt-20">
+    <div className="min-h-screen bg-surface text-tertiary font-body relative overflow-x-hidden selection:bg-primary-container selection:text-primary pt-24 sm:pt-20">
       <div className="bg-grain absolute inset-0 pointer-events-none z-50"></div>
       
       <Header
         searchQuery={searchQuery}
         setSearchQuery={setSearchQuery}
         onShowFavorites={handleShowFavorites}
+        onShowShoppingList={() => setShowShoppingList(true)}
+        onShowLibrary={handleShowLibrary}
         onHome={handleHome}
         isFavoritesView={view === 'favorites' && !searchQuery}
+        isLibraryView={view === 'library' && !searchQuery}
+        shoppingListCount={shoppingList.length}
       />
 
       {searchQuery.trim() ? (
@@ -75,6 +96,10 @@ export default function App() {
             favorites={favorites}
             toggleFavorite={toggleFavorite}
           />
+        </main>
+      ) : view === 'library' ? (
+        <main className="w-full">
+            <Library onSelectBook={setSelectedBook} />
         </main>
       ) : !selectedCategory ? (
         <>
@@ -99,6 +124,33 @@ export default function App() {
           onRate={(rating) => rateRecipe(selectedRecipe.id, rating)}
           isFavorite={favorites.includes(selectedRecipe.id)}
           onToggleFavorite={() => toggleFavorite(selectedRecipe.id)}
+          isShopping={shoppingList.includes(selectedRecipe.id)}
+          onToggleShopping={() => toggleShoppingList(selectedRecipe.id)}
+        />
+      )}
+
+      {selectedBook && (
+          <PaymentModal
+             book={selectedBook}
+             onClose={() => setSelectedBook(null)}
+             onRead={(bookId) => {
+                 setSelectedBook(null);
+                 setReadingBookId(bookId);
+             }}
+          />
+      )}
+
+      {readingBookId && (
+          <BookReader 
+             bookId={readingBookId}
+             onClose={() => setReadingBookId(null)}
+          />
+      )}
+
+      {showShoppingList && (
+        <ShoppingListModal 
+          recipes={shoppingRecipes}
+          onClose={() => setShowShoppingList(false)}
         />
       )}
     </div>

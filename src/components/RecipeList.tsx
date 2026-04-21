@@ -87,24 +87,26 @@ export function RecipeList({ recipes, onSelectRecipe, favorites, toggleFavorite 
                   </button>
 
                   {/* Paper Label */}
-                  <div className="absolute inset-x-[12px] top-[45px] bottom-[20px] bg-[#fdfaf2] rounded-sm p-[4px] flex flex-col items-center justify-start text-center shadow-[0_2px_8px_rgba(0,0,0,0.5)] border border-[#d6c7af]">
-                    <div className="w-full h-full border-[1.5px] border-[#8a6a4b]/40 flex flex-col pt-3 pb-1 px-1 relative bg-[#fdfaf2]">
+                  <div className="absolute inset-x-[12px] top-[45px] bottom-[20px] bg-[#fdfaf2] rounded-sm p-[4px] shadow-[0_2px_8px_rgba(0,0,0,0.5)] border border-[#d6c7af]">
+                    <div className="w-full h-full border-[1.5px] border-[#8a6a4b]/40 flex flex-col relative bg-[#fdfaf2] p-1">
                       
-                      {/* Qué cura (The illness/purpose) */}
-                      <span className="font-accent italic text-[#5c3716] text-[9.5px] uppercase tracking-widest mb-2 line-clamp-3 leading-snug border-b border-[#8a6a4b]/30 pb-2 w-[90%] mx-auto relative z-10 flex-shrink-0">
-                        {getShortPurpose(recipe.purpose)}
-                      </span>
+                      {/* Qué cura (The illness/purpose) - FIXED HEIGHT */}
+                      <div className="h-[30px] w-[90%] mx-auto border-b border-[#8a6a4b]/30 flex items-center justify-center flex-shrink-0">
+                          <span className="font-accent italic text-[#5c3716] text-[8px] uppercase tracking-widest line-clamp-2 leading-tight text-center" title={getShortPurpose(recipe.purpose)}>
+                            {getShortPurpose(recipe.purpose)}
+                          </span>
+                      </div>
                       
-                      {/* Qué es (The preparation name) */}
-                      <div className="flex-grow flex items-center justify-center w-[95%] mx-auto">
-                        <h3 className="font-headline font-bold text-[#1f0d01] text-[13px] leading-[1.15] relative z-10 drop-shadow-sm line-clamp-4">
+                      {/* Qué es (The preparation name) - FLEX 1 */}
+                      <div className="flex-1 flex items-center justify-center w-[95%] mx-auto overflow-hidden py-1">
+                        <h3 className="font-headline font-bold text-[#1f0d01] text-[11px] leading-[1.1] relative z-10 drop-shadow-sm line-clamp-3 text-center">
                           {recipe.title}
                         </h3>
                       </div>
 
-                      {/* Number */}
-                      <div className="w-[90%] mx-auto bg-transparent border-t border-[#8a6a4b]/30 pt-1.5 mt-2 relative z-10">
-                         <span className="font-accent italic text-[#8a6a4b] text-[10px] tracking-[0.1em] font-medium">Nº {recipe.id.toString().padStart(3, '0')}</span>
+                      {/* Number - FIXED HEIGHT */}
+                      <div className="h-[18px] w-[90%] mx-auto border-t border-[#8a6a4b]/30 flex items-end justify-center flex-shrink-0 pb-0.5">
+                         <span className="font-accent italic text-[#8a6a4b] text-[9.5px] tracking-[0.1em] font-medium">Nº {recipe.id.toString().padStart(3, '0')}</span>
                       </div>
                     </div>
                   </div>

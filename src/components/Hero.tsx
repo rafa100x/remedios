@@ -4,15 +4,15 @@ export function Hero() {
   return (
     <section className="relative min-h-[95vh] flex flex-col items-center justify-center overflow-hidden py-16 px-4">
       
-      {/* Background: Estantería oscura con frascos en alta resolución - HECHA MÁS CLARA */}
+      {/* Background: Portada original */}
       <div className="absolute inset-0 z-0 bg-[#2b1f18]">
          <img 
-           src="https://images.unsplash.com/photo-1596704017254-9b121068fb29?q=80&w=2574&auto=format&fit=crop" 
-           alt="Apothecary shelves and jars" 
-           className="w-full h-full object-cover opacity-50 mix-blend-luminosity sepia-[.2] contrast-100 blur-[1px]"
+           src="https://cdn.shopify.com/s/files/1/0988/7904/5945/files/mockup-producto-principal_d05515f3-5c0a-4718-8b0a-bc2d0054df44.jpg?v=1775521634" 
+           alt="" 
+           className="w-full h-full object-cover opacity-30 mix-blend-luminosity sepia-[.2] contrast-125 blur-[2px]"
            referrerPolicy="no-referrer"
          />
-         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_#3a2c2222_0%,_#1d140e_100%)] opacity-80"></div>
+         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_#3a2c2244_0%,_#0a0502_100%)] opacity-90"></div>
       </div>
 
       <div className="relative z-10 w-full flex flex-col items-center justify-center mt-6">

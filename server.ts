@@ -3,6 +3,27 @@ import { createServer as createViteServer } from "vite";
 import { GoogleGenAI } from "@google/genai";
 import path from "path";
 import "dotenv/config";
+import { MercadoPagoConfig, Preference, Payment } from 'mercadopago';
+import * as admin from 'firebase-admin';
+
+// Initialize Firebase Admin (Safe fallback if missing envs)
+let firebaseApp: admin.app.App | null = null;
+try {
+    if (process.env.FIREBASE_PROJECT_ID && process.env.FIREBASE_PRIVATE_KEY && process.env.FIREBASE_CLIENT_EMAIL) {
+        firebaseApp = admin.initializeApp({
+            credential: admin.credential.cert({
+                projectId: process.env.FIREBASE_PROJECT_ID,
+                privateKey: process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n'),
+                clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
+            })
+        });
+        console.log("Firebase Admin initialized securely.");
+    } else {
+        console.warn("Missing Firebase Admin credentials in .env");
+    }
+} catch (e) {
+    console.error("Failed to initialize Firebase Admin:", e);
+}
 
 let ai: GoogleGenAI | null = null;
 const imageCache = new Map<string, string>();
@@ -25,6 +46,91 @@ async function startServer() {
   const PORT = 3000;
 
   app.use(express.json({ limit: '10mb' }));
+
+  // --- MERCADO PAGO INTEGRATION ---
+  
+  app.post("/api/create-preference", async (req, res) => {
+      try {
+          if (!process.env.MP_ACCESS_TOKEN) {
+              return res.status(500).json({ error: "Mercado Pago Token not configured in .env" });
+          }
+
+          const { bookId, title, price, userId } = req.body;
+          if (!bookId || !userId) return res.status(400).json({ error: "Missing required fields" });
+
+          const mpConfig = new MercadoPagoConfig({ accessToken: process.env.MP_ACCESS_TOKEN });
+          const preference = new Preference(mpConfig);
+
+          // We use external_reference to securely pass the format userId_bookId
+          // This ensures that when the webhook returns, we know EXACTLY who bought WHAT.
+          const newPreference = await preference.create({
+              body: {
+                  items: [
+                      {
+                          id: bookId,
+                          title: title,
+                          quantity: 1,
+                          unit_price: Number(price.replace(/[^0-9.-]+/g,"")) || 5000, 
+                          currency_id: 'ARS'
+                      }
+                  ],
+                  external_reference: `${userId}_${bookId}`,
+                  back_urls: {
+                      success: process.env.APP_URL || "http://localhost:3000",
+                      failure: process.env.APP_URL || "http://localhost:3000",
+                      pending: process.env.APP_URL || "http://localhost:3000"
+                  },
+                  auto_return: "approved",
+              }
+          });
+
+          return res.json({ init_point: newPreference.init_point });
+
+      } catch (error: any) {
+          console.error("MP Preference Error:", error);
+          res.status(500).json({ error: "Error creating preference" });
+      }
+  });
+
+  app.post("/api/webhooks/mercadopago", async (req, res) => {
+      // Return 200 immediately to MercadoPago so it doesn't retry infinitely
+      res.status(200).send("OK");
+  
+      try {
+          if (!process.env.MP_ACCESS_TOKEN || !firebaseApp) {
+              console.error("Webhook received but secrets/firebase not configured.");
+              return;
+          }
+
+          const { type, data } = req.body;
+
+          // Only listen for approved payments
+          if (type === 'payment' && data && data.id) {
+              const mpConfig = new MercadoPagoConfig({ accessToken: process.env.MP_ACCESS_TOKEN });
+              const paymentClient = new Payment(mpConfig);
+              const paymentState = await paymentClient.get({ id: data.id });
+
+              if (paymentState.status === 'approved' && paymentState.external_reference) {
+                   // Split `userId_bookId` from the reference we created earlier
+                   const parts = paymentState.external_reference.split('_');
+                   if (parts.length === 2) {
+                       const [userId, bookId] = parts;
+
+                       // By using Admin SDK, we bypass Firestore Security Rules (Inquebrantable!)
+                       console.log(`Unlocking book [${bookId}] for user [${userId}]`);
+                       await admin.firestore().collection('users').doc(userId).update({
+                           purchasedBooks: admin.firestore.FieldValue.arrayUnion(bookId)
+                       });
+                       console.log("Database updated successfully.");
+                   }
+              }
+          }
+      } catch (error) {
+          console.error("Webhook processing error:", error);
+      }
+  });
+
+  // --- GEMINI IMAGE API ---
 
   app.post("/api/generate-image", async (req, res) => {
     try {

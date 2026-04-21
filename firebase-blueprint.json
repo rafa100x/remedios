@@ -1,0 +1,33 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "User profile that stores purchased premium content",
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string",
+          "description": "The user's verified email address"
+        },
+        "purchasedBooks": {
+          "type": "array",
+          "description": "List of book IDs the user has purchased",
+          "items": { "type": "string" }
+        },
+        "createdAt": {
+          "type": "timestamp"
+        },
+        "updatedAt": {
+          "type": "timestamp"
+        }
+      },
+      "required": ["email", "purchasedBooks", "createdAt", "updatedAt"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": { "$ref": "#/entities/User" },
+      "description": "Stores user profiles keyed by Firebase Auth uid"
+    }
+  }
+}
