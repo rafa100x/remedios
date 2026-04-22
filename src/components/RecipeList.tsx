@@ -36,7 +36,7 @@ export function RecipeList({ recipes, onSelectRecipe, favorites, toggleFavorite 
         <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/wood-pattern.png')] opacity-30 mix-blend-overlay"></div>
       </div>
 
-      <div className="relative z-10 flex flex-wrap justify-center gap-x-4 gap-y-16 px-4 py-8">
+      <div className="relative z-10 flex flex-wrap justify-center gap-x-4 gap-y-16 px-4 py-12 pb-24">
         {recipes.length > 0 ? (
           recipes.map((recipe, index) => {
             const isFav = favorites.includes(recipe.id);
@@ -52,17 +52,24 @@ export function RecipeList({ recipes, onSelectRecipe, favorites, toggleFavorite 
                 {/* Drop shadow on shelf */}
                 <div className="absolute bottom-[-5px] w-[110%] h-6 bg-black/60 blur-[6px] rounded-[100%] transition-opacity duration-300 group-hover:opacity-80"></div>
                 
-                {/* Jar Body */}
-                <div className="relative w-full h-full bg-gradient-to-tr from-[#2a1308] to-[#6a3a14] rounded-b-[10px] rounded-t-[30px] shadow-[inset_-6px_-6px_15px_rgba(0,0,0,0.7),inset_3px_3px_10px_rgba(255,255,255,0.1)] border-x border-[#ffffff15] transition-transform duration-300 group-hover:-translate-y-3 group-hover:scale-[1.02] flex flex-col items-center">
+                {/* Jar Body with Image */}
+                <div className="relative w-full h-[210px] flex flex-col items-center justify-end transition-transform duration-300 group-hover:-translate-y-3">
                   
-                  {/* Glass reflection */}
-                  <div className="absolute top-1 left-2 w-4 h-[95%] bg-gradient-to-r from-transparent via-white/10 to-transparent skew-x-3 rounded-l-[30px] pointer-events-none"></div>
-
-                  {/* Neck & Lid */}
-                  <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-[60px] h-4 bg-[#1f0d01] rounded-sm shadow-[inset_0_2px_4px_rgba(0,0,0,0.5)]"></div>
-                  <div className="absolute -top-[22px] left-1/2 -translate-x-1/2 w-[54px] h-[10px] bg-[#3a2211] rounded-t-sm shadow-inner overflow-hidden border-b border-black">
-                      <div className="w-full h-[1px] bg-black/40 mt-[2px]"></div>
-                      <div className="w-full h-[1px] bg-black/20 mt-[2px]"></div>
+                  {/* The Image (Mix Blend Screen to remove black backing, making the bright glass pop in the dark shelf) */}
+                  <div className="absolute inset-x-0 bottom-[60px] top-0 flex items-center justify-center">
+                    <img 
+                      src={`/frascos/botica-frasco-${recipe.id.toString().padStart(3, '0')}.jpg`} 
+                      alt={recipe.title} 
+                      className="w-full max-h-full object-contain mix-blend-screen opacity-90 drop-shadow-2xl transition-all duration-300 group-hover:opacity-100 group-hover:drop-shadow-[0_15px_15px_rgba(255,255,255,0.1)]"
+                      onError={(e) => {
+                        // Fallback generic dark jar if the image is missing
+                        (e.target as HTMLImageElement).src = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 150"><rect width="100" height="150" fill="%231a0f08" rx="20"/><rect x="30" y="-10" width="40" height="30" fill="%230a0502" rx="5"/></svg>';
+                        (e.target as HTMLImageElement).classList.remove('mix-blend-screen');
+                      }}
+                    />
+                    
+                    {/* Inner jar warm glow to create glass effect from behind */}
+                    <div className="absolute inset-0 bg-gradient-to-tr from-[#d4af37]/10 to-transparent mix-blend-overlay pointer-events-none rounded-[20px]"></div>
                   </div>
 
                   {/* Favorite Button */}
@@ -71,10 +78,10 @@ export function RecipeList({ recipes, onSelectRecipe, favorites, toggleFavorite 
                       e.stopPropagation();
                       toggleFavorite(recipe.id);
                     }}
-                    className={`absolute -right-2 -top-4 z-20 w-7 h-7 rounded-full flex items-center justify-center transition-all shadow-xl border ${
+                    className={`absolute -right-1 top-4 z-20 w-8 h-8 rounded-full flex items-center justify-center transition-all bg-[#1a0f08] border border-[#d4af37]/30 shadow-xl ${
                       isFav 
-                        ? 'bg-[#311c0f] border-[#bf953f] text-[#bf953f] shadow-[#bf953f]/20' 
-                        : 'bg-[#1a0f08] border-[#ffffff20] text-white/30 hover:text-white/60'
+                        ? 'text-[#d4af37]' 
+                        : 'text-white/30 hover:text-white/60'
                     }`}
                   >
                     <svg className="w-[14px] h-[14px] fill-current" viewBox="0 0 24 24">
@@ -86,37 +93,24 @@ export function RecipeList({ recipes, onSelectRecipe, favorites, toggleFavorite 
                     </svg>
                   </button>
 
-                  {/* Paper Label */}
-                  <div className="absolute inset-x-[12px] top-[45px] bottom-[20px] bg-[#fdfaf2] rounded-sm p-[4px] shadow-[0_2px_8px_rgba(0,0,0,0.5)] border border-[#d6c7af]">
-                    <div className="w-full h-full border-[1.5px] border-[#8a6a4b]/40 flex flex-col relative bg-[#fdfaf2] p-1">
-                      
-                      {/* Qué cura (The illness/purpose) - FIXED HEIGHT */}
-                      <div className="h-[30px] w-[90%] mx-auto border-b border-[#8a6a4b]/30 flex items-center justify-center flex-shrink-0">
-                          <span className="font-accent italic text-[#5c3716] text-[8px] uppercase tracking-widest line-clamp-2 leading-tight text-center" title={getShortPurpose(recipe.purpose)}>
-                            {getShortPurpose(recipe.purpose)}
-                          </span>
-                      </div>
-                      
-                      {/* Qué es (The preparation name) - FLEX 1 */}
-                      <div className="flex-1 flex items-center justify-center w-[95%] mx-auto overflow-hidden py-1">
-                        <h3 className="font-headline font-bold text-[#1f0d01] text-[11px] leading-[1.1] relative z-10 drop-shadow-sm line-clamp-3 text-center">
-                          {recipe.title}
-                        </h3>
-                      </div>
-
-                      {/* Number - FIXED HEIGHT */}
-                      <div className="h-[18px] w-[90%] mx-auto border-t border-[#8a6a4b]/30 flex items-end justify-center flex-shrink-0 pb-0.5">
-                         <span className="font-accent italic text-[#8a6a4b] text-[9.5px] tracking-[0.1em] font-medium">Nº {recipe.id.toString().padStart(3, '0')}</span>
-                      </div>
-                    </div>
+                  {/* Info Label Below Jar */}
+                  <div className="w-full flex flex-col items-center mt-auto text-center translate-y-4">
+                     <span className="font-accent italic text-[#d4af37] text-[10px] tracking-[0.15em] font-medium mb-1 drop-shadow-md">Nº {recipe.id.toString().padStart(3, '0')}</span>
+                     <span className="font-sans font-bold text-[#f4ead0]/60 text-[8px] uppercase tracking-widest line-clamp-1 w-full max-w-[120px] mb-1">
+                        {getShortPurpose(recipe.purpose)}
+                     </span>
+                     <h3 className="font-headline font-bold text-[#fdfaf2] text-[12px] leading-tight line-clamp-2 w-full max-w-[130px] drop-shadow-md">
+                        {recipe.title}
+                     </h3>
                   </div>
+
                 </div>
               </motion.div>
             );
           })
         ) : (
           <div className="w-full py-24 text-center">
-            <p className="font-accent italic text-xl text-tertiary/40">La estantería está vacía. No hay resultados...</p>
+            <p className="font-accent italic text-xl text-[#d4af37]/40">La estantería está vacía. No hay resultados...</p>
           </div>
         )}
       </div>

@@ -78,8 +78,9 @@ export default function App() {
       />
 
       {searchQuery.trim() ? (
-        <main className="max-w-7xl mx-auto px-4 md:px-12 py-12">
-          <h2 className="font-headline text-4xl text-primary mb-8">Resultados de la búsqueda</h2>
+        <main className="max-w-7xl mx-auto px-4 md:px-12 py-12 relative z-10 bg-[#1a0f08] min-h-screen">
+          <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/dark-leather.png')] opacity-30 mix-blend-overlay pointer-events-none z-0"></div>
+          <h2 className="font-headline text-4xl text-[#d4af37] mb-8 relative z-10 text-center border-b border-[#d4af37]/20 pb-4">Resultados de la búsqueda</h2>
           <RecipeList
             recipes={searchResults}
             onSelectRecipe={setSelectedRecipe}
@@ -88,8 +89,9 @@ export default function App() {
           />
         </main>
       ) : view === 'favorites' ? (
-        <main className="max-w-7xl mx-auto px-4 md:px-12 py-12">
-          <h2 className="font-headline text-4xl text-primary mb-8">Fórmulas Guardadas</h2>
+        <main className="max-w-7xl mx-auto px-4 md:px-12 py-12 relative z-10 bg-[#1a0f08] min-h-screen">
+          <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/dark-leather.png')] opacity-30 mix-blend-overlay pointer-events-none z-0"></div>
+          <h2 className="font-headline text-4xl text-[#d4af37] mb-8 relative z-10 text-center border-b border-[#d4af37]/20 pb-4">Fórmulas Guardadas</h2>
           <RecipeList
             recipes={favoriteRecipes}
             onSelectRecipe={setSelectedRecipe}
