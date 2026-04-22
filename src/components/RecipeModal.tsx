@@ -24,7 +24,6 @@ const BOTICARIO_FACTS = [
 ];
 
 export function RecipeModal({ recipe, onClose, rating, onRate, isFavorite, onToggleFavorite, isShopping = false, onToggleShopping = () => {} }: RecipeModalProps) {
-  const [generatedImage, setGeneratedImage] = useState<string | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -123,43 +122,6 @@ export function RecipeModal({ recipe, onClose, rating, onRate, isFavorite, onTog
     };
   }, []);
 
-  useEffect(() => {
-    let isMounted = true;
-    
-    async function fetchImage() {
-      setIsGenerating(true);
-      setError(null);
-      try {
-        const res = await fetch('/api/generate-image', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ prompt: recipe.imagePrompt })
-        });
-        const data = await res.json();
-        if (isMounted) {
-          if (data.image) {
-            setGeneratedImage(data.image);
-          } else {
-            if (data.error && data.error.includes("API key not valid")) {
-              setError("Clave de API inválida. Configura tu GEMINI_API_KEY en el panel de Secrets.");
-            } else {
-              setError("No se pudo generar la ilustración.");
-            }
-          }
-        }
-      } catch (e) {
-        console.error(e);
-        if (isMounted) setError("Error de conexión con el Gremio.");
-      } finally {
-        if (isMounted) setIsGenerating(false);
-      }
-    }
-
-    fetchImage();
-
-    return () => { isMounted = false; };
-  }, [recipe.imagePrompt]);
-
   return (
     <AnimatePresence>
       <div className="fixed inset-0 z-[100] flex items-center justify-center p-0 md:p-6 lg:p-12">
@@ -212,18 +174,15 @@ export function RecipeModal({ recipe, onClose, rating, onRate, isFavorite, onTog
 
           {/* Header Image Area (2/5 of height) */}
           <div className="relative h-[35vh] md:h-80 shrink-0 bg-[#1a0f08] border-b border-[#8a6a4b]/30">
-            {isGenerating ? (
-               <div className="w-full h-full flex flex-col items-center justify-center gap-4 relative z-10">
-                  <div className="w-10 h-10 border-[3px] border-[#8a6a4b] border-t-transparent rounded-full animate-spin"></div>
-                  <div className="animate-pulse text-[#d6c7af] font-accent italic text-lg tracking-widest">Alquimizando Sabiduría...</div>
-               </div>
-            ) : (
-                <img 
-                  src={generatedImage || `https://images.unsplash.com/photo-1615554867919-482245b73e3a?q=80&w=1200&auto=format&fit=crop`} 
-                  className="w-full h-full object-cover opacity-60 mix-blend-luminosity brightness-75 transition-opacity duration-1000"
-                  alt={`Ilustración para ${recipe.title}`}
-                />
-            )}
+            <img 
+              src={`/recetas/Botica-receta-${recipe.id.toString().padStart(2, '0')}.jpg`} 
+              className="w-full h-full object-cover opacity-60 mix-blend-luminosity brightness-75 transition-opacity duration-1000"
+              alt={`Ilustración para ${recipe.title}`}
+              onError={(e) => {
+                // Fallback in case not all 200 are uploaded right away
+                (e.target as HTMLImageElement).src = `https://images.unsplash.com/photo-1615554867919-482245b73e3a?q=80&w=1200&auto=format&fit=crop`;
+              }}
+            />
             
             {/* Fade overlay at bottom of image */}
             <div className="absolute inset-x-0 bottom-0 h-3/4 bg-gradient-to-t from-[#f4ead0] via-[#f4ead0]/60 to-transparent"></div>
