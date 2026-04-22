@@ -105,7 +105,7 @@ export function PaymentModal({ book, onClose, onRead }: PaymentModalProps) {
                         ) : (
                             <>
                                 <div className="mb-6">
-                                    <span className="block font-accent text-sm text-[#8a6a4b] uppercase tracking-wider mb-1">Aporte por el conocimiento</span>
+                                    <span className="block font-accent text-sm text-[#8a6a4b] uppercase tracking-wider mb-1">Inversión Única</span>
                                     <span className="font-headline text-3xl text-[#1a0f08] font-bold">{book.price}</span>
                                 </div>
 

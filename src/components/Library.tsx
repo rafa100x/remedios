@@ -19,7 +19,7 @@ export const PREMIUM_BOOKS: PremiumBook[] = [
         title: 'Protocolo Natural para la Presión',
         subtitle: 'Bajar la presión sin pastillero diario',
         description: 'El plan exacto para bajar la presión sin pastillero diario. Plantas, infusiones y hábitos que las abuelas usaban antes de que existiera el enalapril. Basado en remedios ancestrales comprobados.',
-        price: 'Consultar precio',
+        price: '$ 7.999 ARS',
         coverUrl: 'https://cdn.shopify.com/s/files/1/0988/7904/5945/files/maestro-presion-v1.jpg?v=1776702706',
         paymentLink: 'https://mpago.la/2pktwf7',
         badge: '¡Disponible!'
@@ -29,7 +29,7 @@ export const PREMIUM_BOOKS: PremiumBook[] = [
         title: 'El Arte de Preparar Remedios',
         subtitle: 'Guía Maestra de Preparaciones Ancestrales',
         description: 'No alcanza con saber qué planta usar. El secreto está en cómo prepararla. Una infusión mal hecha pierde el 80% de su efecto. Esta guía te enseña lo que las curanderas aprendían de memoria: Cómo preparar cada tipo de remedio, dosis exactas, conservación y contraindicaciones clave.',
-        price: 'Consultar precio',
+        price: '$ 14.999 ARS',
         coverUrl: 'https://cdn.shopify.com/s/files/1/0988/7904/5945/files/maestro-arte-preparar-v1.jpg?v=1776702621',
         paymentLink: 'https://mpago.la/1WcUYqH',
         badge: '¡Disponible!'
@@ -39,7 +39,7 @@ export const PREMIUM_BOOKS: PremiumBook[] = [
         title: 'Remedios para la Menopausia',
         subtitle: 'Guía Ancestral',
         description: 'Calores, insomnio, cambios de humor, sequedad. Lo que ningún ginecólogo te recetó: 30 remedios naturales específicos para cada síntoma de la menopausia. Para mujeres que no quieren depender de hormonas artificiales.',
-        price: 'Consultar precio',
+        price: '$ 9.999 ARS',
         coverUrl: 'https://cdn.shopify.com/s/files/1/0988/7904/5945/files/maestro-menopausia-v1.jpg?v=1776702645',
         paymentLink: 'https://mpago.la/1rLW3p8',
         badge: '¡Disponible!'
@@ -49,7 +49,7 @@ export const PREMIUM_BOOKS: PremiumBook[] = [
         title: 'El Botiquín Natural de Emergencia',
         subtitle: '12 remedios esenciales',
         description: '12 remedios que toda mujer debería tener siempre listos en casa. Para cuando duele la cabeza a las 3am, sube la fiebre, o viene la tos. Soluciones inmediatas sin salir corriendo a la farmacia en medio de la noche.',
-        price: 'Consultar precio',
+        price: '$ 5.999 ARS',
         coverUrl: 'https://cdn.shopify.com/s/files/1/0988/7904/5945/files/maestro-botiquin-v1_6597c620-dc38-4363-afca-cfd434e80ef5.jpg?v=1776702782',
         paymentLink: 'https://mpago.la/22TKgMQ',
         badge: '¡Disponible!'
@@ -135,8 +135,18 @@ export function Library({ onSelectBook }: LibraryProps) {
                                           {isUnlocked ? <BookOpen className="w-5 h-5" /> : <Lock className="w-5 h-5" />}
                                        </div>
                                        <span className={`block mt-3 font-accent italic text-sm tracking-wider ${isUnlocked ? 'text-white' : 'text-[#d6c7af]'}`}>
-                                           {isUnlocked ? 'Volumen Abierto' : 'Volumen Cerrado'}
+                                           {isUnlocked ? 'Volumen Abierto' : 'Descubre más'}
                                        </span>
+                                       {!isUnlocked && (
+                                            <>
+                                                <span className="block mt-1 font-headline font-bold text-[#d4af37] drop-shadow-md text-sm">
+                                                    {book.price}
+                                                </span>
+                                                <span className="block mt-1 text-[10px] text-[#f4ead0]/60 uppercase tracking-widest">
+                                                    (Toca para ver info)
+                                                </span>
+                                            </>
+                                       )}
                                     </div>
                                 </div>
                             </div>

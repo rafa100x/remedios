@@ -11,6 +11,7 @@ import { ShoppingListModal } from './components/ShoppingListModal';
 import { Library } from './components/Library';
 import { PaymentModal } from './components/PremiumBookModal';
 import { BookReader } from './components/BookReader';
+import { InfoModal } from './components/InfoModal';
 
 export default function App() {
   const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
@@ -20,6 +21,7 @@ export default function App() {
   const [searchQuery, setSearchQuery] = useState('');
   const [view, setView] = useState<'home' | 'favorites' | 'library'>('home');
   const [showShoppingList, setShowShoppingList] = useState(false);
+  const [showInfo, setShowInfo] = useState(false);
 
   const { favorites, toggleFavorite, shoppingList, toggleShoppingList, ratings, rateRecipe } = useUserData();
 
@@ -62,7 +64,7 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-surface text-tertiary font-body relative overflow-x-hidden selection:bg-primary-container selection:text-primary pt-24 sm:pt-20">
+    <div className="min-h-screen bg-surface text-tertiary font-body relative overflow-x-hidden selection:bg-primary-container selection:text-primary pt-[110px] sm:pt-20 pb-24 sm:pb-0">
       <div className="bg-grain absolute inset-0 pointer-events-none z-50"></div>
       
       <Header
@@ -72,6 +74,7 @@ export default function App() {
         onShowShoppingList={() => setShowShoppingList(true)}
         onShowLibrary={handleShowLibrary}
         onHome={handleHome}
+        onShowInfo={() => setShowInfo(true)}
         isFavoritesView={view === 'favorites' && !searchQuery}
         isLibraryView={view === 'library' && !searchQuery}
         shoppingListCount={shoppingList.length}
@@ -154,6 +157,10 @@ export default function App() {
           recipes={shoppingRecipes}
           onClose={() => setShowShoppingList(false)}
         />
+      )}
+
+      {showInfo && (
+        <InfoModal onClose={() => setShowInfo(false)} />
       )}
     </div>
   );

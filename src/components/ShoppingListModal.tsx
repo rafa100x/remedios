@@ -174,7 +174,7 @@ export function ShoppingListModal({ onClose, recipes }: ShoppingListModalProps) 
              </button>
           </div>
 
-          <div className="p-6 md:p-12 lg:p-16 relative bg-[#f4ead0] bg-[url('https://www.transparenttextures.com/patterns/cream-paper.png')] mix-blend-multiply flex-1 overflow-y-auto">
+          <div className="p-6 md:p-12 lg:p-16 pt-20 md:pt-24 relative bg-[#f4ead0] bg-[url('https://www.transparenttextures.com/patterns/cream-paper.png')] mix-blend-multiply flex-1 overflow-y-auto">
               <div className="text-center mb-10 md:mb-16">
                   <h1 className="font-headline text-4xl md:text-5xl font-bold text-[#201004] mb-4">Lista de Insumos</h1>
                   <p className="font-body text-[#5a3a22] italic md:text-lg">Tus botánicos seleccionados para adquirir en la botica.</p>
