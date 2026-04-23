@@ -48,12 +48,10 @@ export function RecipeModal({ recipe, onClose, rating, onRate, isFavorite, onTog
       let text = `*${recipe.title}*\n_${recipe.purpose}_\n\n`;
       text += `*🍃 Los Botánicos:*\n`;
       recipe.ingredients.forEach(ing => {
-         text += `• ${ing.amount} ${ing.es} (${ing.la})\n`;
+         text += `• ${ing.es} (${ing.la})\n`;
       });
       text += `\n*🥣 La Preparación:*\n`;
-      recipe.instructions.forEach((inst, i) => {
-         text += `${i + 1}. ${inst}\n`;
-      });
+      text += `${recipe.instructions}\n`;
       text += `\n*Tratamiento (Dosis):*\n${recipe.dosage}\n\n`;
       text += `*${getSourcing()}*\n\n`;
       text += `Compartido desde El Grimorio 🌿`;
