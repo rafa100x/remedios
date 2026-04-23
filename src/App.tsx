@@ -12,16 +12,18 @@ import { Library } from './components/Library';
 import { PaymentModal } from './components/PremiumBookModal';
 import { BookReader } from './components/BookReader';
 import { InfoModal } from './components/InfoModal';
+import { DownloadsModal } from './components/DownloadsModal';
 
 export default function App() {
   const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
   const [selectedRecipe, setSelectedRecipe] = useState<Recipe | null>(null);
-  const [selectedBook, setSelectedBook] = useState<any>(null); // Type any for now to avoid importing interface if not exported
+  const [selectedBook, setSelectedBook] = useState<any>(null);
   const [readingBookId, setReadingBookId] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [view, setView] = useState<'home' | 'favorites' | 'library'>('home');
   const [showShoppingList, setShowShoppingList] = useState(false);
   const [showInfo, setShowInfo] = useState(false);
+  const [showDownloads, setShowDownloads] = useState(false);
 
   const { favorites, toggleFavorite, shoppingList, toggleShoppingList, ratings, rateRecipe } = useUserData();
 
@@ -64,9 +66,7 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-surface text-tertiary font-body relative overflow-x-hidden selection:bg-primary-container selection:text-primary pt-[110px] sm:pt-20 pb-24 sm:pb-0">
-      <div className="bg-grain absolute inset-0 pointer-events-none z-50"></div>
-      
+    <div className="min-h-screen bg-[#fdfaf2] text-[#2c1600] pb-20 sm:pb-0 pt-[110px] sm:pt-20">
       <Header
         searchQuery={searchQuery}
         setSearchQuery={setSearchQuery}
@@ -75,15 +75,17 @@ export default function App() {
         onShowLibrary={handleShowLibrary}
         onHome={handleHome}
         onShowInfo={() => setShowInfo(true)}
-        isFavoritesView={view === 'favorites' && !searchQuery}
-        isLibraryView={view === 'library' && !searchQuery}
-        shoppingListCount={shoppingList.length}
+        isFavoritesView={view === 'favorites'}
+        isLibraryView={view === 'library'}
+        shoppingListCount={shoppingRecipes.length}
       />
 
-      {searchQuery.trim() ? (
-        <main className="max-w-7xl mx-auto px-4 md:px-12 py-12 relative z-10 bg-[#1a0f08] min-h-screen">
-          <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/dark-leather.png')] opacity-30 mix-blend-overlay pointer-events-none z-0"></div>
-          <h2 className="font-headline text-4xl text-[#d4af37] mb-8 relative z-10 text-center border-b border-[#d4af37]/20 pb-4">Resultados de la búsqueda</h2>
+      {searchQuery ? (
+        <main className="max-w-6xl mx-auto px-4 py-8 md:py-12">
+          <div className="mb-8 border-b-2 border-[#8a3c1f] pb-4 px-4 inline-block">
+             <h2 className="font-headline text-3xl font-bold text-[#8a3c1f]">Resultados de Búsqueda</h2>
+             <p className="font-body text-[#5a3a22] font-medium mt-1">« {searchQuery} »</p>
+          </div>
           <RecipeList
             recipes={searchResults}
             onSelectRecipe={setSelectedRecipe}
@@ -92,9 +94,11 @@ export default function App() {
           />
         </main>
       ) : view === 'favorites' ? (
-        <main className="max-w-7xl mx-auto px-4 md:px-12 py-12 relative z-10 bg-[#1a0f08] min-h-screen">
-          <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/dark-leather.png')] opacity-30 mix-blend-overlay pointer-events-none z-0"></div>
-          <h2 className="font-headline text-4xl text-[#d4af37] mb-8 relative z-10 text-center border-b border-[#d4af37]/20 pb-4">Fórmulas Guardadas</h2>
+        <main className="max-w-6xl mx-auto px-4 py-8 md:py-12">
+          <div className="mb-8 border-b-2 border-[#8a3c1f] pb-4 px-4 inline-block">
+             <h2 className="font-headline text-3xl font-bold text-[#8a3c1f]">Mis Fórmulas Guardadas</h2>
+             <p className="font-body text-[#5a3a22] font-medium mt-1">Tu colección personal de remedios.</p>
+          </div>
           <RecipeList
             recipes={favoriteRecipes}
             onSelectRecipe={setSelectedRecipe}
@@ -104,7 +108,7 @@ export default function App() {
         </main>
       ) : view === 'library' ? (
         <main className="w-full">
-            <Library onSelectBook={setSelectedBook} />
+            <Library onSelectBook={setSelectedBook} onShowDownloads={() => setShowDownloads(true)} />
         </main>
       ) : !selectedCategory ? (
         <>
@@ -161,6 +165,10 @@ export default function App() {
 
       {showInfo && (
         <InfoModal onClose={() => setShowInfo(false)} />
+      )}
+
+      {showDownloads && (
+        <DownloadsModal onClose={() => setShowDownloads(false)} />
       )}
     </div>
   );
