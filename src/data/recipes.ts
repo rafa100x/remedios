@@ -23,7 +23,19 @@ export interface Category {
   recipes: Recipe[];
 }
 
+export const categories: Category[] = [import { featuredCategory } from './featured'; // <-- 1. AÑADE ESTA LÍNEA
+
+// Abres el array "categories" como siempre:
 export const categories: Category[] = [
+  featuredCategory, // <-- 2. AÑADE ESTO AQUÍ COMO EL PRIMER ELEMENTO
+  {
+    "id": 1,
+    "name": "SISTEMA RESPIRATORIO",
+    "range": [
+      1,
+      20
+    ],
+// ... (el resto del archivo gigantesco sigue igual hacia abajo)
   {
     "id": 1,
     "name": "SISTEMA RESPIRATORIO",
