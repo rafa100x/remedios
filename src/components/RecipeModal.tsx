@@ -45,7 +45,7 @@ export function RecipeModal({ recipe, onClose, rating, onRate, isFavorite, onTog
    const fact = BOTICARIO_FACTS[recipe.id % BOTICARIO_FACTS.length];
 
    const handleShareWhatsApp = () => {
-      let text = `*${recipe.title}*\n_${getShortPurpose(recipe.purpose)}_\n\n`;
+      let text = `*${recipe.title}*\n_${recipe.purpose}_\n\n`;
       text += `*🍃 Los Botánicos:*\n`;
       recipe.ingredients.forEach(ing => {
          text += `• ${ing.amount} ${ing.es} (${ing.la})\n`;
@@ -181,7 +181,7 @@ export function RecipeModal({ recipe, onClose, rating, onRate, isFavorite, onTog
                 {/* 1. Header Image Area */}
                 <div className="w-full h-[30vh] sm:h-[40vh] md:h-[50vh] bg-[#f4ead0] border-b-4 border-[#8a3c1f] shrink-0">
                   <img 
-                    src={`/recetas/Botica-receta-${recipe.id.toString().padStart(2, '0')}.jpg`} 
+                    src={(!recipe.imageUrl || recipe.imageUrl.includes('picsum.photos')) ? `https://raw.githubusercontent.com/rafa100x/remedios/main/public/recetas/botica-receta-${recipe.id.toString().padStart(3, '0')}.jpg` : recipe.imageUrl} 
                     className="w-full h-full object-cover object-center"
                     alt={`Ilustración de la receta ${recipe.title}`}
                     onError={(e) => {
@@ -337,7 +337,7 @@ export function RecipeModal({ recipe, onClose, rating, onRate, isFavorite, onTog
                      {/* Sourcing Section */}
                      <section className="bg-[#e9deb8] p-5 md:p-6 rounded-sm border border-[#8a6a4b]/30 shadow-inner relative overflow-hidden">
                          <div className="absolute -right-4 -top-4 text-[#8a6a4b]/10">
-                            <svg className="w-20 md:w-24 h-20 md:h-24" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"/></svg>
+                            <svg className="w-20 md:w-24 h-20 md:h-24" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2v-2z"/></svg>
                          </div>
                          <h4 className="font-headline font-bold text-[#3a2211] text-[12px] md:text-sm uppercase tracking-widest mb-2 md:mb-3 relative z-10 flex items-center gap-2">
                              <svg className="w-4 h-4 text-[#8a6a4b]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
