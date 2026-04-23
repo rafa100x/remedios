@@ -30,7 +30,9 @@ export function Cabinet({ onSelectCategory }: CabinetProps) {
               
               <div className="relative flex items-end justify-between px-8 pb-6 pt-12 bg-surface-container-low/50 hover:bg-surface-container transition-colors duration-500">
                 <div className="flex flex-col gap-2 z-10">
-                  <span className="font-accent italic text-secondary/60 text-sm">Estante {index + 1}</span>
+                 <span className="font-accent italic text-secondary/60 text-sm">
+    {category.id === 0 ? "Colección Especial" : `Estante ${category.id}`}
+  </span>
                   <h3 className="font-headline text-2xl md:text-3xl text-tertiary group-hover:text-primary transition-colors duration-500">
                     {category.name}
                   </h3>
