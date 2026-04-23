@@ -154,252 +154,205 @@ export function RecipeModal({ recipe, onClose, rating, onRate, isFavorite, onTog
              <button
                 onClick={handlePrintPDF}
                 className="bg-[#f4ead0]/90 backdrop-blur aspect-square border border-[#8a6a4b]/30 text-[#8a6a4b] hover:bg-white hover:text-[#2c1600] w-10 h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center transition-all shadow-md"
-                title="Descargar en PDF / Imprimir"
+                title="Imprimir Papiro o Guardar PDF"
              >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                <svg className="w-5 h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
                 </svg>
              </button>
-             <button 
-               onClick={onClose}
-               className="bg-[#f4ead0]/90 backdrop-blur border border-[#8a6a4b]/30 text-[#8a6a4b] hover:bg-[#8a3c1f] hover:text-white w-10 h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center transition-all shadow-md"
-             >
-               <svg className="w-6 h-6 md:w-6 md:h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M6 18L18 6M6 6l12 12" />
-               </svg>
-             </button>
+            <button 
+              onClick={onClose}
+              className="bg-[#1a0f0a]/80 backdrop-blur aspect-square border border-[#fff]/10 text-[#f4ead0] hover:bg-[#8a6a4b] hover:text-white w-10 h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center transition-all shadow-md"
+              title="Cerrar Grimorio"
+            >
+              <svg className="w-5 h-5 md:w-6 md:h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
           </div>
 
-          {/* SINGLE SCROLLABLE WRAPPER FOR EVERYTHING */}
-          <div className="flex-1 w-full overflow-y-auto relative">
-             {/* Paper grain/texture that covers the whole scrollable background */}
-             <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cream-paper.png')] opacity-30 pointer-events-none mix-blend-multiply"></div>
-             
-             <div className="relative z-10 flex flex-col w-full min-h-full">
-                {/* 1. Header Image Area */}
-                <div className="w-full h-[30vh] sm:h-[40vh] md:h-[50vh] bg-[#f4ead0] border-b-4 border-[#8a3c1f] shrink-0">
-                  <img 
-                    src={(!recipe.imageUrl || recipe.imageUrl.includes('picsum.photos')) ? `https://raw.githubusercontent.com/rafa100x/remedios/main/public/recetas/botica-receta-${recipe.id.toString().padStart(3, '0')}.jpg` : recipe.imageUrl} 
-                    className="w-full h-full object-cover object-center"
-                    alt={`Ilustración de la receta ${recipe.title}`}
-                    onError={(e) => {
-                      (e.target as HTMLImageElement).src = `https://images.unsplash.com/photo-1615554867919-482245b73e3a?q=80&w=1200&auto=format&fit=crop`;
-                    }}
-                  />
+          <div className="flex-1 overflow-y-auto overflow-x-hidden relative h-full scrollbar-thin scrollbar-thumb-[#8a6a4b] scrollbar-track-[#efe5cc]">
+            
+            <div className="flex flex-col md:flex-row min-h-full">
+              {/* Left Column: Image Area */}
+              <div className="relative w-full md:w-[45%] h-[40vh] md:h-auto md:min-h-full bg-black/5 shrink-0">
+                {/* Fallback to local image in public folder if model unsplash fails, named mathematically */}
+                <img 
+                  src={`/recetas/botica-receta-${recipe.id.toString().padStart(3, '0')}.jpg`}
+                  alt={recipe.title}
+                  className="absolute inset-0 w-full h-full object-cover mix-blend-multiply"
+                  onError={(e) => {
+                    // Si no existe la imagen en public/recetas/, usamos la de Unsplash o la fallback global
+                    const target = e.target as HTMLImageElement;
+                    if(target.src.includes('unsplash')) {
+                       target.src = "https://images.unsplash.com/photo-1600880292203-757bb62b4baf?q=80&w=1200&auto=format&fit=crop";
+                    } else {
+                       target.src = recipe.imageUrl;
+                    }
+                  }}
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#fdfaf2] via-transparent to-black/30 md:bg-gradient-to-r md:from-transparent md:to-[#fdfaf2]"></div>
+                
+                {/* Visual decoration overlay */}
+                <div className="absolute inset-0 opacity-10 pointer-events-none" style={{ backgroundImage: 'url("https://www.transparenttextures.com/patterns/aged-paper.png")' }}></div>
+              </div>
+
+              {/* Right Column: Copy Area */}
+              <div className="relative w-full md:w-[55%] pb-24 md:pb-12 pt-8 md:pt-16 px-6 md:px-12 lg:px-16 flex flex-col items-center text-center">
+                
+                {/* Tags / Subtitle */}
+                <div className="flex gap-2 flex-wrap items-center justify-center mb-6">
+                   {/* Create dynamic tags based on keywords */}
+                   {recipe.purpose.includes('digestivo') || recipe.purpose.includes('estómago') ? <span className="text-[10px] uppercase tracking-widest text-[#5a3a22] border border-[#a68a6b]/30 bg-[#efe5cc]/50 px-3 py-1 rounded-full">Digestivo</span> : null}
+                   {recipe.purpose.includes('inmunológico') || recipe.purpose.includes('viral') ? <span className="text-[10px] uppercase tracking-widest text-[#5a3a22] border border-[#a68a6b]/30 bg-[#efe5cc]/50 px-3 py-1 rounded-full">Defensas</span> : null}
+                   {recipe.title.includes('Sueño') || recipe.purpose.includes('ansiedad') ? <span className="text-[10px] uppercase tracking-widest text-[#5a3a22] border border-[#a68a6b]/30 bg-[#efe5cc]/50 px-3 py-1 rounded-full">Relajante</span> : null}
+                   {recipe.ingredients.some(i => i.es.toLowerCase().includes('aceite')) ? <span className="text-[10px] uppercase tracking-widest text-[#5a3a22] border border-[#a68a6b]/30 bg-[#efe5cc]/50 px-3 py-1 rounded-full">Uso Externo</span> : <span className="text-[10px] uppercase tracking-widest text-[#5a3a22] border border-[#a68a6b]/30 bg-[#efe5cc]/50 px-3 py-1 rounded-full">Brebaje</span>}
                 </div>
 
-                {/* 2. Extremely Clear Title & Action Container */}
-                <div className="w-full bg-[#fdfaf2] border-b border-[#d6c7af] px-5 py-6 sm:px-8 md:px-12 shadow-md shrink-0">
-                   <div className="max-w-5xl mx-auto flex flex-col md:flex-row md:items-end justify-between gap-6">
-                       
-                       <div className="flex-1">
-                          <span className="inline-block font-accent italic text-[#8a3c1f] text-lg mb-1 tracking-widest border border-[#8a3c1f]/20 px-3 py-1 rounded-full bg-[#8a3c1f]/5">
-                            RECETA NO. {recipe.id.toString().padStart(3, '0')}
-                          </span>
-                          <h1 className="font-headline text-4xl sm:text-5xl md:text-6xl font-bold text-[#201004] leading-tight mb-4">
-                            {recipe.title}
-                          </h1>
-                          
-                          {/* Simplified Rating */}
-                          <div className="flex items-center gap-3">
-                             <span className="font-bold text-[#5a3a22] uppercase tracking-wider text-sm">Eficacia Probada:</span>
-                             <div className="flex bg-white px-3 py-1.5 rounded-full border border-[#d6c7af] shadow-sm">
-                                 {[1, 2, 3, 4, 5].map((star) => (
-                                   <button
-                                     key={star}
-                                     onClick={() => onRate(star)}
-                                     className={`transition-colors ${star <= rating ? 'text-[#e6b800]' : 'text-[#d6c7af] hover:text-[#e6b800]'}`}
-                                   >
-                                     <svg className="w-6 h-6 fill-current" viewBox="0 0 24 24">
-                                       <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
-                                     </svg>
-                                   </button>
-                                 ))}
-                             </div>
-                          </div>
-                       </div>
+                <div className="uppercase tracking-[0.2em] text-[#8a6a4b] text-xs font-serif mb-3 border-b border-[#8a6a4b]/30 pb-2 inline-block">Nro. {recipe.id.toString().padStart(3, '0')}</div>
+                <h2 className="text-3xl md:text-5xl font-serif text-[#2c1600] leading-[1.1] mb-6 drop-shadow-sm">{recipe.title}</h2>
+                <h3 className="text-lg md:text-xl text-[#5a3a22] italic font-serif leading-relaxed max-w-lg mb-10">
+                  {recipe.purpose}
+                </h3>
 
-                       {/* Huge, Clearly Labelled Actions for mobile & desktop */}
-                       <div className="flex flex-col sm:flex-row gap-2 md:w-auto mt-2 md:mt-0">
-                          <button 
-                            onClick={onToggleShopping}
-                            className={`flex flex-row items-center justify-center gap-2 px-4 py-2 sm:px-5 sm:py-3 rounded-lg font-bold text-sm sm:text-base border-2 transition-colors shadow-sm ${
-                              isShopping 
-                                ? 'bg-[#556b3e] text-[#fdfaf2] border-[#556b3e]' 
-                                : 'bg-white text-[#556b3e] border-[#556b3e] hover:bg-[#556b3e]/10'
-                            }`}
-                          >
-                             <svg className="w-5 h-5 sm:w-6 sm:h-6" fill={isShopping ? "currentColor" : "none"} viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                                 <path strokeLinecap="round" strokeLinejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
-                             </svg>
-                             {isShopping ? 'En Insumos ✓' : 'Añadir a Insumos'}
-                          </button>
-
-                          <button 
-                            onClick={onToggleFavorite}
-                            className={`flex flex-row items-center justify-center gap-2 px-4 py-2 sm:px-5 sm:py-3 rounded-lg font-bold text-sm sm:text-base border-2 transition-colors shadow-sm ${
-                              isFavorite 
-                                ? 'bg-[#311c0f] text-[#d4af37] border-[#311c0f]' 
-                                : 'bg-white text-[#8a3c1f] border-[#8a3c1f] hover:bg-[#8a3c1f]/10'
-                            }`}
-                          >
-                             <svg className="w-5 h-5 sm:w-6 sm:h-6" fill={isFavorite ? "currentColor" : "none"} viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                                 <path strokeLinecap="round" strokeLinejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
-                             </svg>
-                             {isFavorite ? 'Recomendada ✓' : 'Guardar Receta'}
-                          </button>
-                       </div>
-
-                   </div>
-                   
-                   {/* Categorías/Tags de la receta */}
-                   {(() => {
-                        const words = recipe.purpose.toLowerCase();
-                        const titleWords = recipe.title.toLowerCase();
-                        const combinedInfo = words + " " + titleWords;
-                        const tags: string[] = [];
-                        
-                        if (combinedInfo.includes('tos') || combinedInfo.includes('mucosidad') || combinedInfo.includes('expectorante')) tags.push('Tos y Mucosidad');
-                        if (combinedInfo.includes('resfrío') || combinedInfo.includes('resfriado') || combinedInfo.includes('gripe')) tags.push('Gripe y Resfrío');
-                        if (combinedInfo.includes('garganta')) tags.push('Garganta Irritada');
-                        if (combinedInfo.includes('cabeza') || combinedInfo.includes('migraña') || combinedInfo.includes('cefalea')) tags.push('Dolor de Cabeza');
-                        if (combinedInfo.includes('estómago') || combinedInfo.includes('digestión') || combinedInfo.includes('indigestión') || combinedInfo.includes('gastrointestinal') || combinedInfo.includes('empacho')) tags.push('Digestión');
-                        if (combinedInfo.includes('ansiedad') || combinedInfo.includes('nervios') || combinedInfo.includes('estrés')) tags.push('Anti-estrés');
-                        if (combinedInfo.includes('insomnio') || combinedInfo.includes('dormir') || combinedInfo.includes('sueño')) tags.push('Buen Descanso');
-                        if (combinedInfo.includes('fiebre')) tags.push('Bajar Fiebre');
-                        if (combinedInfo.includes('piel') || combinedInfo.includes('herida') || combinedInfo.includes('quemadura') || combinedInfo.includes('acné') || combinedInfo.includes('dermatitis')) tags.push('Cuidado de la Piel');
-                        if (combinedInfo.includes('menopausia') || combinedInfo.includes('calores') || combinedInfo.includes('hormonal')) tags.push('Menopausia');
-                        if (combinedInfo.includes('dolor muscular') || combinedInfo.includes('reuma') || combinedInfo.includes('articulación') || combinedInfo.includes('artritis') || combinedInfo.includes('inflamación')) tags.push('Dolor e Inflamación');
-                        if (combinedInfo.includes('energía') || combinedInfo.includes('fatiga') || combinedInfo.includes('cansancio') || combinedInfo.includes('agotamiento')) tags.push('Vitalidad');
-                        if (combinedInfo.includes('inmunidad') || combinedInfo.includes('defensas') || combinedInfo.includes('inmunológico')) tags.push('Defensas');
-                        if (combinedInfo.includes('respiratoria') || combinedInfo.includes('pulmones') || combinedInfo.includes('asma')) tags.push('Respiratorio');
-
-                        // Fallback
-                        if (tags.length === 0) {
-                           const match = recipe.purpose.match(/diseñada específicamente para (.*?)\./i);
-                           if (match && match[1]) {
-                             tags.push(match[1].charAt(0).toUpperCase() + match[1].slice(1).toLowerCase());
-                           } else {
-                             tags.push('Bienestar General');
-                           }
-                        }
-
-                        // Take only first 3 tags max to avoid clutter
-                        const displayTags = tags.slice(0, 3);
-
-                       return (
-                           <div className="max-w-5xl mx-auto mt-4 pt-4 border-t border-[#d6c7af]/50 flex flex-wrap gap-2">
-                               <span className="text-[#8a6a4b] text-sm italic mr-2 self-center">Ideal para:</span>
-                               {displayTags.map((cat, idx) => (
-                                   <span key={idx} className="bg-[#e9deb8] text-[#5c3716] text-xs font-semibold px-3 py-1 rounded-full uppercase tracking-wider shadow-sm">
-                                       {cat}
-                                   </span>
-                               ))}
-                           </div>
-                       );
-                   })()}
+                {/* Rating - Simplified visual */}
+                <div className="flex flex-col items-center gap-3 mb-10">
+                  <div className="text-[#8a6a4b] text-sm uppercase tracking-widest font-medium">Grado de Efectividad</div>
+                  <div className="flex gap-1.5 p-3 rounded-full border border-[#8a6a4b]/10 bg-white/50 shadow-inner">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <button
+                        key={star}
+                        onClick={() => onRate(star)}
+                        className={`transition-all duration-300 ${rating >= star ? 'text-amber-500 scale-110 drop-shadow-md' : 'text-[#d4c5b0] hover:text-amber-300'}`}
+                        aria-label={`Rate ${star} stars`}
+                      >
+                        <svg className="w-6 h-6 md:w-7 md:h-7" fill={rating >= star ? 'currentColor' : 'none'} stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
+                        </svg>
+                      </button>
+                    ))}
+                  </div>
                 </div>
 
-                {/* 3. Scrollable Content Details Area */}
-                <div className="w-full flex flex-col lg:flex-row gap-10 lg:gap-20 p-5 sm:p-8 md:p-12 lg:p-16 max-w-7xl mx-auto pb-safe">
-                 
-                 {/* Left Column (Purpose, Ingredients, Sourcing) */}
-                 <div className="w-full lg:w-5/12 space-y-10 md:space-y-12">
-                     <section>
-                         <h3 className="flex items-center gap-2 md:gap-3 font-accent italic text-[#8a6a4b] text-lg md:text-xl mb-3 md:mb-4">
-                             <div className="w-6 h-[1px] bg-[#8a6a4b]/50"></div>
-                             LA AFECCIÓN
-                         </h3>
-                         <p className="font-body text-[#3a2211] text-[20px] md:text-2xl font-light leading-snug italic">
-                            "{recipe.purpose}"
-                         </p>
-                     </section>
+                {/* User Actions */}
+                <div className="flex flex-wrap justify-center gap-3 w-full mb-12">
+                   <button
+                     onClick={onToggleShopping}
+                     className={`flex items-center gap-2 px-5 py-2.5 rounded text-sm font-medium transition-all ${
+                       isShopping 
+                       ? 'bg-[#8a6a4b] text-white shadow-md' 
+                       : 'bg-white text-[#5a3a22] border border-[#a68a6b]/30 hover:bg-[#efe5cc]'
+                     }`}
+                   >
+                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                     </svg>
+                     {isShopping ? 'Añadido a Insumos' : 'Añadir a Insumos'}
+                   </button>
+                   <button
+                     onClick={onToggleFavorite}
+                     className={`flex items-center gap-2 px-5 py-2.5 rounded text-sm font-medium transition-all ${
+                       isFavorite
+                       ? 'bg-red-50 text-red-700 border border-red-200'
+                       : 'bg-white text-[#5a3a22] border border-[#a68a6b]/30 hover:bg-[#efe5cc]'
+                     }`}
+                   >
+                     <svg className="w-5 h-5" fill={isFavorite ? 'currentColor' : 'none'} stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                     </svg>
+                     {isFavorite ? 'Guardado' : 'Guardar Receta'}
+                   </button>
+                </div>
 
-                     <section>
-                         <h3 className="flex items-center gap-2 md:gap-3 font-accent italic text-[#8a6a4b] text-lg md:text-xl mb-4 md:mb-6">
-                             <div className="w-6 h-[1px] bg-[#8a6a4b]/50"></div>
-                             LOS BOTÁNICOS
-                         </h3>
-                         <ul className="space-y-3 md:space-y-4">
-                            {recipe.ingredients.map((ing, i) => (
-                                <li key={i} className="flex flex-col border-b border-[#8a6a4b]/20 pb-3">
-                                   <div className="flex items-baseline gap-2">
-                                     <span className="font-headline font-bold text-[#2a1308] text-[18px] md:text-xl">{ing.es}</span>
-                                     <span className="font-accent italic text-[#8a6a4b] text-[13px] md:text-sm">/ {ing.la}</span>
-                                   </div>
-                                </li>
-                            ))}
-                         </ul>
-                     </section>
+                <div className="w-full max-w-lg mb-10 h-px bg-gradient-to-r from-transparent via-[#8a6a4b]/20 to-transparent"></div>
 
-                     {/* Sourcing Section */}
-                     <section className="bg-[#e9deb8] p-5 md:p-6 rounded-sm border border-[#8a6a4b]/30 shadow-inner relative overflow-hidden">
-                         <div className="absolute -right-4 -top-4 text-[#8a6a4b]/10">
-                            <svg className="w-20 md:w-24 h-20 md:h-24" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2v-2z"/></svg>
-                         </div>
-                         <h4 className="font-headline font-bold text-[#3a2211] text-[12px] md:text-sm uppercase tracking-widest mb-2 md:mb-3 relative z-10 flex items-center gap-2">
-                             <svg className="w-4 h-4 text-[#8a6a4b]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
-                             Adquisición de Insumos
-                         </h4>
-                         <p className="font-body text-[#4a2e15] text-base md:text-lg font-medium relative z-10">{getSourcing()}</p>
-                     </section>
-                 </div>
+                <div className="w-full max-w-xl text-left space-y-12">
+                  
+                  {/* Ingredients Section */}
+                  <section>
+                    <div className="flex items-center gap-4 mb-6">
+                      <div className="flex-1 h-px bg-[#8a6a4b]/20"></div>
+                      <h4 className="text-xl font-serif text-[#2c1600] flex items-center gap-2">
+                        <svg className="w-5 h-5 text-[#8a6a4b]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
+                        </svg>
+                        Los Botánicos
+                      </h4>
+                      <div className="flex-1 h-px bg-[#8a6a4b]/20"></div>
+                    </div>
+                    <ul className="space-y-4">
+                      {recipe.ingredients.map((ing, idx) => (
+                        <li key={idx} className="flex flex-col sm:flex-row sm:items-baseline justify-between py-1 group">
+                          <span className="text-[#3c2514] font-medium text-[17px] group-hover:text-[#8a6a4b] transition-colors">{ing.es}</span>
+                          <span className="hidden sm:block border-b border-dotted border-[#8a6a4b]/30 flex-1 mx-4"></span>
+                          <span className="text-sm italic text-[#8a6a4b]/80 font-serif whitespace-nowrap">{ing.la}</span>
+                        </li>
+                      ))}
+                    </ul>
+                    
+                    {/* Sourcing hint */}
+                    <div className="mt-6 bg-[#f4ead0]/50 border border-[#8a6a4b]/10 rounded px-4 py-3 text-sm text-[#5a3a22] flex items-start gap-2">
+                       <svg className="w-5 h-5 shrink-0 text-[#8a6a4b] mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                       </svg>
+                       <p><span className="font-semibold block mb-0.5">Dónde conseguir:</span> {getSourcing()}</p>
+                    </div>
+                  </section>
 
-                 {/* Right Column (Preparation, Dosage, Warning, Fun Fact) */}
-                 <div className="w-full lg:w-7/12 space-y-10 md:space-y-12">
-                     <section>
-                         <h3 className="flex items-center gap-2 md:gap-3 font-accent italic text-[#8a6a4b] text-lg md:text-xl mb-3 md:mb-4">
-                             <div className="w-6 h-[1px] bg-[#8a6a4b]/50"></div>
-                             LA PREPARACIÓN
-                         </h3>
-                         <p className="font-body text-[#3a2211] text-[18px] md:text-xl leading-relaxed whitespace-pre-wrap">
-                             {recipe.instructions}
-                         </p>
-                     </section>
+                  {/* Instructions Section */}
+                  <section>
+                    <div className="flex items-center gap-4 mb-6">
+                      <div className="flex-1 h-px bg-[#8a6a4b]/20"></div>
+                      <h4 className="text-xl font-serif text-[#2c1600] flex items-center gap-2">
+                        <svg className="w-5 h-5 text-[#8a6a4b]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                        </svg>
+                        La Preparación
+                      </h4>
+                      <div className="flex-1 h-px bg-[#8a6a4b]/20"></div>
+                    </div>
+                    <div className="prose prose-stone max-w-none text-lg text-[#3c2514] leading-[1.8] font-serif bg-white/40 p-6 rounded-lg border border-[#8a6a4b]/10 shadow-inner">
+                      <p className="first-letter:text-5xl first-letter:font-bold first-letter:text-[#8a6a4b] first-letter:mr-1 first-letter:float-left first-letter:leading-[0.8]">{recipe.instructions}</p>
+                    </div>
+                  </section>
 
-                     <section>
-                         <h3 className="flex items-center gap-2 md:gap-3 font-accent italic text-[#8a6a4b] text-lg md:text-xl mb-3 md:mb-4">
-                             <div className="w-6 h-[1px] bg-[#8a6a4b]/50"></div>
-                             EL TRATAMIENTO
-                         </h3>
-                         <p className="font-body text-[#3a2211] text-[18px] md:text-xl font-medium leading-relaxed bg-[#8a6a4b]/5 p-4 md:p-5 rounded-sm border-l-[3px] md:border-l-4 border-[#8a6a4b]">
-                             {recipe.dosage}
-                         </p>
-                     </section>
+                  {/* Dosage & Notes Section */}
+                  <section className="bg-[#1a0f0a] text-[#fdfaf2] p-8 -mx-6 md:rounded-bl-3xl md:rounded-tr-3xl relative overflow-hidden group">
+                    <div className="absolute inset-0 opacity-20 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] mix-blend-overlay"></div>
+                    <div className="relative z-10">
+                      <h4 className="text-xl font-serif text-[#d4c5b0] mb-4 flex items-center gap-2 border-b border-[#d4c5b0]/20 pb-2">
+                        <svg className="w-5 h-5 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+                        </svg>
+                        El Tratamiento
+                      </h4>
+                      <p className="text-lg leading-relaxed mb-6 font-serif">{recipe.dosage}</p>
 
-                     {(recipe.notes && recipe.notes !== "N/A" && recipe.notes.toLowerCase() !== "uso seguro") && (
-                       <section className="mt-8 border-t border-red-900/10 pt-6 md:pt-8">
-                           <h4 className="font-headline font-bold text-red-900 text-[12px] md:text-sm uppercase tracking-widest mb-2 md:mb-3 flex items-center gap-2">
-                              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
-                              Recomendación Estricta
-                           </h4>
-                           <p className="font-body text-[#591c1c] text-base md:text-lg italic">
-                               {recipe.notes}
-                           </p>
-                       </section>
-                     )}
+                      {recipe.notes && recipe.notes !== 'N/A' && (
+                        <div className="pt-4 border-t border-[#d4c5b0]/20 mt-4">
+                          <h5 className="text-[13px] uppercase tracking-widest text-red-300 font-bold mb-2">Advertencia del Boticario:</h5>
+                          <p className="text-sm md:text-base text-red-200/90 leading-relaxed italic">{recipe.notes}</p>
+                        </div>
+                      )}
+                    </div>
+                  </section>
 
-                     {/* Dato de Boticario */}
-                     <section className="mt-12 md:mt-16 bg-[#2a1308] text-[#f4ead0] p-6 sm:p-8 md:p-10 rounded-xl relative overflow-hidden shadow-2xl">
-                         <div className="absolute top-0 right-0 p-6 md:p-8 opacity-10 pointer-events-none">
-                            <svg className="w-24 md:w-32 h-24 md:h-32 fill-current" viewBox="0 0 24 24"><path d="M12 2L2 22h20L12 2zm0 4.14L18.17 19H5.83L12 6.14zM11 10h2v5h-2v-5zm0 7h2v2h-2v-2z"/></svg>
-                         </div>
-                         <div className="flex flex-col sm:flex-row items-start gap-4 md:gap-6 relative z-10">
-                              <div className="shrink-0 w-10 md:w-12 h-10 md:h-12 rounded-full border border-[#bf953f]/50 flex items-center justify-center text-[#bf953f] mb-2 sm:mb-0">
-                                  <svg className="w-5 md:w-6 h-5 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" /></svg>
-                              </div>
-                              <div>
-                                  <h4 className="font-accent italic text-[#bf953f] text-base md:text-lg uppercase tracking-widest mb-1 md:mb-2">Apunte del Boticario</h4>
-                                  <p className="font-body text-[#d6c7af] text-base md:text-lg font-light leading-relaxed">
-                                      {fact}
-                                  </p>
-                              </div>
-                         </div>
-                     </section>
+                  {/* Fun Fact Section */}
+                  <section className="border-l-4 border-[#8a6a4b] bg-white/60 p-5 rounded-r">
+                    <h5 className="text-[11px] font-bold uppercase tracking-widest text-[#8a6a4b] mb-2 flex items-center gap-1.5">
+                       <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                       Cultura Boticaria
+                    </h5>
+                    <p className="font-serif italic text-[#5a3a22] text-[15px] leading-relaxed">
+                       "{fact}"
+                    </p>
+                  </section>
 
-                 </div>
-             </div>
-          </div>
+                </div>
+
+              </div>
+            </div>
+            
           </div>
         </motion.div>
       </div>
