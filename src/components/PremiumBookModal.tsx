@@ -2,6 +2,9 @@ import { motion, AnimatePresence } from 'motion/react';
 import { Lock, BookOpen, ExternalLink, X, Unlock } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 
+import { collection, doc, setDoc, serverTimestamp } from 'firebase/firestore';
+import { db } from '../lib/firebase';
+
 interface PremiumBook {
     id: string;
     title: string;
@@ -121,6 +124,19 @@ export function PaymentModal({ book, onClose, onRead }: PaymentModalProps) {
                                 ) : (
                                     <button 
                                         onClick={async () => {
+                                            try {
+                                                const intentRef = doc(collection(db, 'purchaseIntents'));
+                                                await setDoc(intentRef, {
+                                                    userId: user.uid,
+                                                    email: user.email,
+                                                    bookId: book.id,
+                                                    status: 'pending',
+                                                    createdAt: serverTimestamp()
+                                                });
+                                            } catch (e) {
+                                                console.error("Error logging intent:", e);
+                                            }
+
                                             if (book.paymentLink) {
                                                 // User provided a literal MP link
                                                 window.open(book.paymentLink, '_blank');

@@ -14,14 +14,19 @@ import { BookReader } from './components/BookReader';
 import { InfoModal } from './components/InfoModal';
 import { DownloadsModal } from './components/DownloadsModal';
 import { trackEvent } from './lib/analytics';
+import { useAuth } from './contexts/AuthContext';
+import { LoginScreen } from './components/LoginScreen';
+import { ProfileView } from './components/ProfileView';
+import { AdminDashboard } from './components/AdminDashboard';
 
 export default function App() {
+  const { user } = useAuth();
   const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
   const [selectedRecipe, setSelectedRecipe] = useState<Recipe | null>(null);
   const [selectedBook, setSelectedBook] = useState<any>(null); // Type any for now to avoid importing interface if not exported
   const [readingBookId, setReadingBookId] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
-  const [view, setView] = useState<'home' | 'favorites' | 'library'>('home');
+  const [view, setView] = useState<'home' | 'favorites' | 'library' | 'profile' | 'admin'>('home');
   const [showShoppingList, setShowShoppingList] = useState(false);
   const [showInfo, setShowInfo] = useState(false);
   const [showDownloads, setShowDownloads] = useState(false);
@@ -77,6 +82,20 @@ export default function App() {
     trackEvent('view_library', { event_category: 'navigation', event_label: 'Biblioteca' });
   };
 
+  const handleShowProfile = () => {
+    setSearchQuery('');
+    setView('profile');
+    setSelectedCategory(null);
+    trackEvent('view_profile', { event_category: 'navigation' });
+  };
+
+  const handleShowAdmin = () => {
+    setSearchQuery('');
+    setView('admin');
+    setSelectedCategory(null);
+    trackEvent('view_admin', { event_category: 'navigation' });
+  };
+
   useEffect(() => {
     if (searchQuery.trim().length > 2) {
       const timeout = setTimeout(() => {
@@ -92,6 +111,10 @@ export default function App() {
     }
   }, [selectedRecipe]);
 
+  if (!user) {
+    return <LoginScreen />;
+  }
+
   return (
     <div className="min-h-screen bg-surface text-tertiary font-body relative overflow-x-hidden selection:bg-primary-container selection:text-primary pt-[110px] sm:pt-20 pb-24 sm:pb-0">
       <div className="bg-grain absolute inset-0 pointer-events-none z-50"></div>
@@ -102,6 +125,8 @@ export default function App() {
         onShowFavorites={handleShowFavorites}
         onShowShoppingList={() => setShowShoppingList(true)}
         onShowLibrary={handleShowLibrary}
+        onShowProfile={handleShowProfile}
+        onShowAdmin={handleShowAdmin}
         onHome={handleHome}
         onShowInfo={() => setShowInfo(true)}
         isFavoritesView={view === 'favorites' && !searchQuery}
@@ -134,6 +159,14 @@ export default function App() {
       ) : view === 'library' ? (
         <main className="w-full">
             <Library onSelectBook={setSelectedBook} onShowDownloads={() => setShowDownloads(true)} />
+        </main>
+      ) : view === 'profile' ? (
+        <main className="w-full">
+            <ProfileView />
+        </main>
+      ) : view === 'admin' ? (
+        <main className="w-full">
+            <AdminDashboard />
         </main>
       ) : !selectedCategory ? (
         <>

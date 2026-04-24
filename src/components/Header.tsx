@@ -9,6 +9,8 @@ interface HeaderProps {
   onShowFavorites: () => void;
   onShowShoppingList: () => void;
   onShowLibrary: () => void;
+  onShowProfile: () => void;
+  onShowAdmin?: () => void;
   onHome: () => void;
   onShowInfo?: () => void;
   isFavoritesView: boolean;
@@ -16,8 +18,8 @@ interface HeaderProps {
   shoppingListCount: number;
 }
 
-export function Header({ searchQuery, setSearchQuery, onShowFavorites, onShowShoppingList, onShowLibrary, onHome, onShowInfo, isFavoritesView, isLibraryView, shoppingListCount }: HeaderProps) {
-  const { user, signIn, logOut } = useAuth();
+export function Header({ searchQuery, setSearchQuery, onShowFavorites, onShowShoppingList, onShowLibrary, onShowProfile, onShowAdmin, onHome, onShowInfo, isFavoritesView, isLibraryView, shoppingListCount }: HeaderProps) {
+  const { user, isAdmin, signIn, logOut } = useAuth();
   const [showUserMenu, setShowUserMenu] = useState(false);
 
   return (
@@ -118,6 +120,14 @@ export function Header({ searchQuery, setSearchQuery, onShowFavorites, onShowSho
                                  exit={{ opacity: 0, y: 10, scale: 0.95 }}
                                  className="absolute right-0 top-12 w-48 bg-white rounded-lg shadow-[0_4px_20px_rgba(44,22,0,0.15)] border border-[#d6c7af] overflow-hidden flex flex-col py-2"
                                >
+                                 <button onClick={() => { onShowProfile(); setShowUserMenu(false); }} className="flex items-center gap-2 px-4 py-3 text-sm font-bold text-[#5a3a22] hover:bg-[#fdfaf2] border-b border-[#d6c7af]">
+                                    <UserCircle className="w-5 h-5" /> Mi Perfil
+                                 </button>
+                                 {isAdmin && onShowAdmin && (
+                                   <button onClick={() => { onShowAdmin(); setShowUserMenu(false); }} className="flex items-center gap-2 px-4 py-3 text-sm font-bold text-[#201004] hover:bg-[#fdfaf2] border-b border-[#d6c7af]">
+                                      <Search className="w-5 h-5" /> Admin Dashboard
+                                   </button>
+                                 )}
                                  <button onClick={() => { logOut(); setShowUserMenu(false); }} className="flex items-center gap-2 px-4 py-3 text-sm font-bold text-[#8a3c1f] hover:bg-[#fdfaf2]">
                                     <LogOut className="w-5 h-5" /> Cerrar Sesión
                                  </button>

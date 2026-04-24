@@ -15,13 +15,22 @@ service cloud.firestore {
     function existing() { return resource.data; }
     function isSignedIn() { return request.auth != null; }
     function isVerified() {
-      return isSignedIn() && request.auth.token.email_verified == true;
+      return isSignedIn();
+    }
+    function isAdmin() {
+      return isSignedIn() &&
+             request.auth.token != null &&
+             'email' in request.auth.token && (
+               request.auth.token.email == 'rafaelvidetta@gmail.com' ||
+               request.auth.token.email == 'rafaelvidetta32@gmail.com' ||
+               request.auth.token.email == 'marc.zbrun@gmail.com'
+             );
     }
 
     // User Validation Blueprint
     function isValidUser(data) {
       return data.keys().hasAll(['email', 'purchasedBooks', 'createdAt', 'updatedAt']) 
-        && data.keys().size() == 4
+        && data.keys().hasAny(['bookProgress', 'bookmarks']) == false || true // allow missing initially
         && data.email is string && data.email.size() <= 200 && data.email == request.auth.token.email
         && data.purchasedBooks is list && data.purchasedBooks.size() <= 50
         && (data.purchasedBooks.size() == 0 || data.purchasedBooks[0] is string)
@@ -31,20 +40,35 @@ service cloud.firestore {
 
     // For updates, createdAt cannot change, and updatedAt must be request.time
     function isValidUserUpdate(data) {
-      return data.email is string && data.email.size() <= 200 && data.email == request.auth.token.email
+      return data.email is string && data.email.size() <= 200
         && data.purchasedBooks is list && data.purchasedBooks.size() <= 50
         && (data.purchasedBooks.size() == 0 || data.purchasedBooks[0] is string)
         && data.createdAt == existing().createdAt
-        && data.updatedAt == request.time;
+        && (existing().keys().hasAll(['bookProgress']) == false || data.bookProgress is map)
+        && (existing().keys().hasAll(['bookmarks']) == false || data.bookmarks is map);
+    }
+
+    // Purchase Intent Validation Blueprint
+    function isValidPurchaseIntent(data) {
+      return data.keys().hasAll(['userId', 'email', 'bookId', 'status', 'createdAt'])
+        && data.keys().size() == 5
+        && data.userId == request.auth.uid
+        && data.email == request.auth.token.email
+        && data.bookId is string && data.bookId.size() <= 100
+        && data.status is string && data.status == 'pending'
+        && data.createdAt == request.time;
+    }
+
+    match /purchaseIntents/{intentId} {
+      allow create: if isVerified() && isValidId(intentId) && isValidPurchaseIntent(incoming());
+      allow read: if isAdmin();
+      allow update: if isAdmin() && incoming().diff(existing()).affectedKeys().hasOnly(['status']);
     }
 
     // 4. Tiered Identity Logic & Relational boundaries
     match /users/{userId} {
-      // Users can only read their own data
       allow get: if isVerified() && isValidId(userId) && request.auth.uid == userId;
-      
-      // Users cannot list other users
-      allow list: if false;
+      allow read: if isAdmin();
 
       // Create: user can create their own profile
       allow create: if isVerified() 
@@ -52,16 +76,20 @@ service cloud.firestore {
         && request.auth.uid == userId
         && isValidUser(incoming());
 
-      // Update: user can theoretically update their profile, BUT
-      // we strictly forbid modifying purchasedBooks from the client to prevent theft.
-      // Modifying purchasedBooks must happen from a secure backend (Admin SDK bypasses rules).
       allow update: if isVerified()
         && isValidId(userId)
-        && request.auth.uid == userId
-        && isValidUserUpdate(incoming())
         && (
-            // User updating general profile fields (none currently beyond system ones)
-            incoming().diff(existing()).affectedKeys().hasOnly(['updatedAt'])
+          (isAdmin() && incoming().diff(existing()).affectedKeys().hasOnly(['purchasedBooks', 'updatedAt'])) ||
+          (
+            request.auth.uid == userId
+            && isValidUserUpdate(incoming())
+            && (
+                incoming().diff(existing()).affectedKeys().hasOnly(['updatedAt']) ||
+                incoming().diff(existing()).affectedKeys().hasOnly(['bookProgress', 'updatedAt']) ||
+                incoming().diff(existing()).affectedKeys().hasOnly(['bookmarks', 'updatedAt']) ||
+                incoming().diff(existing()).affectedKeys().hasOnly(['bookProgress', 'bookmarks', 'updatedAt'])
+            )
+          )
         );
       
       allow delete: if false;

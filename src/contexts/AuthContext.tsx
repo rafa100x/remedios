@@ -1,33 +1,48 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { User, onAuthStateChanged, signInWithPopup, signOut } from 'firebase/auth';
+import { User, onAuthStateChanged, signInWithPopup, signOut, signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'firebase/auth';
 import { doc, getDoc, setDoc, serverTimestamp, onSnapshot } from 'firebase/firestore';
 import { auth, googleProvider, db, handleFirestoreError } from '../lib/firebase';
 
 interface AuthContextType {
   user: User | null;
+  isAdmin: boolean;
   purchasedBooks: string[];
+  bookProgress: Record<string, string>;
+  bookmarks: Record<string, string[]>;
   loading: boolean;
   signIn: () => Promise<void>;
   logOut: () => Promise<void>;
+  signInWithEmail: (email: string, pass: string) => Promise<void>;
+  registerWithEmail: (email: string, pass: string) => Promise<void>;
   simulatePurchase: (bookId: string) => Promise<void>;
+  updateProgress: (bookId: string, chapterId: string) => Promise<void>;
+  toggleBookmark: (bookId: string, chapterId: string) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
+  const [isAdmin, setIsAdmin] = useState(false);
   const [purchasedBooks, setPurchasedBooks] = useState<string[]>([]);
+  const [bookProgress, setBookProgress] = useState<Record<string, string>>({});
+  const [bookmarks, setBookmarks] = useState<Record<string, string[]>>({});
   const [loading, setLoading] = useState(true);
+
+  const [isDemo] = useState(() => {
+    return typeof window !== 'undefined' && new URLSearchParams(window.location.search).get('demo') === 'true';
+  });
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
-      setUser(user);
       if (user) {
-        const adminEmails = ['rafaelvidetta@gmail.com', 'rafaelvidetta32@gmail.com'];
-        const isAdmin = adminEmails.includes((user.email || '').trim().toLowerCase());
+        setUser(user);
+        const adminEmails = ['rafaelvidetta@gmail.com', 'rafaelvidetta32@gmail.com', 'marc.zbrun@gmail.com'];
+        const isUserAdmin = adminEmails.includes((user.email || '').trim().toLowerCase());
+        setIsAdmin(isUserAdmin);
         const allPremiumBooks = ['presion', 'arte_preparar', 'menopausia', 'botiquin'];
         
-        if (isAdmin) {
+        if (isUserAdmin) {
           setPurchasedBooks(allPremiumBooks);
         }
 
@@ -38,39 +53,96 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         const unsubscribeDoc = onSnapshot(userRef, async (docSnap) => {
             if (docSnap.exists()) {
               const data = docSnap.data();
-              setPurchasedBooks(isAdmin ? Array.from(new Set([...(data.purchasedBooks || []), ...allPremiumBooks])) : (data.purchasedBooks || []));
+              setPurchasedBooks(isUserAdmin ? Array.from(new Set([...(data.purchasedBooks || []), ...allPremiumBooks])) : (data.purchasedBooks || []));
+              setBookProgress(data.bookProgress || {});
+              setBookmarks(data.bookmarks || {});
             } else {
               // Create user profile
               const newUserData = {
                 email: user.email || '',
-                purchasedBooks: isAdmin ? allPremiumBooks : [],
+                purchasedBooks: isUserAdmin ? allPremiumBooks : [],
+                bookProgress: {},
+                bookmarks: {},
                 createdAt: serverTimestamp(),
                 updatedAt: serverTimestamp()
               };
               try {
                 await setDoc(userRef, newUserData);
-                setPurchasedBooks(isAdmin ? allPremiumBooks : []);
+                setPurchasedBooks(isUserAdmin ? allPremiumBooks : []);
+                setBookProgress({});
+                setBookmarks({});
               } catch (err: any) {
                 console.error('Error creating user profile in Firestore:', err);
-                // Optionally handle/log with handleFirestoreError if needed,
-                // but don't break the whole app experience
               }
             }
         }, (error) => {
             console.error('onSnapshot listener error:', error);
-            // Catch permission denied explicitly
         });
 
         setLoading(false);
         return () => unsubscribeDoc();
       } else {
-        setPurchasedBooks([]);
-        setLoading(false);
+        if (isDemo) {
+          // Mock a user for demo preview
+          setUser({
+            uid: 'demo-user',
+            email: 'demo@grimorio.app',
+            displayName: 'Explorador',
+            photoURL: ''
+          } as User);
+          setIsAdmin(false);
+          setPurchasedBooks([]);
+          setBookProgress({});
+          setBookmarks({});
+          setLoading(false);
+        } else {
+          setUser(null);
+          setIsAdmin(false);
+          setPurchasedBooks([]);
+          setBookProgress({});
+          setBookmarks({});
+          setLoading(false);
+        }
       }
     });
 
     return unsubscribe;
-  }, []);
+  }, [isDemo]);
+
+  const updateProgress = async (bookId: string, chapterId: string) => {
+    if (!user) return;
+    try {
+      const userRef = doc(db, 'users', user.uid);
+      await setDoc(userRef, {
+        bookProgress: {
+          [bookId]: chapterId
+        }
+      }, { merge: true });
+    } catch (err) {
+      console.error('Error updating progress:', err);
+    }
+  };
+
+  const toggleBookmark = async (bookId: string, chapterId: string) => {
+    if (!user) return;
+    try {
+      const currentBookmarks = bookmarks[bookId] || [];
+      const isBookmarked = currentBookmarks.includes(chapterId);
+      
+      const newBookmarks = isBookmarked 
+        ? currentBookmarks.filter(id => id !== chapterId)
+        : [...currentBookmarks, chapterId];
+
+      const userRef = doc(db, 'users', user.uid);
+      await setDoc(userRef, {
+        bookmarks: {
+          [bookId]: newBookmarks
+        }
+      }, { merge: true });
+    } catch (err) {
+      console.error('Error toggling bookmark:', err);
+    }
+  };
 
   const signIn = async () => {
     try {
@@ -81,6 +153,24 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           return; // silent ignore if they just closed it
       }
       alert(`Error al iniciar sesión: ${error.message}. Por favor, verifica que habilitaste el proveedor "Google" en la sección de Authentication de tu consola de Firebase.`);
+      throw error;
+    }
+  };
+
+  const signInWithEmail = async (email: string, pass: string) => {
+    try {
+      await signInWithEmailAndPassword(auth, email, pass);
+    } catch (error: any) {
+      console.error('Error signing in with email', error);
+      throw error;
+    }
+  };
+
+  const registerWithEmail = async (email: string, pass: string) => {
+    try {
+      await createUserWithEmailAndPassword(auth, email, pass);
+    } catch (error: any) {
+      console.error('Error registering with email', error);
       throw error;
     }
   };
@@ -100,7 +190,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   return (
-    <AuthContext.Provider value={{ user, purchasedBooks, loading, signIn, logOut, simulatePurchase }}>
+    <AuthContext.Provider value={{ user, isAdmin, purchasedBooks, bookProgress, bookmarks, loading, signIn, signInWithEmail, registerWithEmail, logOut, simulatePurchase, updateProgress, toggleBookmark }}>
       {!loading && children}
     </AuthContext.Provider>
   );
@@ -113,3 +203,4 @@ export function useAuth() {
   }
   return context;
 }
+

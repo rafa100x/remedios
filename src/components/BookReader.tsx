@@ -1,7 +1,9 @@
 import { motion } from 'motion/react';
-import { ArrowLeft, BookOpen } from 'lucide-react';
+import { ArrowLeft, BookOpen, Bookmark, BookmarkCheck } from 'lucide-react';
 import Markdown from 'react-markdown';
 import { BOOK_CONTENTS } from '../data/bookContents';
+import { useAuth } from '../contexts/AuthContext';
+import { useEffect, useRef } from 'react';
 
 interface BookReaderProps {
     bookId: string;
@@ -9,7 +11,45 @@ interface BookReaderProps {
 }
 
 export function BookReader({ bookId, onClose }: BookReaderProps) {
+    const { bookProgress, bookmarks, updateProgress, toggleBookmark } = useAuth();
     const bookContent = BOOK_CONTENTS[bookId];
+    
+    // Auto-scroll to last read
+    const contentRef = useRef<HTMLDivElement>(null);
+    const chapterRefs = useRef<Record<string, HTMLElement | null>>({});
+
+    useEffect(() => {
+        if (!bookContent) return;
+        const lastRead = bookProgress[bookId];
+        if (lastRead && chapterRefs.current[lastRead]) {
+            setTimeout(() => {
+                chapterRefs.current[lastRead]?.scrollIntoView({ behavior: 'smooth' });
+            }, 500);
+        }
+    }, [bookContent, bookId, bookProgress]);
+
+    useEffect(() => {
+        if (!bookContent || !contentRef.current) return;
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const chapterId = entry.target.id;
+                    updateProgress(bookId, chapterId);
+                }
+            });
+        }, {
+            root: contentRef.current,
+            threshold: 0.1, // Trigger when 10% of chapter is visible
+            rootMargin: '-10% 0px -80% 0px' // Target the top of the viewport
+        });
+
+        Object.values(chapterRefs.current).forEach(ref => {
+            if (ref) observer.observe(ref);
+        });
+
+        return () => observer.disconnect();
+    }, [bookContent, bookId, updateProgress]);
 
     if (!bookContent) {
         return (
@@ -21,6 +61,8 @@ export function BookReader({ bookId, onClose }: BookReaderProps) {
             </div>
         );
     }
+
+    const currentBookmarks = bookmarks[bookId] || [];
 
     return (
         <motion.div 
@@ -55,7 +97,7 @@ export function BookReader({ bookId, onClose }: BookReaderProps) {
                 <div className="absolute inset-0 bg-gradient-to-r from-[#e8dcb8]/40 via-transparent to-[#e8dcb8]/40 pointer-events-none z-10"></div>
                 
                 {/* Content Area - Scrollable */}
-                <div className="flex-1 overflow-y-auto scroll-smooth p-6 pb-32 relative z-20 selection:bg-[#5c3716]/20">
+                <div ref={contentRef} className="flex-1 overflow-y-auto scroll-smooth p-6 pb-32 relative z-20 selection:bg-[#5c3716]/20">
                     <div className="max-w-3xl mx-auto">
                         
                         <div className="text-center mb-16 pt-10">
@@ -63,11 +105,27 @@ export function BookReader({ bookId, onClose }: BookReaderProps) {
                             <div className="w-24 h-1 bg-[#8a3c1f]/40 mx-auto rounded-full"></div>
                         </div>
 
-                        {bookContent.chapters.map((chapter) => (
-                            <section key={chapter.id} id={chapter.id} className="mb-20">
-                                <h2 className="font-headline text-3xl md:text-4xl text-[#3a1a0f] font-bold border-b border-[#3a1a0f]/20 pb-4 mb-8">
-                                    {chapter.title}
-                                </h2>
+                        {bookContent.chapters.map((chapter) => {
+                            const isBookmarked = currentBookmarks.includes(chapter.id);
+                            return (
+                            <section 
+                                key={chapter.id} 
+                                id={chapter.id} 
+                                ref={(el) => chapterRefs.current[chapter.id] = el}
+                                className="mb-20"
+                            >
+                                <div className="flex items-center justify-between border-b border-[#3a1a0f]/20 pb-4 mb-8">
+                                    <h2 className="font-headline text-3xl md:text-4xl text-[#3a1a0f] font-bold">
+                                        {chapter.title}
+                                    </h2>
+                                    <button 
+                                        onClick={() => toggleBookmark(bookId, chapter.id)}
+                                        className={`p-2 rounded-full transition-colors ${isBookmarked ? 'bg-[#d4af37]/20 text-[#d4af37]' : 'hover:bg-[#8a3c1f]/10 text-[#8a3c1f]/50'}`}
+                                        title={isBookmarked ? "Quitar Marcador" : "Añadir Marcador"}
+                                    >
+                                        {isBookmarked ? <BookmarkCheck className="w-6 h-6" /> : <Bookmark className="w-6 h-6" />}
+                                    </button>
+                                </div>
                                 
                                 <div className="font-body text-[#1a0f08] text-lg leading-relaxed space-y-6 markdown-content
                                     [&>h2]:font-headline [&>h2]:text-2xl [&>h2]:text-[#5c3716] [&>h2]:mt-10 [&>h2]:mb-4
@@ -83,7 +141,8 @@ export function BookReader({ bookId, onClose }: BookReaderProps) {
                                    <BookOpen className="w-6 h-6 text-[#8a3c1f]" />
                                 </div>
                             </section>
-                        ))}
+                            );
+                        })}
                     </div>
                 </div>
             </div>
