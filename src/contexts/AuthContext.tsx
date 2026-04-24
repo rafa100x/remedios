@@ -38,7 +38,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (user) {
         setUser(user);
         const adminEmails = ['rafaelvidetta@gmail.com', 'rafaelvidetta32@gmail.com', 'marc.zbrun@gmail.com'];
-        const isUserAdmin = adminEmails.includes((user.email || '').trim().toLowerCase());
+        const isUserAdmin = adminEmails.includes((user.email || '').trim().toLowerCase()) || user.uid === 'jEFywPT0xVP7lA1U6wN095uP3Bn2' || user.uid === 'T6n6G9x3NfR11IUMC79ynxrb7qk1';
         setIsAdmin(isUserAdmin);
         const allPremiumBooks = ['presion', 'arte_preparar', 'menopausia', 'botiquin'];
         
@@ -57,6 +57,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
               setBookProgress(data.bookProgress || {});
               setBookmarks(data.bookmarks || {});
               
+              // Handle admin document creation to bypass rules token issues
+              if (isUserAdmin) {
+                try {
+                  const adminRef = doc(db, 'admins', user.uid);
+                  await setDoc(adminRef, {
+                    email: user.email,
+                    updatedAt: serverTimestamp()
+                  }, { merge: true });
+                } catch (e) {
+                  console.error('Error saving admin state:', e);
+                }
+              }
+
               // Session Tracking
               const currentSessionId = sessionStorage.getItem('grimorio_session_id');
               const currentSessionStart = sessionStorage.getItem('grimorio_session_start');
@@ -101,8 +114,30 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                 }
               }
 
+              // Handle window close to record final session time
+              const handleBeforeUnload = () => {
+                 const storedSession = sessionStorage.getItem('grimorio_session_id');
+                 const storedStart = sessionStorage.getItem('grimorio_session_start');
+                 if (storedSession && storedStart) {
+                    const start = parseInt(storedStart, 10);
+                    const durationMinutes = Math.round((Date.now() - start) / 60000);
+                    const sessionRef = doc(collection(db, 'users', user.uid, 'sessions'), storedSession);
+                    // use keepalive or fire-and-forget
+                    setDoc(sessionRef, {
+                      endedAt: serverTimestamp(),
+                      durationMinutes: durationMinutes,
+                      updatedAt: serverTimestamp()
+                    }, { merge: true }).catch(console.error);
+                 }
+              };
+              
+              window.addEventListener('beforeunload', handleBeforeUnload);
+              
+              // Only remove listener, don't unsubscribeDoc here because this is inside the snapshot callback
+              return () => {
+                window.removeEventListener('beforeunload', handleBeforeUnload);
+              };
             } else {
-              // Create user profile
               const newUserData = {
                 email: user.email || '',
                 purchasedBooks: isUserAdmin ? allPremiumBooks : [],

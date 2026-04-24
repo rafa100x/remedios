@@ -3,7 +3,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { ShieldAlert, Users, BookOpen, Activity, ShoppingCart, CheckCircle, Clock } from 'lucide-react';
 import { trackEvent } from '../lib/analytics';
 import { collection, getDocs, orderBy, query, updateDoc, doc, getDoc, serverTimestamp } from 'firebase/firestore';
-import { db } from '../lib/firebase';
+import { auth, db } from '../lib/firebase';
 
 interface Intent {
   id: string;
@@ -72,6 +72,7 @@ export function AdminDashboard() {
     
     const fetchStats = async () => {
       let currentError = null;
+      
       try {
         const usersSnapshot = await getDocs(collection(db, 'users'));
         setUsersCount(usersSnapshot.size);
