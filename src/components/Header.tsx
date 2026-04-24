@@ -48,9 +48,33 @@ export function Header({ searchQuery, setSearchQuery, onShowFavorites, onShowSho
              </button>
 
              {user ? (
-               <button onClick={() => setShowUserMenu(!showUserMenu)} className="w-9 h-9 rounded-full bg-[#f4ead0] overflow-hidden border border-[#8a6a4b] flex items-center justify-center">
-                  {user.photoURL ? <img src={user.photoURL} alt="User" /> : <UserCircle className="w-6 h-6 text-[#5a3a22]" />}
-               </button>
+               <div className="relative z-[60]">
+                 <button onClick={() => setShowUserMenu(!showUserMenu)} className="w-9 h-9 rounded-full bg-[#f4ead0] overflow-hidden border border-[#8a6a4b] flex items-center justify-center">
+                    {user.photoURL ? <img src={user.photoURL} alt="User" /> : <UserCircle className="w-6 h-6 text-[#5a3a22]" />}
+                 </button>
+                 <AnimatePresence>
+                    {showUserMenu && (
+                          <motion.div
+                          initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                          animate={{ opacity: 1, y: 0, scale: 1 }}
+                          exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                          className="absolute right-0 top-12 w-48 bg-white rounded-lg shadow-[0_4px_20px_rgba(44,22,0,0.15)] border border-[#d6c7af] overflow-hidden flex flex-col py-2 z-50"
+                        >
+                          <button onClick={() => { onShowProfile(); setShowUserMenu(false); }} className="flex items-center gap-2 px-4 py-3 text-sm font-bold text-[#5a3a22] hover:bg-[#fdfaf2] border-b border-[#d6c7af]">
+                             <UserCircle className="w-5 h-5" /> Mi Perfil
+                          </button>
+                          {isAdmin && onShowAdmin && (
+                            <button onClick={() => { onShowAdmin(); setShowUserMenu(false); }} className="flex items-center gap-2 px-4 py-3 text-sm font-bold text-[#201004] hover:bg-[#fdfaf2] border-b border-[#d6c7af]">
+                               <Search className="w-5 h-5" /> Admin Dashboard
+                            </button>
+                          )}
+                          <button onClick={() => { logOut(); setShowUserMenu(false); }} className="flex items-center gap-2 px-4 py-3 text-sm font-bold text-[#8a3c1f] hover:bg-[#fdfaf2]">
+                             <LogOut className="w-5 h-5" /> Cerrar Sesión
+                          </button>
+                        </motion.div>
+                    )}
+                 </AnimatePresence>
+               </div>
              ) : (
                <button onClick={signIn} className="text-[#8a3c1f] font-bold text-sm bg-[#8a3c1f]/10 px-3 py-1.5 rounded-full">
                   Ingresar
@@ -100,7 +124,7 @@ export function Header({ searchQuery, setSearchQuery, onShowFavorites, onShowSho
             <div className="w-[1px] h-8 bg-[#d6c7af]"></div>
 
             {/* Desktop Auth */}
-            <div className="relative">
+            <div className="relative z-[60]">
                 {user ? (
                     <div className="relative">
                         <button 
@@ -118,7 +142,7 @@ export function Header({ searchQuery, setSearchQuery, onShowFavorites, onShowSho
                                  initial={{ opacity: 0, y: 10, scale: 0.95 }}
                                  animate={{ opacity: 1, y: 0, scale: 1 }}
                                  exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                                 className="absolute right-0 top-12 w-48 bg-white rounded-lg shadow-[0_4px_20px_rgba(44,22,0,0.15)] border border-[#d6c7af] overflow-hidden flex flex-col py-2"
+                                 className="absolute right-0 top-12 w-48 bg-white rounded-lg shadow-[0_4px_20px_rgba(44,22,0,0.15)] border border-[#d6c7af] overflow-hidden flex flex-col py-2 z-50"
                                >
                                  <button onClick={() => { onShowProfile(); setShowUserMenu(false); }} className="flex items-center gap-2 px-4 py-3 text-sm font-bold text-[#5a3a22] hover:bg-[#fdfaf2] border-b border-[#d6c7af]">
                                     <UserCircle className="w-5 h-5" /> Mi Perfil

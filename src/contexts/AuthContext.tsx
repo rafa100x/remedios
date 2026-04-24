@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { User, onAuthStateChanged, signInWithPopup, signOut, signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'firebase/auth';
-import { doc, getDoc, setDoc, serverTimestamp, onSnapshot } from 'firebase/firestore';
+import { doc, getDoc, setDoc, serverTimestamp, onSnapshot, increment } from 'firebase/firestore';
 import { auth, googleProvider, db, handleFirestoreError } from '../lib/firebase';
 
 interface AuthContextType {
@@ -78,6 +78,20 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         }, (error) => {
             console.error('onSnapshot listener error:', error);
         });
+
+        const sessionId = sessionStorage.getItem('grimorio_session');
+        if (!sessionId) {
+          sessionStorage.setItem('grimorio_session', Date.now().toString());
+          try {
+            await setDoc(userRef, {
+              lastLoginAt: serverTimestamp(),
+              loginCount: increment(1),
+              updatedAt: serverTimestamp()
+            }, { merge: true });
+          } catch(err) {
+            console.error('Error tracking login session', err);
+          }
+        }
 
         setLoading(false);
         return () => unsubscribeDoc();
@@ -177,6 +191,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const logOut = async () => {
     try {
+      sessionStorage.removeItem('grimorio_session');
       await signOut(auth);
     } catch (error) {
       console.error('Error signing out', error);

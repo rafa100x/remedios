@@ -14,8 +14,17 @@ interface Intent {
   createdAt: any;
 }
 
+interface UserRecord {
+  id: string;
+  email: string;
+  loginCount?: number;
+  lastLoginAt?: any;
+  createdAt?: any;
+}
+
 export function AdminDashboard() {
   const { isAdmin } = useAuth();
+  const [usersList, setUsersList] = useState<UserRecord[]>([]);
   const [usersCount, setUsersCount] = useState<number | null>(null);
   const [intents, setIntents] = useState<Intent[]>([]);
   const [loading, setLoading] = useState(true);
@@ -30,6 +39,18 @@ export function AdminDashboard() {
       try {
         const usersSnapshot = await getDocs(collection(db, 'users'));
         setUsersCount(usersSnapshot.size);
+        const usersData = usersSnapshot.docs.map(doc => ({
+           id: doc.id,
+           ...doc.data()
+        })) as UserRecord[];
+        
+        usersData.sort((a, b) => {
+           const timeA = a.lastLoginAt ? a.lastLoginAt.toMillis() : (a.createdAt ? a.createdAt.toMillis() : 0);
+           const timeB = b.lastLoginAt ? b.lastLoginAt.toMillis() : (b.createdAt ? b.createdAt.toMillis() : 0);
+           return timeB - timeA;
+        });
+        
+        setUsersList(usersData);
       } catch (err: any) {
         console.error('Error fetching users:', err);
         currentError = 'Error usuarios: ' + (err.message || 'Error desconocido');
@@ -46,7 +67,7 @@ export function AdminDashboard() {
         setIntents(intentsData);
       } catch (err: any) {
         console.error('Error fetching intents:', err);
-        setUsersError(prev => (prev ? prev + ' | ' : '') + 'Error intentos: ' + (err.message || 'Error desconocido'));
+        setUsersError(prev => (prev ? prev + ' | ' : '') + 'Error intentos: ' + (err.message || 'Error desconocido') + '. Asegúrate de refrescar la sesión.');
       } finally {
         setLoading(false);
       }
@@ -200,6 +221,43 @@ export function AdminDashboard() {
              </table>
            </div>
         )}
+      </div>
+      
+      <div className="glass-panel ghost-border p-8 rounded-xl shadow-sm relative overflow-hidden mt-8">
+         <h3 className="text-2xl font-bold text-primary mb-6">Usuarios ({usersList.length})</h3>
+         
+         {usersList.length === 0 ? (
+            <p className="text-secondary italic">Aún no hay usuarios.</p>
+         ) : (
+            <div className="overflow-x-auto">
+              <table className="w-full text-left border-collapse">
+                <thead>
+                  <tr className="border-b border-outline-variant/40 text-tertiary">
+                    <th className="py-3 px-4 font-bold">Email</th>
+                    <th className="py-3 px-4 font-bold">Último Ingreso</th>
+                    <th className="py-3 px-4 font-bold">Registro</th>
+                    <th className="py-3 px-4 font-bold text-right">Sesiones Totales</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {usersList.map((user) => (
+                    <tr key={user.id} className="border-b border-outline-variant/20 hover:bg-surface-container/50 transition-colors">
+                      <td className="py-3 px-4 font-medium text-primary">{user.email}</td>
+                      <td className="py-3 px-4 text-secondary text-sm">
+                         {user.lastLoginAt ? new Date(user.lastLoginAt.toDate()).toLocaleString() : '-'}
+                      </td>
+                      <td className="py-3 px-4 text-tertiary text-sm">
+                         {user.createdAt ? new Date(user.createdAt.toDate()).toLocaleDateString() : '-'}
+                      </td>
+                      <td className="py-3 px-4 text-right font-bold text-accent text-lg">
+                         {user.loginCount || 1}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+         )}
       </div>
     </div>
   );
