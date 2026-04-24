@@ -9,6 +9,8 @@ interface PremiumBook {
     description: string;
     price: string;
     coverUrl: string;
+    badge?: string;
+    paymentLink?: string;
 }
 
 interface PaymentModalProps {
