@@ -18,14 +18,11 @@ service cloud.firestore {
       return isSignedIn();
     }
     function isAdmin() {
-      return request.auth != null && 
-             request.auth.token != null && 
-             'email' in request.auth.token &&
-             (
-               request.auth.token.email == 'rafaelvidetta@gmail.com' ||
-               request.auth.token.email == 'rafaelvidetta32@gmail.com' ||
-               request.auth.token.email == 'marc.zbrun@gmail.com'
-             );
+      return request.auth != null && request.auth.token != null && (
+        request.auth.token.email == 'rafaelvidetta@gmail.com' ||
+        request.auth.token.email == 'rafaelvidetta32@gmail.com' ||
+        request.auth.token.email == 'marc.zbrun@gmail.com'
+      );
     }
 
     // User Validation Blueprint
@@ -69,6 +66,16 @@ service cloud.firestore {
     }
 
     // 4. Tiered Identity Logic & Relational boundaries
+    match /users/{userId}/sessions/{sessionId} {
+      allow read: if isAdmin() || (isVerified() && request.auth.uid == userId);
+      allow create: if isVerified() && request.auth.uid == userId 
+        && incoming().keys().hasAll(['startedAt', 'updatedAt'])
+        && incoming().startedAt == request.time;
+      allow update: if isVerified() && request.auth.uid == userId
+        && incoming().diff(existing()).affectedKeys().hasOnly(['endedAt', 'durationMinutes', 'updatedAt'])
+        && incoming().updatedAt == request.time;
+    }
+
     match /users/{userId} {
       allow get: if isAdmin() || (isVerified() && request.auth.uid == userId);
       allow list: if isAdmin();

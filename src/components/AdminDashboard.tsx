@@ -14,12 +14,20 @@ interface Intent {
   createdAt: any;
 }
 
+interface SessionRecord {
+  id: string;
+  startedAt: any;
+  endedAt?: any;
+  durationMinutes?: number;
+}
+
 interface UserRecord {
   id: string;
   email: string;
   loginCount?: number;
   lastLoginAt?: any;
   createdAt?: any;
+  sessions?: SessionRecord[];
 }
 
 export function AdminDashboard() {
@@ -30,6 +38,34 @@ export function AdminDashboard() {
   const [loading, setLoading] = useState(true);
   const [processingId, setProcessingId] = useState<string | null>(null);
   const [usersError, setUsersError] = useState<string | null>(null);
+  const [expandedUserId, setExpandedUserId] = useState<string | null>(null);
+
+  const toggleUserExpanded = async (userId: string) => {
+    if (expandedUserId === userId) {
+      setExpandedUserId(null);
+      return;
+    }
+    setExpandedUserId(userId);
+    
+    // Fetch sessions if not already fetched
+    const userIndex = usersList.findIndex(u => u.id === userId);
+    if (userIndex >= 0 && !usersList[userIndex].sessions) {
+      try {
+        const sessionsQuery = query(collection(db, 'users', userId, 'sessions'), orderBy('startedAt', 'desc'));
+        const sessionsSnap = await getDocs(sessionsQuery);
+        const sessionsData = sessionsSnap.docs.map(doc => ({
+           id: doc.id,
+           ...doc.data()
+        })) as SessionRecord[];
+        
+        const newUsersList = [...usersList];
+        newUsersList[userIndex].sessions = sessionsData;
+        setUsersList(newUsersList);
+      } catch (err: any) {
+        console.error('Error fetching sessions:', err);
+      }
+    }
+  };
 
   useEffect(() => {
     trackEvent('view_admin_dashboard');
@@ -241,18 +277,53 @@ export function AdminDashboard() {
                 </thead>
                 <tbody>
                   {usersList.map((user) => (
-                    <tr key={user.id} className="border-b border-outline-variant/20 hover:bg-surface-container/50 transition-colors">
-                      <td className="py-3 px-4 font-medium text-primary">{user.email}</td>
-                      <td className="py-3 px-4 text-secondary text-sm">
-                         {user.lastLoginAt ? new Date(user.lastLoginAt.toDate()).toLocaleString() : '-'}
-                      </td>
-                      <td className="py-3 px-4 text-tertiary text-sm">
-                         {user.createdAt ? new Date(user.createdAt.toDate()).toLocaleDateString() : '-'}
-                      </td>
-                      <td className="py-3 px-4 text-right font-bold text-accent text-lg">
-                         {user.loginCount || 1}
-                      </td>
-                    </tr>
+                    <React.Fragment key={user.id}>
+                      <tr 
+                        className="border-b border-outline-variant/20 hover:bg-surface-container/50 transition-colors cursor-pointer"
+                        onClick={() => toggleUserExpanded(user.id)}
+                      >
+                        <td className="py-3 px-4 font-medium text-primary flex items-center justify-between">
+                           {user.email}
+                        </td>
+                        <td className="py-3 px-4 text-secondary text-sm">
+                           {user.lastLoginAt ? new Date(user.lastLoginAt.toDate()).toLocaleString() : '-'}
+                        </td>
+                        <td className="py-3 px-4 text-tertiary text-sm">
+                           {user.createdAt ? new Date(user.createdAt.toDate()).toLocaleDateString() : '-'}
+                        </td>
+                        <td className="py-3 px-4 text-right font-bold text-accent text-lg flex items-center justify-end gap-2">
+                           {user.loginCount || 1}
+                           <span className="text-sm font-normal text-tertiary">{expandedUserId === user.id ? '▼' : '►'}</span>
+                        </td>
+                      </tr>
+                      {expandedUserId === user.id && (
+                        <tr className="bg-surface-container/20">
+                          <td colSpan={4} className="p-4 border-b border-outline-variant/20">
+                            <h4 className="font-bold text-secondary mb-3">Historial de Sesiones</h4>
+                            {!user.sessions ? (
+                              <p className="text-sm text-tertiary">Cargando...</p>
+                            ) : user.sessions.length === 0 ? (
+                              <p className="text-sm text-tertiary">No hay sesiones registradas.</p>
+                            ) : (
+                              <ul className="space-y-2 text-sm">
+                                {user.sessions.map(session => (
+                                  <li key={session.id} className="flex justify-between items-center bg-white/5 p-2 rounded">
+                                    <span className="text-primary font-medium">
+                                      {session.startedAt ? new Date(session.startedAt.toDate()).toLocaleString() : 'Reciente'}
+                                    </span>
+                                    <span className="text-secondary">
+                                      {session.durationMinutes !== undefined 
+                                        ? `${session.durationMinutes} minutos` 
+                                        : (session.endedAt ? 'Cerrada' : 'En curso')}
+                                    </span>
+                                  </li>
+                                ))}
+                              </ul>
+                            )}
+                          </td>
+                        </tr>
+                      )}
+                    </React.Fragment>
                   ))}
                 </tbody>
               </table>

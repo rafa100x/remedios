@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { User, onAuthStateChanged, signInWithPopup, signOut, signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'firebase/auth';
-import { doc, getDoc, setDoc, serverTimestamp, onSnapshot, increment } from 'firebase/firestore';
+import { doc, getDoc, setDoc, serverTimestamp, onSnapshot, increment, collection } from 'firebase/firestore';
 import { auth, googleProvider, db, handleFirestoreError } from '../lib/firebase';
 
 interface AuthContextType {
@@ -56,6 +56,51 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
               setPurchasedBooks(isUserAdmin ? Array.from(new Set([...(data.purchasedBooks || []), ...allPremiumBooks])) : (data.purchasedBooks || []));
               setBookProgress(data.bookProgress || {});
               setBookmarks(data.bookmarks || {});
+              
+              // Session Tracking
+              const currentSessionId = sessionStorage.getItem('grimorio_session_id');
+              const currentSessionStart = sessionStorage.getItem('grimorio_session_start');
+              
+              if (!currentSessionId) {
+                // New session
+                const newSessionId = Date.now().toString();
+                sessionStorage.setItem('grimorio_session_id', newSessionId);
+                sessionStorage.setItem('grimorio_session_start', newSessionId);
+                
+                try {
+                  const sessionRef = doc(collection(db, 'users', user.uid, 'sessions'), newSessionId);
+                  await setDoc(sessionRef, {
+                    startedAt: serverTimestamp(),
+                    updatedAt: serverTimestamp()
+                  });
+                  
+                  // Also update lastLoginAt on user doc
+                  await setDoc(userRef, {
+                    lastLoginAt: serverTimestamp(),
+                    loginCount: increment(1),
+                    updatedAt: serverTimestamp()
+                  }, { merge: true });
+                } catch(err) {
+                  console.error('Error tracking session start:', err);
+                }
+              } else if (currentSessionStart) {
+                // We have an active session, let's update the duration and endedAt periodically
+                // but doing it on every snapshot is too much, so we debounce it or just do it once here if needed
+                const start = parseInt(currentSessionStart, 10);
+                const durationMinutes = Math.round((Date.now() - start) / 60000);
+                
+                try {
+                  const sessionRef = doc(collection(db, 'users', user.uid, 'sessions'), currentSessionId);
+                  await setDoc(sessionRef, {
+                    endedAt: serverTimestamp(),
+                    durationMinutes: durationMinutes,
+                    updatedAt: serverTimestamp()
+                  }, { merge: true });
+                } catch(err) {
+                  console.error('Error updating session:', err);
+                }
+              }
+
             } else {
               // Create user profile
               const newUserData = {
@@ -64,13 +109,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                 bookProgress: {},
                 bookmarks: {},
                 createdAt: serverTimestamp(),
-                updatedAt: serverTimestamp()
+                updatedAt: serverTimestamp(),
+                lastLoginAt: serverTimestamp(),
+                loginCount: 1
               };
               try {
                 await setDoc(userRef, newUserData);
                 setPurchasedBooks(isUserAdmin ? allPremiumBooks : []);
                 setBookProgress({});
                 setBookmarks({});
+                const newSessionId = Date.now().toString();
+                sessionStorage.setItem('grimorio_session_id', newSessionId);
+                sessionStorage.setItem('grimorio_session_start', newSessionId);
               } catch (err: any) {
                 console.error('Error creating user profile in Firestore:', err);
               }
@@ -78,20 +128,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         }, (error) => {
             console.error('onSnapshot listener error:', error);
         });
-
-        const sessionId = sessionStorage.getItem('grimorio_session');
-        if (!sessionId) {
-          sessionStorage.setItem('grimorio_session', Date.now().toString());
-          try {
-            await setDoc(userRef, {
-              lastLoginAt: serverTimestamp(),
-              loginCount: increment(1),
-              updatedAt: serverTimestamp()
-            }, { merge: true });
-          } catch(err) {
-            console.error('Error tracking login session', err);
-          }
-        }
 
         setLoading(false);
         return () => unsubscribeDoc();
@@ -191,7 +227,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const logOut = async () => {
     try {
-      sessionStorage.removeItem('grimorio_session');
+      sessionStorage.removeItem('grimorio_session_id');
+      sessionStorage.removeItem('grimorio_session_start');
       await signOut(auth);
     } catch (error) {
       console.error('Error signing out', error);
