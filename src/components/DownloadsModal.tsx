@@ -86,7 +86,7 @@ export function DownloadsModal({ onClose }: DownloadsModalProps) {
                             >
                                 <div className="flex flex-col pr-4">
                                    <span className="font-bold text-[#3a2215] leading-tight group-hover:text-[#8a3c1f] transition-colors">{file.title}</span>
-                                   <span className="text-xs text-[#8a6a4b] mt-1 font-mono hover:underline">{file.filename}</span>
+                                   <span className="text-xs text-[#8a6a4b] mt-1 font-mono">{file.filename}</span>
                                 </div>
                                 <div className="shrink-0 w-10 h-10 rounded-full bg-[#f4ead0] flex items-center justify-center text-[#8a3c1f] group-hover:bg-[#8a3c1f] group-hover:text-white transition-colors">
                                    <Download className="w-5 h-5" />
@@ -112,7 +112,7 @@ export function DownloadsModal({ onClose }: DownloadsModalProps) {
                             >
                                 <div className="flex flex-col pr-4">
                                    <span className="font-bold text-[#5c3716] leading-tight group-hover:text-[#3a2215] transition-colors">{file.title}</span>
-                                   <span className="text-xs text-[#8a6a4b] mt-1 font-mono opacity-80 hover:underline">{file.filename}</span>
+                                   <span className="text-xs text-[#8a6a4b] mt-1 font-mono opacity-80">{file.filename}</span>
                                 </div>
                                 <div className="shrink-0 w-9 h-9 rounded-full bg-white shadow-sm flex items-center justify-center text-[#d4af37] group-hover:bg-[#d4af37] group-hover:text-white transition-colors">
                                    <Download className="w-4 h-4" />
