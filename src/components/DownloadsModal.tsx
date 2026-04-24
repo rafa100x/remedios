@@ -80,7 +80,7 @@ export function DownloadsModal({ onClose }: DownloadsModalProps) {
                         {PRINCIPAL_FILES.map(file => (
                             <a 
                                key={file.id}
-                               href={`https://raw.githubusercontent.com/rafa100x/remedios/main/public/pdfs/${file.filename}`}
+                               href={`https://firebasestorage.googleapis.com/v0/b/remedios-ancestrasel.firebasestorage.app/o/pdfs%2F${encodeURIComponent(file.filename)}?alt=media`}
                                target="_blank" rel="noopener noreferrer"
                                className="flex items-center justify-between bg-white border border-[#d6c7af] rounded-lg p-4 hover:shadow-md hover:border-[#8a6a4b] transition-all group"
                             >
@@ -106,7 +106,7 @@ export function DownloadsModal({ onClose }: DownloadsModalProps) {
                         {BONUS_FILES.map(file => (
                             <a 
                                key={file.id}
-                               href={`https://raw.githubusercontent.com/rafa100x/remedios/main/public/pdfs/${file.filename}`}
+                               href={`https://firebasestorage.googleapis.com/v0/b/remedios-ancestrasel.firebasestorage.app/o/pdfs%2F${encodeURIComponent(file.filename)}?alt=media`}
                                target="_blank" rel="noopener noreferrer"
                                className="flex items-center justify-between bg-gradient-to-br from-[#fdfaf2] to-[#f4ead0] border border-[#d4af37]/40 rounded-lg p-4 hover:shadow-md hover:border-[#d4af37] transition-all group"
                             >
