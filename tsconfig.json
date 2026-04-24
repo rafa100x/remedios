@@ -23,5 +23,5 @@
     "allowImportingTsExtensions": true,
     "noEmit": true
   },
-  "exclude": ["firestore.rules.test.ts"]
+  "exclude": ["firestore.rules.test.ts", "generate_books.js"]
 }

@@ -13,6 +13,7 @@ import { PaymentModal } from './components/PremiumBookModal';
 import { BookReader } from './components/BookReader';
 import { InfoModal } from './components/InfoModal';
 import { DownloadsModal } from './components/DownloadsModal';
+import { trackEvent } from './lib/analytics';
 
 export default function App() {
   const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
@@ -59,19 +60,37 @@ export default function App() {
     setSearchQuery('');
     setView('home');
     setSelectedCategory(null);
+    trackEvent('view_home', { event_category: 'navigation' });
   };
 
   const handleShowFavorites = () => {
     setSearchQuery('');
     setView('favorites');
     setSelectedCategory(null);
+    trackEvent('view_favorites', { event_category: 'navigation' });
   };
 
   const handleShowLibrary = () => {
     setSearchQuery('');
     setView('library');
     setSelectedCategory(null);
+    trackEvent('view_library', { event_category: 'navigation', event_label: 'Biblioteca' });
   };
+
+  useEffect(() => {
+    if (searchQuery.trim().length > 2) {
+      const timeout = setTimeout(() => {
+        trackEvent('search', { search_term: searchQuery });
+      }, 1000);
+      return () => clearTimeout(timeout);
+    }
+  }, [searchQuery]);
+
+  useEffect(() => {
+    if (selectedRecipe) {
+      trackEvent('view_recipe', { event_category: 'engagement', event_label: selectedRecipe.title });
+    }
+  }, [selectedRecipe]);
 
   return (
     <div className="min-h-screen bg-surface text-tertiary font-body relative overflow-x-hidden selection:bg-primary-container selection:text-primary pt-[110px] sm:pt-20 pb-24 sm:pb-0">
@@ -136,11 +155,20 @@ export default function App() {
           recipe={selectedRecipe} 
           onClose={() => setSelectedRecipe(null)} 
           rating={ratings[selectedRecipe.id] || 0}
-          onRate={(rating) => rateRecipe(selectedRecipe.id, rating)}
+          onRate={(rating) => {
+            rateRecipe(selectedRecipe.id, rating);
+            trackEvent('rate_recipe', { event_category: 'engagement', event_label: selectedRecipe.title, value: rating });
+          }}
           isFavorite={favorites.includes(selectedRecipe.id)}
-          onToggleFavorite={() => toggleFavorite(selectedRecipe.id)}
+          onToggleFavorite={() => {
+            toggleFavorite(selectedRecipe.id);
+            trackEvent(favorites.includes(selectedRecipe.id) ? 'remove_favorite' : 'add_favorite', { event_category: 'engagement', event_label: selectedRecipe.title });
+          }}
           isShopping={shoppingList.includes(selectedRecipe.id)}
-          onToggleShopping={() => toggleShoppingList(selectedRecipe.id)}
+          onToggleShopping={() => {
+            toggleShoppingList(selectedRecipe.id);
+            trackEvent(shoppingList.includes(selectedRecipe.id) ? 'remove_from_shopping_list' : 'add_to_shopping_list', { event_category: 'ecommerce', event_label: selectedRecipe.title });
+          }}
         />
       )}
 
@@ -151,6 +179,7 @@ export default function App() {
              onRead={(bookId) => {
                  setSelectedBook(null);
                  setReadingBookId(bookId);
+                 trackEvent('read_book', { event_category: 'engagement', event_label: selectedBook.title || bookId });
              }}
           />
       )}
