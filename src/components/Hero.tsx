@@ -1,6 +1,7 @@
 import { motion } from 'motion/react';
+import { Sparkles, ArrowRight } from 'lucide-react';
 
-export function Hero() {
+export function Hero({ onNavigateToLibrary }: { onNavigateToLibrary?: () => void }) {
   return (
     <section className="relative min-h-[95vh] flex flex-col items-center justify-center overflow-hidden py-16 px-4">
       
@@ -15,7 +16,23 @@ export function Hero() {
          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_#3a2c2244_0%,_#0a0502_100%)] opacity-90"></div>
       </div>
 
-      <div className="relative z-10 w-full flex flex-col items-center justify-center mt-6">
+      <div className="relative z-20 w-full mb-8 flex justify-center -mt-8 sm:mt-0 pb-4">
+         <motion.button 
+            onClick={onNavigateToLibrary}
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.5, duration: 0.5 }}
+            className="group flex items-center gap-3 bg-[#d4af37]/20 hover:bg-[#d4af37]/30 border border-[#d4af37]/40 px-5 break-words max-w-full text-center sm:px-6 py-2.5 rounded-full backdrop-blur-md shadow-[0_4px_20px_rgba(0,0,0,0.5)] transition-all cursor-pointer"
+         >
+            <Sparkles className="w-5 h-5 text-[#d4af37] flex-shrink-0 animate-pulse" />
+            <span className="text-[#f8f6f0] font-headline tracking-wide uppercase text-[11px] sm:text-xs">
+              <strong className="text-[#d4af37]">Nuevo Lanzamiento:</strong> El Arte de Preparar Remedios
+            </span>
+            <ArrowRight className="w-4 h-4 text-[#d4af37] flex-shrink-0 group-hover:translate-x-1 transition-transform" />
+         </motion.button>
+      </div>
+
+      <div className="relative z-10 w-full flex flex-col items-center justify-center mt-2">
          
          {/* Placa decorativa central inspirada fielmente en la portada del libro */}
          <motion.div 

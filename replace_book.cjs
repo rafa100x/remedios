@@ -1,110 +1,15 @@
-export interface Chapter {
-    id: string;
-    title: string;
-    content: string;
-}
+const fs = require('fs');
 
-export interface BookContent {
-    bookId: string;
-    title: string;
-    chapters: Chapter[];
-}
+const content = fs.readFileSync('src/data/bookContents.ts', 'utf-8');
 
-export const BOOK_CONTENTS: Record<string, BookContent> = {
-    'presion': {
-        bookId: 'presion',
-        title: 'Protocolo Natural para la Presión',
-        chapters: [
-            {
-                id: 'ch1',
-                title: 'Capítulo 1: La Raíz del Problema',
-                content: `
-## La visión ancestral de la hipertensión
-
-Nuestras abuelas no hablaban de "presión arterial sistólica". Ellas hablaban del *fuego en la sangre*, del *estrés acumulado en la nuca* o de los *nervios duros*. Esta sabiduría intuitiva encierra una verdad profunda que la medicina moderna a veces olvida.
-
-La medicina alopática trata la hipertensión como un simple número que debe ser bajado a la fuerza mediante el uso de químicos sintéticos: bloqueadores de canales de calcio, inhibidores de la ECA, diuréticos drásticos. La herbolaria tradicional y la medicina bioenergética, sin embargo, la ven como un **síntoma de un desequilibrio mayor**: vasos sanguíneos rígidos que han perdido su flexibilidad, riñones sobrecargados de toxinas, un hígado estancado o un sistema nervioso crónicamente agotado y en estado de alerta constante (lucha o huida).
-
-Para sanar de verdad y no solo maquillar un síntoma, no basta con bloquear un receptor en el corazón. Debemos devolverle la elasticidad a las venas, drenar los líquidos suavemente, nutrir el músculo cardíaco y, sobre todo, calmar el espíritu. En este grimorio, te adentrarás en las profundidades de las plantas aliadas que logran esta alquimia en el cuerpo.
-
-### La Hipertensión como Grito del Cuerpo
-Cuando la presión arterial sube, es como si el cuerpo estuviera tocando una alarma de incendio. Tu sistema circulatorio está bajo presión, literalmente. 
-
-1.  **Rigidez Arterial:** Con el tiempo, debido a la inflamación, el exceso de azúcar, la falta de nutrientes y el estrés oxidativo, los tubos flexibles que son tus venas y arterias se vuelven rígidos. Como una manguera vieja, cuando bombea el agua (la sangre), no se expande; por ende, la presión interna sube vertiginosamente.
-2.  **Sobrecarga Renal:** Los riñones son los maestros de la presión arterial, regulando el volumen de sangre a través del sodio y el agua. Cuando sufren, la presión sube.
-3.  **Tensión Nerviosa Constante:** El estrés crónico mantiene tu cuerpo lleno de cortisol y adrenalina, cerrando los capilares periféricos para mandar la sangre a los músculos mayores (para huir o luchar). Esto eleva la presión de forma sostenida.
-
-En los siguientes capítulos, vamos a abordar cada una de estas causas usando el poder sanador absoluto de la naturaleza.
-                `
-            },
-            {
-                id: 'ch2',
-                title: 'Capítulo 2: El Espino Blanco, el Guardián del Corazón',
-                content: `
-## Crataegus monogyna: El Rey de la Presión y el Corazón Fuerte
-
-El **Espino Blanco** (Hawthorn) es, sin lugar a dudas, la planta cardiovascular más potente, inteligente y segura conocida en toda la botánica occidental y de la herbolaria medicinal.
-
-### ¿Cómo funciona su magia clínica?
-A diferencia de los medicamentos beta-bloqueantes que obligan al corazón a latir más lento forzándolo químicamente, el Espino Blanco *nutre* el músculo cardíaco a un nivel celular. Actúa como un tónico anfotérico (un equilibrador universal). Tiene un triple efecto excepcional que casi parece magia:
-
-*   **Si tienes la presión alta (Hipertensión):** Sus potentes flavonoides dilatan suavemente los vasos coronarios (las arterias que alimentan al corazón mismo) y los capilares periféricos de las extremidades. Esto reduce drásticamente la resistencia periférica total (el esfuerzo necesario para empujar la sangre), bajando la presión de manera natural.
-*   **Si tienes la presión baja (Hipotensión):** Ayuda a regularizarla, dándole un tono firme y saludable al músculo del corazón, mejorando su contractilidad sin causar palpitaciones.
-*   **Reparación Endotelial:** El endotelio (el revestimiento interno de nuestras venas) se daña con la presión alta y el azúcar. El Espino Blanco repara este papel tapiz interno, devolviendo la flexibilidad juvenil a arterias endurecidas.
-
-### Preparación del Elixir Diario de Espino
-Para absorber todo su valor, no podemos usarlo esporádicamente. El Espino Blanco es una planta alimenticia, profunda, que se debe consumir como un tónico.
-
-*   **Partes usadas recomendadas:** Las flores superiores y las hojas en primavera, y las bayas rojas oscuras en otoño. La mezcla de ambas es la más potente.
-*   **Infusión Reparadora de Vasos Sanguíneos:** 
-    *   2 cucharaditas de bayas trituradas + hojas/flores secas de espino.
-    *   1 taza grande de agua a punto de ebullición.
-    *   Dejar reposar tapado rigurosamente por 15 a 20 minutos (vital para no perder aceites esenciales).
-*   **Dosis Terapéutica:** 2 a 3 tazas al día, lejos de las comidas para mejor absorción.
-
-> **La Advertencia de la Abuela Sabia:** El Espino Blanco no es una píldora sintética mágica de 15 minutos. Su acción es tónica asimilativa y profundamente acumulativa. Debes tomarlo de forma estructurada, con devoción y constante durante 4 a 6 semanas para notar los cambios más profundos, protectores y duraderos en tu presión arterial. Una vez logrado el efecto, se puede dejar en una dosis de mantenimiento.
-                `
-            },
-            {
-                id: 'ch3',
-                title: 'Capítulo 3: Drenaje y Relajación',
-                content: `
-## Diuréticos Inteligentes y Relajantes Nervinos
-
-Si el Espino Blanco es el monarca del corazón, sus ministros más leales para reducir la presión son el Diente de León y el místico Tilo.
-
-### 1. El Diente de León (Taraxacum officinale) - El Diurético Perfecto
-La gran mayoría de los fármacos antihipertensivos de primera línea son los llamados diuréticos (pastillas para orinar que reducen el volumen de sangre y por ende la presión). El inmenso problema clínico con estos medicamentos es que actúan como "barrenderos ciegos": eliminan líquidos, pero también barren con nutrientes esenciales como el potasio, provocando terribles calambres, arritmias y debilidad profunda.
-
-El Diente de León (específicamente sus hojas dentadas) es un diurético natural inmensamente poderoso, pero con una ventaja evolutiva única: **sus hojas son una de las fuentes vegetales de Potasio más ricas de la tierra**. Así, al mismo tiempo que te hace eliminar el excedente de líquido, te *repone exactamente lo que tu corazón necesita*, manteniendo un equilibrio electrolítico perfecto.
-*   **Uso medicinal:** Infusión en caliente de hojas secas o frescas, 2 a 3 tazas al día. Se puede mezclar con limón.
-
-### 2. El Tilo, la Pasiflora y la Melisa (Para la Hipertensión de estrés)
-Más del 60% de los casos de hipertensión moderna tienen un componente emocional o de estrés ("Essential Hypertension"). Si tu presión se dispara debido al exceso de pensamientos, ansiedad laboral, o "malas sangres" (enojos y frustraciones guardadas), necesitas forzosamente relajar los vasos sanguíneos desde tu sistema nervioso central.
-
-*   **Tilo (Tilia cordata):** Conocido por las abuelas para "bajar los nervios", el Tilo es un vasodilatador suave pero de acción central muy profunda.
-*   **Pasiflora (Passiflora incarnata):** Frena el tren de pensamientos. Al calmar el cerebro hiperactivo, reduce los latidos del corazón e impide la subida de los niveles tensionales.
-
-### Protocolo Tónico: La "Mezcla de la Calma Coronaria"
-Si quieres un remedio completo, crea esta fórmula en un frasco grande de vidrio y úsala a diario:
-*   2 partes de hojas y flores de Espino Blanco
-*   1 parte de flores de Tilo
-*   1 parte de hojas de Diente de León
-*   1/2 parte de Melisa (para el estómago y la alegría del espíritu)
-
-Mezcla todo. Usa 1 cucharada generosa por cada taza (250ml) de agua recién hervida. Tapa, reposa 15 min y bebe 3 veces al día durante un ciclo de 2 meses.
-                `
-            }
-        ]
-    },
-    'arte_preparar': {
+const newArtePreparar = `    'arte_preparar': {
         bookId: 'arte_preparar',
         title: 'El Arte de Preparar Remedios',
         chapters: [
             {
                 id: 'ch1',
                 title: 'Capítulo 1: La Filosofía de la Alquimia Verde',
-                content: `
+                content: \`
 ![El Laboratorio Ancestral](https://cdn.shopify.com/s/files/1/0988/7904/5945/files/arte-preparar-1-square.jpg?v=1777047751)
 
 ## El Laboratorio Ancestral
@@ -128,12 +33,12 @@ Tus herramientas deben estar impolutas. Evita completamente el plástico al proc
 *   **Agua Pura:** Nunca uses agua del grifo cargada de cloro para extraer la medicina de una planta pura. El cloro reacciona oxidativamente con los componentes de la planta rompiendo la extracción. Usa agua destilada, filtrada o de manantial para extracciones y tinturas.
 
 En las siguientes páginas entraremos a profundidad quirúrgica sobre cómo extraer, paso a paso, tinturas, cocimientos, maceratos en frío y mucho más.
-`
+\`
             },
             {
                 id: 'ch2',
                 title: 'Capítulo 2: Infusiones y Decocciones Correctas',
-                content: `
+                content: \`
 ![Infusiones Correctas](https://cdn.shopify.com/s/files/1/0988/7904/5945/files/arte-preparar-2-vertical.jpg?v=1777047752)
 
 ## La Infusión Terapéutica Clínica (Para Hojas y Flores Delicadas)
@@ -155,12 +60,12 @@ Para arrancar los poderosos alcaloides y fitoquímicos internos de la gruesa cá
 3.  Punto Máximo y Descenso: Tan pronto el agua de su primer hervor burbujeante, baja la temperatura o llama vital al nivel más pequeño y mínimo posible (para lograr un *simmer* apenas sutil de burbuja diminuta).
 4.  Tiempo vital: Mantén la tapa casi cerrada. Deja en fuego ultra bajo reduciéndose durante un período sagrado de **20 a 45 minutos** continuos. La paciencia se recompensa fuertemente en decocciones donde el agua se oscurece y adquiere cuerpo inmenso y vital.
 5.  Saca el contenido entero del fuego, y como con la infusión, deja refrescar su infierno todo tapado durante otro cuarto de hora antes de intentar filtrar. El licor ambarino obtenido guarda fuerzas inmensas.
-`
+\`
             },
             {
                 id: 'ch3',
                 title: 'Capítulo 3: El Poder Infinito de la Tintura Madre',
-                content: `
+                content: \`
 ![El Proceso de la Tintura](https://cdn.shopify.com/s/files/1/0988/7904/5945/files/arte-preparar-3-story.jpg?v=1777047752)
 
 ## Capturar la medicina por años (Tinturas 101)
@@ -184,12 +89,12 @@ No usarás jamás tu vaso medidor ocular rústico; tú vas a seguir desde hoy y 
 5.  Porción ideal en nuestra práctica son 250 perfectos y gloriosos Mililitros fríos aplicados con rigor (5 veces tu peso x 50 gm = 250 mil).
 6.  Sellado negro estricto forjado: Todo cerrado muy apretadamente a presión o fuerza dura y sin aire interno remanente si es posible.
 7.  Incubación sagrada profunda.
-`
+\`
             },
             {
                 id: 'ch4',
                 title: 'Capítulo 4: Extracciones Dulces Milenarias: Oxomeles',
-                content: `
+                content: \`
 ![Dulce Oxomel](https://cdn.shopify.com/s/files/1/0988/7904/5945/files/arte-preparar-4-landscape.jpg?v=1777047751)
 
 ## Los Vinos Cordiales, Jarabes Balsámicos y los Mágicos Oxomeles de Siracusa
@@ -206,12 +111,12 @@ Usando tus precisos ojos como exactos jueces de sabiduría intemporal, debes lle
 Llenaremos ese abismo contenedor de vidrio estéril hermoso hasta superar completamente ese exacto y milimétrico grueso borde sagrado estricto, sobre cubriéndolo sin piedad a inmersión por completo ahogantemente bañado intensamente saturado mediante tu excelente jugo vivo.
 
 1 parte radiante brillante destellante puro peso pesado de oro ámbar grueso opaco sedoso liso líquido espeso inmenso ambarino de su maravillosamente dulce inconfundible Miel y con su reflejo exacto equilibrador 1 parte idéntica al vacío absoluto y cruel pálida blanca agrio ralo líquido vibrante transparente ácido intenso potente pálido de su crudo crudo agrio sanador Vinagre purísimo. Mezclar asombrosamente de formas tenaces incansables, rotar y batir la gran y bella fuerza opuesta hasta lograr integrar y emulsionar la magia pacífica al final equilibrada de su hermoso sabor celestial y agridulce tan antiguo mítico legendario.
-`
+\`
             },
             {
                 id: 'ch5',
                 title: 'Capítulo 5: Emplastos, Cataplasmas y Fomentos',
-                content: `
+                content: \`
 ![Cataplasma en preparación](https://cdn.shopify.com/s/files/1/0988/7904/5945/files/arte-preparar-5-tabla.jpg?v=1777047752)
 
 ## La Medicina Aplicada Directo al Dolor y la Herida Viva
@@ -225,12 +130,12 @@ Un majestuoso verdadero cataplasma curativo ancestral absorbe con potencia sucia
 Toma arcilla de bentonita inmaculadamente pura y mézclala junto con un gran y denso mágico polvo fino inmenso sedoso molido de la mejor suave y blandita raíz blanca del curador reparador del mítico Malvavisco que brinda humedad sanadora; entonces, humedece despacito pacientemente largamente de a gotas ínfimas toda esa sagrada densa masa usando en vez de torpe inútil agua lisa cruda boba vacía sin más... usas tu mejor extracto infusión hirviente hiper concentrada roja espesa de caléndula o manzanilla hasta que se solidifique majestuosamente mutando cambiando en un lodo resbaladizo curativo liso perfecto húmedo untuoso pero duro pesado amasable con tu caliente propia mano curandera y sanadora infinita.
 
 Aplica sobre esa carne hirviendo estresada roja e inflamada sufriente dolorosa toda esa pasta gruesa masiva espesa pastosa de al menos generosamente 1 centímetro protector y aislante envolvente muy muy profundo protector y sella férreamente y atrapa ese sanador denso lodo medicinal cubriéndolo fuertemente mediante tela protectora vieja lana fina firme en retorcijones eternos y paños benditos tibios calientes humeantes ardientes hasta que ese lodo noble sanador haya absorbido succionado chupado mágicamente asombrosamente el infierno ardiente interior.
-`
+\`
             },
             {
                 id: 'ch6',
                 title: 'Capítulo 6: Maccerados Oleosos (Aceites Infundidos)',
-                content: `
+                content: \`
 ![Leyenda en oleos](https://cdn.shopify.com/s/files/1/0988/7904/5945/files/arte-preparar-6-quote.jpg?v=1777047751)
 
 ## Cómo Volver al Sol un Aliado en Tus Óleos
@@ -245,12 +150,12 @@ Una sola inocente pícara solitaria inofensiva y pequeña débil o invisible min
 
 **Fuego Falso (Baño María - Rápido):** 
 Cocciones largas y bajísimas e invisibles y tibias y resguardadas y lentísimas sobre un pozo profundo o inmenso cazo gigante lleno hirviendo pero con la olla de tu aceite colgada arriba intocablemente flotando acariciada pero resguardada e indirectamente calentada sin jamás llegar al infernal frito hervido frito loco cruel abrazador ardiente humeante achicharrante destrozador, por extensas y gloriosas místicas hermosas inmensas largas valientes infinitas preciosas horas de calor sutil hasta completar todo el proceso artesanal.
-`
+\`
             },
             {
                 id: 'ch7',
                 title: 'Capítulo 7: Ungüentos Reparadores: El Sello Final',
-                content: `
+                content: \`
 ## Cuando el Aceite adquiere cuerpo: Solidificación a bálsamo protector
 El inmenso problema del sagrado noble puro verde o amarillo y escurridizo curativo aceite líquido o fluente resbaladizo curativo oleo mágico es su total incapacidad triste rebelde caprichosa incontrolable fiera su inmensa y colosal terrible y fastidiosa resbaladiza y molesta y efímera naturaleza fugaz: huye sin tregua se desliza cae resbala ensucia estampa marchando fugitivo libre y rápido abandonando inexorable abandonando traicioneramente dejándote llorando a esa inmensa grave y fea herida profunda tajeada roja profunda adolorida raspada suplicando ayuda, ya que simplemente y tristemente en segundos gotea libremente cayendo resbalando y se va de la piel derramándose tristemente velozmente sin remedio goteando.
 
@@ -262,24 +167,24 @@ Derretiremos al más delicado baño María indirecto el fabuloso sanador oleo ya
 (La medida base es rígida científica matemática implacable a fuego marcada rígidamente infalible: exactísimos hermosos 1 partes en duros hermosos gramos de la dura o pesada cera de pura hermosa abeja frente y contra frente a inmensamente opuestos y blandos 4 perfectas líquidas resplandecientes suaves mágicas largas fluidas y bellas medidas asombrosas opuestas 4 partes asombrosísimamente líquidas en puros y resplandecientes gramos de tu mágico oleo infundido hirviendo).
 
 Dejas todo enfriar vertido sobre ricas bonitas chatas latas finas latas delicadas divinas y anchas chatas delicadas divinas pequeñitas anchas hermosas pequeñas ricas latitas duras pequeñas hermosas bajas cómodas chatas inmensas prácticas hermitas latas pequeñitas doradas latas oscuras divinas y preciosas latitas cómodas latinas hermosas adorables oscuras o frascos ámbares y tendrás magia espesa de larga de enorme de inmensa infinita y muy de una larguísima vida inquebrantable.
-`
+\`
             },
             {
                 id: 'ch8',
                 title: 'Capítulo 8: Los Pilares del Secado y Guardado Moderno',
-                content: `
+                content: \`
 ## La recolección al filo del ocaso: El Secreto mayor del Verde
 Nada hay más catastróficamente triste en este mundo mágico natural sanador sanador en este mundo inmenso botánico grande infinito en el gran hermoso y profundo arte profundo que recoger grandes canastos grandes inmensos floridos brillantes jugosos hermosos repletos maravillosos hermosos maravillosísimos vibrantes hermosos hermosos tiernos y tiernos rebalsados canastos vibrantes canastos y hojas llenas hermosísimas canastas muy hermosas de grandísimas hermosas enormes recolecciones de llenas preciosas y de vivas y muy sanas verdes radiantes santas y olorosas vívidas vibrantes maravillosas curativas jugosas divinas repletas floridas puras y bellas de divinas de puras y puras curativas frescas gigantes canastas de hermosas mimosas vivas radiantes hermosas plantas, que inútilmente perderán fatalmente su gloria sanadora letalmente de una mortal fulminantemente de una en una lenta fétida fea muy triste muy húmeda triste fulminante su magia fulminante y oscura y húmeda agónica muerte mortal lenta asfixiante fulminante trampa fétida negra oscura tristísima.
 
 ### Pasos estelares resplandecientes para un curandero real purista inquebrantable
 *   Nunca seques hojas de forma grupal apelotonada gorda asfixiante masiva gorda muy ruda apelmazada gruesa masiva estancada aglomerada gruesa asfixiante masiva o junta montonera espesa y amontonada amontonada gorda montonera montada gorda pesada agobiante apretujada junta amontonada inmensa apretujada pesada masiva espesa bruta. Sepáralas con fina dedicación monástica y obsesiva quirúrgica amorosa artesanal y con finísimo cuidado con infinito de forma amorosa pura esparcidas y amorosas libres de amoroso con finísimo con obsesivo un paciente devoto.
 *   Temperatura máxima asombrosa estúpida asombrosa calcinante es prohibida asombrosa mortal prohibida mortal máxima suprema máxima calcinante y prohibida asombrosa suprema máxima o límite barrera mortal roja de suprema barrera mortal prohibida destructora calcinante asombrosa caliente de la última 35°C (Grados). Más calor evapora volátiles, quema colores y debilita y anula destrozando asesinando matando aniquilando evaporando suprimiendo quemando asesinando y evaporando aniquilando suprimiendo quemando y exterminando exterminando todo su vigor profundo su vigor aniquilando por completo de raíz su vigor evaporando destruyendo exterminando el vigor volátil y frágil suprimiendo.
-`
+\`
             },
             {
                 id: 'ch9',
                 title: 'Capítulo 9: El Grimorio Personal y sus Anotaciones',
-                content: `
+                content: \`
 ## La Bitácora del Boticario
 
 Ningún avance profundo es duradero sin un estricto grandísimo inquebrantable fanático absoluto maravilloso fanático hermoso gigantesco celoso diario gigantesco maravilloso y exacto inmenso inquebrantable fanático diario celoso de detalladísimo precioso diario precioso bello y un registro exacto obsesivo precioso diario de registro constante celoso fiel celoso devoto inquebrantable diario inmenso fiel fanático y minucioso registro y detalladísimo de su exacto y escrito muy bello exacto profundo fiel escrito y puro minucioso fiel fanático minucioso cuaderno minucioso constante. 
@@ -292,12 +197,12 @@ Acostúmbrate a marcar cada frasco rotulado asombrosamente limpio perfecto limpi
 *   **Fase sagrada exacta del astro y fase natural del cielo de la pura pálida mística redonda inmensa o media luna pálida misteriosa oscura pálida lunar sagrada fría y poderosa mística de su majestuosa clara bella y pálida menguante fría de luna satélite lunar.**
 *   **Las partes específicas botánicas extraídas, pesadas, procesadas, usadas**
 *   **Graduación viva natural o de fuerte destilada alcohólica y puro poderoso absoluto ardiente inmenso alcohólico o del vinagre disolvente elegido exacto y sus días a esperar**
-`
+\`
             },
             {
                 id: 'ch10',
                 title: 'Capítulo 10: Combinaciones Magistrales Modernas (Tus Primeros Sanadores)',
-                content: `
+                content: \`
 ## Formulando para el Día a Día
 
 Estás por graduarte, boticario. Para cerrar tu primer grimorio formativo vivo curativo inmenso sanador formativo sagrado milenario maestro puro eterno grandioso mágico profundo maestro vivo mágico maestro santo majestuoso inmenso profundo y vital santo puro gran vivo antiguo grimorio formativo formativo e milenario de profundo formativo de la sanador inmensa de arte herbolario puro mágico eterno, te legamos de herencia un mágico y muy inmenso milenario y poderoso milenario tesoro de valiosas poderosas muy puras o valiosas potentes vivas antiguas sabias sagradas grandiosas valiosas sabias potentes de antiguas puras inmensas y valiosas sagradas maravillosísimas de vivas antiguas muy maestras o sabias vivas maravillosas maestras profundas y antiguas fórmulas magistrales puras y sabias magistrales maravillosas bellas antiguas de milenarias divinas fórmulas sabias santas.
@@ -306,109 +211,12 @@ Estás por graduarte, boticario. Para cerrar tu primer grimorio formativo vivo c
 Equinácea (raíz punzante purificadora) 40%, Sáuco de vallas maravillosamente moradas oscuras oscuras inmensas purpuras oscurísimas negras vallas moradas moradas negras mágicas 20%, Tomillo rastrero asombrosamente aromático y sanador tomillo rústico bello verde silvestre tomillo silvestre verde aromático sanador 20%, y valiente poderosa inmensa milagrosa santa amarga poderosa valiente inmensa fuerte y salvaje verde poderosa valiente milagrosa fuerte verde rústica santa salvaje poderosa verde de maravillosísima maravillosísima gigante planta inmensa 20%. En base alcohólica viva pura alcohólica hirviente de vodka o caña del 50%. A los primeros horribles síntomas: 30 dolorosas fuertes gotas crudas curativas puras y disueltas valientes disueltas.
 
 Y así concluimos tu paso hacia este vasto reino infinito esmeralda inmenso infinito verde de este mágico verde salviero reino mágico esmeralda bosque curativo verde florido esmeralda infinito florido vivo florido de las botánicas ciencias vivianas sagradas botánicas de de inmensas ciencias profundas botánicas botánicas místicas, de botánicas mágicas sanadoras artes sagradas vivianas místicas milenarias artes ciencias puras ciencias ciencias maravillosas milenarias místicas vivianas de la artes místicas vivas las antiguas de las antiguas y artes la místicas de hermosas de botánicas ciencias eternas vivas las eternas ciencias milenarias y santas antiguas antiguas sabias.
-`
+\`
             }
         ]
-    },
-    'menopausia': {
-        bookId: 'menopausia',
-        title: 'Remedios para la Menopausia',
-        chapters: [
-            {
-                id: 'ch1',
-                title: 'Capítulo 1: La Transición a la Sabia',
-                content: `
-## No es una enfermedad, es un portal y salto evolutivo supremo
+    },`;
 
-La medicina occidental patologiza la menopausia. Le pone nombre a cada "síntoma" y receta hormonas sintéticas de reemplazo en cuanto la mujer se queja. Las curanderas ancestrales veían el retiro de la sangre no como una pérdida inútil y marchita, sino como la sagrada retención de la energía vital creadora inmensa: la mujer dejaba de dar su sangre vitalmente al mundo físico exterior material humano y terrenal, para por una finísima vez en toda su larga vida, retener fuertemente para ella misma esa incalculable sabiduría, salud en su propio espíritu y mente. Es el paso de ser "La Madre que da vida biológica" a "La Sabia Madre Ancestral del clan que da guía a toda su inmensa civilización".
+const modified = content.replace(/    'arte_preparar': \{[\s\S]*?\]\n    \},/, newArtePreparar);
 
-Sin embargo, el cuerpo biológico material debe balancearse irremediablemente mientras de forma inmensa la gigantesca cantidad de sus hormonas femeninas estrogénicas y progestínicas se reacomodan abrupta e intempestivamente. Aquí usamos las plantas aliadas maravillosísimas de forma profunda, sostenida e intensa para que el aterrizaje de este vuelo sea maravillosamente suave, inmensamente refrescante, equilibrado y purificadoramente poderoso para devolverte el reinado soberano absoluto de tu vida.
-                `
-            },
-            {
-                id: 'ch2',
-                title: 'Capítulo 2: Apagar los Sofocos y Calores Inmensos',
-                content: `
-## La Salvia (Salvia officinalis): La Refrescante y Absoluta Fiera 
-
-Si los sofocos nocturnos brutales interminables inaguantables sofocos incesantes y la sudoración extrema que quema repentina de forma agresiva te dominan la existencia de tu propia vida y arruinan velozmente sin remedio aparente la calidad pacífica hermosa de tus sagrados e importantísimos muy revitalizantes horas completísimas de ansiados dulces sueños invaluables profundos, entonces sin dudarlo la maravilla herbácea de tu mejor amiga incondicional salvadora es absolutamente la Salvia. Su nombre viene de *salvare* (curar/salvar). Es un fuerte astringente inquebrantable curativo y anhidrótico fenomenal (frena inmensa y colosalmente la sobre producción de los fluidos inmensos sudoríferos de la glándula excretora sudoración extrema).
-
-**Cómo usarla para sofocos:**
-*   Se recomienda y aconseja intensamente tomarla forzosa e indiscutiblemente muy totalmente fría pura y limpia o moderadamente equilibrada a temperatura del ambiente templado fresco neutral del salón. (Advertencia de la herbolaria dorada central del arte natural ancestral clínico vivo: El muy sabroso o hirviente burbujeante fuego caliente ardiente de una clásica taza de tradicional té caliente promueve fuertísimamente y desata en mayor medida descontrolando absurdamente colosalmente irónicamente horriblemente muchísimo más inmenso incontrolable enorme sofocante fuego en el calor basal de la madre sufriente).
-*   Prepara meticulosamente y en la santísima calma hermosa una colosal fuerte muy oscurísima inmensa infusión suprema sagrada hirviendo y sumergiéndola a inmersiones plenas largas y frías a base de una enorme colmada gigante maciza cucharada grande llena colmada grandiosísima cargadísima rebasante de verde bellísima muy limpia preciosa flor de su hoja viva curativa salvia gruesa desecada y machacada a la olla y al vaso de precipitado y de agua de gran calidad de manantial puro libre cloro y deja y ordénate dejar infundir reposando estricta y fielmente por rigurosos intocables cerrados largos completísimos herméticos intocables tapadísimos no ventilados sus sagrados de sus quince extensos amplificados preciosísimos minutos intensos y largos llenos absolutos repletos eternos, enfríala maravillosamente en los fríos inviernos siberianos eternos nevados ventisqueros gélidos de tu humilde inmensamente fresca sagrada moderna neverita refrigeradora gigante de hogar en el rincón.
-*   Toma despacio un profundo y altísimo brillante inmenso resplandeciente grueso y fresquísimo y sanador alivianador largo completo vaso entero grandioso completo en fríos por tu bendita inmensa oscura y tranquila silenciosa santa ininterrumpida sagrada noche antes justa casi instantáneamente antes sumergirte en tu ansiado reposo profundo apagar las lámparas y arrojarte libre al reparador soñar al profundo para dominar apagar extirpar congelar eliminar suprimir y anular la sudoración asquerosa de tus sábanas de una vez.
-
-## Trébol Rojo (Trifolium pratense): El Equilibrador Fitoestrogénico Gigante
-
-Contiene isoflavonas maravillosas que tu cuerpo asimilará como agua en un largo y candente calcinante inmenso grandioso profundo asombro resplandeciente letal y asfixiante desierto milenario infinito, en perfecta hermosísima total resonancia perfecta asombrosísima bellísima amalgama química con tu inmenso dolor femenino interno desbalanzado biológico grandiosísimo y colosal.
-                `
-            },
-            {
-                id: 'ch3',
-                title: 'Capítulo 3: Sequedad, Piel e Hidratación',
-                content: `
-## Nutrición interna para la sequedad de las mucosas
-
-Con la caída de los estrógenos, la piel, los ojos y, en particular, las paredes vaginales, sufren de extrema sequedad. 
-
-### Aceite de Onagra (Evening Primrose) y Borraja
-Ricos en Ácido Gamma-Linolénico (GLA), lubricantes naturales supremos del cuerpo femenino.
-*   **Dosis recomendada:** Tomar en cápsulas de primera presión en frío o incorporar el aceite en ensaladas (nunca cocinarlo).
-
-### Espino Amarillo (Sea Buckthorn)
-Este es un secreto milenario de la medicina asiática. Las bayas del espino amarillo contienen Omega 7, un tipo de grasa escasísima en la naturaleza que regenera y rehidrata específicamente todas las membranas del cuerpo, mejorando la lubricación íntima y devolviendo el brillo a la piel cuarteada en cuestión de semanas.
-                `
-            }
-        ]
-    },
-    'botiquin': {
-        bookId: 'botiquin',
-        title: 'El Botiquín Natural de Emergencia',
-        chapters: [
-            {
-                id: 'ch1',
-                title: 'Capítulo 1: Reglas del Botiquín Herbal',
-                content: `
-## Estar lista cuando las farmacias cierran
-
-La diferencia entre la hierba y el fármaco de emergencia es que la planta requiere que la **tengas lista ANTES** de que llegue el problema. Las abuelas no iban a recolectar plantas en medio de la tormenta, ya tenían sus frascos alineados.
-
-Tu botiquín debe estar guardado en un lugar oscuro (un armario), fresco, lejos del vapor de la ducha y etiquetado con fechas. Renovaremos el botiquín seco cada año.
-                `
-            },
-            {
-                id: 'ch2',
-                title: 'Capítulo 2: Fiebres y Resfriados Fuertes',
-                content: `
-## Saúco (Sambucus nigra): El Antiviral de la Abuela
-
-Cuando sientes el cuerpo cortado, la nariz empieza a gotear, y sientes ese picor en la garganta, **el jarabe de Saúco** detiene la replicación del virus en la pared celular.
-
-*   **Uso:** 1 cucharada sopera de Jarabe de Bayas de Saúco cada 3 horas ante los primeros síntomas. 
-
-## La Mezcla Diaforética (Para Sudar la Fiebre)
-
-La medicina ancestral NO suprime la fiebre (a menos que suba a rangos peligrosos). La fiebre cocina el virus. Nuestro objetivo es ayudar al cuerpo a **abrir los poros y liberarla mediante el sudor**.
-*   Mezcla: Hojas de Menta (abre poros), Flores de Saúco (antiviral) y Milenrama (regula la sangre).
-*   Suministrar una taza de té bien caliente, arropa a la persona en la cama hasta que empiece a sudar. La fiebre bajará naturalmente después de la sudoración.
-                `
-            },
-            {
-                id: 'ch3',
-                title: 'Capítulo 3: Traumas Críticos',
-                content: `
-## Golpes, Esguinces y Magulladuras: Árnica
-
-El Árnica montana es indispensable. 
-**Regla de oro:** EL ÁRNICA JAMÁS SE PONE EN HERIDAS ABIERTAS. Solo en piel intacta.
-*   En caso de esguince de tobillo, codo golpeado, nuca dolorida: aplicar Ungüento o Tintura de Árnica diluida y masajear. Absorbe hematomas (moretones) en tiempo récord.
-
-## Cortes y Quemaduras: Aloe y Sangre de Drago
-
-*   **Aloe Vera:** Para quemaduras de 1er y 2do grado (plancha, horno, estufa). Poner la pulpa pura en frío directamente calma el dolor insoportable al instante y evita la ampolla posterior.
-*   **Sangre de Drago (Resina):** El "super glue" de la naturaleza. Si te haces un tajo profundo limpiando verduras, vierte un par de gotas de resina de Croton lechleri (Sangre de drago) en el corte, presiona unos segundos. Cierra hernias, sella instantáneamente, frena el sangrado y es un antibiótico fortísimo natural.
-                `
-            }
-        ]
-    }
-};
+fs.writeFileSync('src/data/bookContents.ts', modified, 'utf-8');
+console.log("Written successfully");

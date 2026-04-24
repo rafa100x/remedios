@@ -170,7 +170,7 @@ export default function App() {
         </main>
       ) : !selectedCategory ? (
         <>
-          <Hero />
+          <Hero onNavigateToLibrary={handleShowLibrary} />
           <Cabinet onSelectCategory={setSelectedCategory} />
         </>
       ) : (

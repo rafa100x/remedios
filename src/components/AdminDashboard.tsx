@@ -46,7 +46,7 @@ export function AdminDashboard() {
         setIntents(intentsData);
       } catch (err: any) {
         console.error('Error fetching intents:', err);
-        if (!currentError) setUsersError('Error intentos: ' + (err.message || 'Error desconocido'));
+        setUsersError(prev => (prev ? prev + ' | ' : '') + 'Error intentos: ' + (err.message || 'Error desconocido'));
       } finally {
         setLoading(false);
       }
