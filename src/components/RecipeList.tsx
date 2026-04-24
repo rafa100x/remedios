@@ -51,16 +51,15 @@ export function RecipeList({ recipes, onSelectRecipe, favorites, toggleFavorite 
                 {/* Jar Body with Image */}
                 <div className="relative w-full h-[240px] flex flex-col items-center justify-end transition-transform duration-300 group-hover:-translate-y-3">
                   
-                  {/* The Image (Mix Blend Screen to remove black backing, making the bright glass pop in the dark shelf) */}
+                  {/* The Image */}
                   <div className="absolute inset-x-0 bottom-[60px] top-0 flex items-center justify-center">
                     <img 
                       src={`https://firebasestorage.googleapis.com/v0/b/remedios-ancestrasel.firebasestorage.app/o/frascos%2Fbotica-frasco-${recipe.id.toString().padStart(3, '0')}.png?alt=media`} 
                       alt={recipe.title} 
-                      className="w-full max-h-full object-contain mix-blend-screen opacity-90 drop-shadow-2xl transition-all duration-300 group-hover:opacity-100 group-hover:drop-shadow-[0_15px_15px_rgba(255,255,255,0.1)]"
+                      className="w-full max-h-full object-contain opacity-90 drop-shadow-2xl transition-all duration-300 group-hover:opacity-100 group-hover:drop-shadow-[0_15px_15px_rgba(255,255,255,0.1)]"
                       onError={(e) => {
                         // Fallback generic dark jar if the image is missing
                         (e.target as HTMLImageElement).src = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 150"><rect width="100" height="150" fill="%231a0f08" rx="20"/><rect x="30" y="-10" width="40" height="30" fill="%230a0502" rx="5"/></svg>';
-                        (e.target as HTMLImageElement).classList.remove('mix-blend-screen');
                       }}
                     />
                     
