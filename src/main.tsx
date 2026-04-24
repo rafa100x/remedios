@@ -1,12 +1,11 @@
-/// <reference types="vite/client" />.
-import { StrictMode } from 'react';
-import { createRoot } from 'react-dom/client';
+import {StrictMode} from 'react';
+import {createRoot} from 'react-dom/client';
 import ReactGA from 'react-ga4';
 import App from './App.tsx';
 import { AuthProvider } from './contexts/AuthContext.tsx';
 import './index.css';
 
-const gaMeasurementId = import.meta.env.VITE_GA_MEASUREMENT_ID || 'G-TH26DT24Y2';
+const gaMeasurementId = (import.meta as any).env.VITE_GA_MEASUREMENT_ID || 'G-TH26DT24Y2';
 ReactGA.initialize(gaMeasurementId);
 
 createRoot(document.getElementById('root')!).render(
@@ -14,5 +13,5 @@ createRoot(document.getElementById('root')!).render(
     <AuthProvider>
       <App />
     </AuthProvider>
-  </StrictMode>
+  </StrictMode>,
 );
