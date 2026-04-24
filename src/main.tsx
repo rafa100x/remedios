@@ -5,13 +5,13 @@ import App from './App.tsx';
 import { AuthProvider } from './contexts/AuthContext.tsx';
 import './index.css';
 
-// Inicializar Google Analytics con tu ID proporcionado
-ReactGA.initialize('G-TH26DT24Y2');
+const gaMeasurementId = import.meta.env.VITE_GA_MEASUREMENT_ID || 'G-TH26DT24Y2';
+ReactGA.initialize(gaMeasurementId);
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <AuthProvider>
       <App />
     </AuthProvider>
-  </StrictMode>,
+  </StrictMode>
 );
