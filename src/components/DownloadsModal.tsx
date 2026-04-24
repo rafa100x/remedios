@@ -95,17 +95,15 @@ export function DownloadsModal({ onClose }: DownloadsModalProps) {
           </div>
 
           {/* Content */}
-          <div className="flex-1 overflow-y-auto relative bg-[#e8e1d5] flex flex-col">
+          <div className={`flex-1 relative bg-[#e8e1d5] ${selectedPdf ? 'overflow-hidden' : 'overflow-y-auto flex flex-col'}`}>
              {!selectedPdf && <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cream-paper.png')] opacity-30 pointer-events-none mix-blend-multiply"></div>}
              
              {selectedPdf ? (
-               <div className="w-full h-full min-h-[60vh] md:min-h-[70vh] flex-1">
-                 <iframe 
-                   src={`${selectedPdf.url}#view=FitH`} 
-                   className="w-full h-full border-0 bg-white/50 backdrop-blur-sm"
-                   title={selectedPdf.title}
-                 />
-               </div>
+               <iframe 
+                 src={selectedPdf.url} 
+                 className="absolute inset-0 w-full h-full border-0 bg-white"
+                 title={selectedPdf.title}
+               />
              ) : (
                <div className="p-6 md:p-10 space-y-12 relative z-10">
                   {/* Material Principal */}

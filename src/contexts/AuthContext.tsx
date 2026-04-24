@@ -28,19 +28,24 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         
         // Listen to changes in real-time so purchases unlock instantly
         const unsubscribeDoc = onSnapshot(userRef, async (docSnap) => {
+            const adminEmails = ['rafaelvidetta@gmail.com', 'rafaelvidetta32@gmail.com'];
+            const isAdmin = adminEmails.includes(user.email || '');
+            const allPremiumBooks = ['presion', 'arte_preparar', 'menopausia', 'botiquin'];
+            
             if (docSnap.exists()) {
-              setPurchasedBooks(docSnap.data().purchasedBooks || []);
+              const data = docSnap.data();
+              setPurchasedBooks(isAdmin ? Array.from(new Set([...(data.purchasedBooks || []), ...allPremiumBooks])) : (data.purchasedBooks || []));
             } else {
               // Create user profile
               const newUserData = {
                 email: user.email || '',
-                purchasedBooks: [],
+                purchasedBooks: isAdmin ? allPremiumBooks : [],
                 createdAt: serverTimestamp(),
                 updatedAt: serverTimestamp()
               };
               try {
                 await setDoc(userRef, newUserData);
-                setPurchasedBooks([]);
+                setPurchasedBooks(isAdmin ? allPremiumBooks : []);
               } catch (err: any) {
                 console.error('Error creating user profile in Firestore:', err);
                 // Optionally handle/log with handleFirestoreError if needed,
