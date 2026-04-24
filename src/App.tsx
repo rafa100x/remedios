@@ -1,4 +1,5 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
+import ReactGA from 'react-ga4';
 import { Category, Recipe, categories } from './data/recipes';
 import { Hero } from './components/Hero';
 import { Cabinet } from './components/Cabinet';
@@ -46,6 +47,34 @@ export default function App() {
   const shoppingRecipes = useMemo(() => {
     return allRecipes.filter(r => shoppingList.includes(r.id));
   }, [shoppingList, allRecipes]);
+
+  // --- GOOGLE ANALYTICS : Seguimiento de pantallas (Pageviews) ---
+  useEffect(() => {
+    let path = '/';
+    if (searchQuery.trim()) {
+      path = `/search?q=${encodeURIComponent(searchQuery)}`;
+    } else if (view === 'favorites') {
+      path = '/favorites';
+    } else if (view === 'library') {
+      path = '/library';
+    } else if (selectedCategory) {
+      path = `/category/${selectedCategory.id}`;
+    }
+    
+    // Registra la visita con Google Analytics
+    ReactGA.send({ hitType: "pageview", page: path });
+  }, [view, selectedCategory, searchQuery]);
+
+  // --- GOOGLE ANALYTICS : Seguimiento de apertura de recetas (Eventos) ---
+  useEffect(() => {
+    if (selectedRecipe) {
+      ReactGA.event({
+        category: 'Recipe',
+        action: 'View',
+        label: selectedRecipe.title
+      });
+    }
+  }, [selectedRecipe]);
 
   const handleHome = () => {
     setSearchQuery('');
