@@ -1,5 +1,4 @@
 import { useState, useMemo, useEffect } from 'react';
-import ReactGA from 'react-ga4';
 import { Category, Recipe, categories } from './data/recipes';
 import { Hero } from './components/Hero';
 import { Cabinet } from './components/Cabinet';
@@ -55,31 +54,6 @@ export default function App() {
   const shoppingRecipes = useMemo(() => {
     return allRecipes.filter(r => shoppingList.includes(r.id));
   }, [shoppingList, allRecipes]);
-
-  useEffect(() => {
-    let path = '/';
-    if (searchQuery.trim()) {
-      path = `/search?q=${encodeURIComponent(searchQuery)}`;
-    } else if (view === 'favorites') {
-      path = '/favorites';
-    } else if (view === 'library') {
-      path = '/library';
-    } else if (selectedCategory) {
-      path = `/category/${selectedCategory.id}`;
-    }
-    
-    ReactGA.send({ hitType: "pageview", page: path });
-  }, [view, selectedCategory, searchQuery]);
-
-  useEffect(() => {
-    if (selectedRecipe) {
-      ReactGA.event({
-        category: 'Recipe',
-        action: 'View',
-        label: selectedRecipe.title
-      });
-    }
-  }, [selectedRecipe]);
 
   const handleHome = () => {
     setSearchQuery('');

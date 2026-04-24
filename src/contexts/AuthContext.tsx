@@ -33,14 +33,23 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             } else {
               // Create user profile
               const newUserData = {
-                email: user.email,
+                email: user.email || '',
                 purchasedBooks: [],
                 createdAt: serverTimestamp(),
                 updatedAt: serverTimestamp()
               };
-              await setDoc(userRef, newUserData);
-              setPurchasedBooks([]);
+              try {
+                await setDoc(userRef, newUserData);
+                setPurchasedBooks([]);
+              } catch (err: any) {
+                console.error('Error creating user profile in Firestore:', err);
+                // Optionally handle/log with handleFirestoreError if needed,
+                // but don't break the whole app experience
+              }
             }
+        }, (error) => {
+            console.error('onSnapshot listener error:', error);
+            // Catch permission denied explicitly
         });
 
         setLoading(false);

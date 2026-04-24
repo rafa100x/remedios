@@ -31,7 +31,7 @@ export const PREMIUM_BOOKS: PremiumBook[] = [
         description: 'No alcanza con saber qué planta usar. El secreto está en cómo prepararla. Una infusión mal hecha pierde el 80% de su efecto. Esta guía te enseña lo que las curanderas aprendían de memoria: Cómo preparar cada tipo de remedio, dosis exactas, conservación y contraindicaciones clave.',
         price: '$ 14.999 ARS',
         coverUrl: 'https://cdn.shopify.com/s/files/1/0988/7904/5945/files/maestro-arte-preparar-v1.jpg?v=1776702621',
-        paymentLink: 'https://mpago.la/1rLW3p8',
+        paymentLink: 'https://mpago.la/1WcUYqH',
         badge: '¡Disponible!'
     },
     {

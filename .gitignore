@@ -6,3 +6,10 @@ coverage/
 *.log
 .env*
 !.env.example
+
+# Ignorar carpetas de imágenes y pdfs cargadas externamente en GitHub
+public/frascos/
+public/recetas/
+public/pdfs/
+public_repo_backup/
+temp_repo/

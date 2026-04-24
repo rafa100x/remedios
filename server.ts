@@ -4,19 +4,24 @@ import { GoogleGenAI } from "@google/genai";
 import path from "path";
 import "dotenv/config";
 import { MercadoPagoConfig, Preference, Payment } from 'mercadopago';
-import * as admin from 'firebase-admin';
+import { initializeApp, cert, getApps, getApp } from 'firebase-admin/app';
+import { getFirestore, FieldValue } from 'firebase-admin/firestore';
 
 // Initialize Firebase Admin (Safe fallback if missing envs)
-let firebaseApp: admin.app.App | null = null;
+let firebaseApp = null;
 try {
     if (process.env.FIREBASE_PROJECT_ID && process.env.FIREBASE_PRIVATE_KEY && process.env.FIREBASE_CLIENT_EMAIL) {
-        firebaseApp = admin.initializeApp({
-            credential: admin.credential.cert({
-                projectId: process.env.FIREBASE_PROJECT_ID,
-                privateKey: process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n'),
-                clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
-            })
-        });
+        if (!getApps().length) {
+            firebaseApp = initializeApp({
+                credential: cert({
+                    projectId: process.env.FIREBASE_PROJECT_ID,
+                    privateKey: process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n'),
+                    clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
+                })
+            });
+        } else {
+            firebaseApp = getApp();
+        }
         console.log("Firebase Admin initialized securely.");
     } else {
         console.warn("Missing Firebase Admin credentials in .env");
@@ -118,8 +123,8 @@ async function startServer() {
 
                        // By using Admin SDK, we bypass Firestore Security Rules (Inquebrantable!)
                        console.log(`Unlocking book [${bookId}] for user [${userId}]`);
-                       await admin.firestore().collection('users').doc(userId).update({
-                           purchasedBooks: admin.firestore.FieldValue.arrayUnion(bookId)
+                       await getFirestore().collection('users').doc(userId).update({
+                           purchasedBooks: FieldValue.arrayUnion(bookId)
                        });
                        console.log("Database updated successfully.");
                    }
@@ -180,15 +185,19 @@ async function startServer() {
     }
   });
 
-  // Vite middleware for development
-  if (process.env.NODE_ENV !== "production") {
+  const distPath = path.join(process.cwd(), 'dist');
+  const fs = await import('fs');
+  const hasDist = fs.existsSync(path.join(distPath, 'index.html'));
+
+  if (!hasDist && process.env.NODE_ENV !== "production") {
+    console.log("Starting in development mode with Vite middleware...");
     const vite = await createViteServer({
       server: { middlewareMode: true },
       appType: "spa",
     });
     app.use(vite.middlewares);
   } else {
-    const distPath = path.join(process.cwd(), 'dist');
+    console.log("Serving static files from dist...");
     app.use(express.static(distPath));
     app.get('*', (req, res) => {
       res.sendFile(path.join(distPath, 'index.html'));
