@@ -32,11 +32,20 @@ export default function App() {
 
   const searchResults = useMemo(() => {
     if (!searchQuery.trim()) return [];
-    const q = searchQuery.toLowerCase();
+    
+    // Función para quitar tildes y hacer la búsqueda más exacta
+    const normalize = (str: string) => {
+      return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+    };
+    
+    const q = normalize(searchQuery);
+
     return allRecipes.filter(r =>
-      r.title.toLowerCase().includes(q) ||
-      r.purpose.toLowerCase().includes(q) ||
-      r.ingredients.some(i => i.es.toLowerCase().includes(q) || i.la.toLowerCase().includes(q))
+      normalize(r.title).includes(q) ||
+      normalize(r.purpose).includes(q) ||
+      (r.instructions && normalize(r.instructions).includes(q)) ||
+      (r.notes && normalize(r.notes).includes(q)) ||
+      r.ingredients.some(i => normalize(i.es).includes(q) || normalize(i.la).includes(q))
     );
   }, [searchQuery, allRecipes]);
 
@@ -48,7 +57,7 @@ export default function App() {
     return allRecipes.filter(r => shoppingList.includes(r.id));
   }, [shoppingList, allRecipes]);
 
-  // --- GOOGLE ANALYTICS : Seguimiento de pantallas (Pageviews) ---
+  // Analytics de vistas basadas en la pantalla en la que está el usuario
   useEffect(() => {
     let path = '/';
     if (searchQuery.trim()) {
@@ -61,11 +70,10 @@ export default function App() {
       path = `/category/${selectedCategory.id}`;
     }
     
-    // Registra la visita con Google Analytics
     ReactGA.send({ hitType: "pageview", page: path });
   }, [view, selectedCategory, searchQuery]);
 
-  // --- GOOGLE ANALYTICS : Seguimiento de apertura de recetas (Eventos) ---
+  // Analytics de cuando abres una receta
   useEffect(() => {
     if (selectedRecipe) {
       ReactGA.event({
@@ -104,12 +112,12 @@ export default function App() {
         onShowLibrary={handleShowLibrary}
         onHome={handleHome}
         onShowInfo={() => setShowInfo(true)}
-        isFavoritesView={view === 'favorites'}
-        isLibraryView={view === 'library'}
+        isFavoritesView={view === 'favorites' && !searchQuery}
+        isLibraryView={view === 'library' && !searchQuery}
         shoppingListCount={shoppingRecipes.length}
       />
 
-      {searchQuery ? (
+      {searchQuery.trim() ? (
         <main className="max-w-6xl mx-auto px-4 py-8 md:py-12">
           <div className="mb-8 border-b-2 border-[#8a3c1f] pb-4 px-4 inline-block">
              <h2 className="font-headline text-3xl font-bold text-[#8a3c1f]">Resultados de Búsqueda</h2>
