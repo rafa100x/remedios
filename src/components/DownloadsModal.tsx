@@ -95,12 +95,12 @@ export function DownloadsModal({ onClose }: DownloadsModalProps) {
           </div>
 
           {/* Content */}
-          <div className={`flex-1 relative bg-[#e8e1d5] ${selectedPdf ? 'overflow-hidden' : 'overflow-y-auto flex flex-col'}`}>
+          <div className={`flex-1 relative bg-[#e8e1d5] ${selectedPdf ? 'overflow-hidden min-h-[60vh] md:min-h-[75vh]' : 'overflow-y-auto flex flex-col'}`}>
              {!selectedPdf && <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cream-paper.png')] opacity-30 pointer-events-none mix-blend-multiply"></div>}
              
              {selectedPdf ? (
                <iframe 
-                 src={selectedPdf.url} 
+                 src={`https://docs.google.com/viewer?url=${encodeURIComponent(selectedPdf.url)}&embedded=true`} 
                  className="absolute inset-0 w-full h-full border-0 bg-white"
                  title={selectedPdf.title}
                />

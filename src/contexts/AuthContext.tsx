@@ -23,15 +23,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       setUser(user);
       if (user) {
+        const adminEmails = ['rafaelvidetta@gmail.com', 'rafaelvidetta32@gmail.com'];
+        const isAdmin = adminEmails.includes((user.email || '').trim().toLowerCase());
+        const allPremiumBooks = ['presion', 'arte_preparar', 'menopausia', 'botiquin'];
+        
+        if (isAdmin) {
+          setPurchasedBooks(allPremiumBooks);
+        }
+
         // Fetch user profile from Firestore or create it
         const userRef = doc(db, 'users', user.uid);
         
         // Listen to changes in real-time so purchases unlock instantly
         const unsubscribeDoc = onSnapshot(userRef, async (docSnap) => {
-            const adminEmails = ['rafaelvidetta@gmail.com', 'rafaelvidetta32@gmail.com'];
-            const isAdmin = adminEmails.includes(user.email || '');
-            const allPremiumBooks = ['presion', 'arte_preparar', 'menopausia', 'botiquin'];
-            
             if (docSnap.exists()) {
               const data = docSnap.data();
               setPurchasedBooks(isAdmin ? Array.from(new Set([...(data.purchasedBooks || []), ...allPremiumBooks])) : (data.purchasedBooks || []));
