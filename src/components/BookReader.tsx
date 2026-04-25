@@ -111,7 +111,7 @@ export function BookReader({ bookId, onClose }: BookReaderProps) {
                             <section 
                                 key={chapter.id} 
                                 id={chapter.id} 
-                                ref={(el) => chapterRefs.current[chapter.id] = el}
+                                ref={(el) => { chapterRefs.current[chapter.id] = el; }}
                                 className="mb-20"
                             >
                                 <div className="flex items-center justify-between border-b border-[#3a1a0f]/20 pb-4 mb-8">

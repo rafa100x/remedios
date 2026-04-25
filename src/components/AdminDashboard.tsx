@@ -31,7 +31,7 @@ interface UserRecord {
 }
 
 export function AdminDashboard() {
-  const { isAdmin } = useAuth();
+  const { isAdmin, user } = useAuth();
   const [usersList, setUsersList] = useState<UserRecord[]>([]);
   const [usersCount, setUsersCount] = useState<number | null>(null);
   const [intents, setIntents] = useState<Intent[]>([]);
@@ -39,6 +39,30 @@ export function AdminDashboard() {
   const [processingId, setProcessingId] = useState<string | null>(null);
   const [usersError, setUsersError] = useState<string | null>(null);
   const [expandedUserId, setExpandedUserId] = useState<string | null>(null);
+
+  const formatDate = (dateObj: any, onlyDate = false) => {
+    if (!dateObj) return '-';
+    try {
+      let d: Date;
+      if (typeof dateObj.toDate === 'function') {
+        d = dateObj.toDate();
+      } else if (dateObj.seconds) {
+        d = new Date(dateObj.seconds * 1000);
+      } else {
+        d = new Date(dateObj);
+      }
+      return onlyDate ? d.toLocaleDateString() : d.toLocaleString();
+    } catch(e) {
+      return '-';
+    }
+  };
+
+  const getTimeMillis = (dateObj: any) => {
+    if (!dateObj) return 0;
+    if (typeof dateObj.toMillis === 'function') return dateObj.toMillis();
+    if (dateObj.seconds) return dateObj.seconds * 1000;
+    return new Date(dateObj).getTime() || 0;
+  };
 
   const toggleUserExpanded = async (userId: string) => {
     if (expandedUserId === userId) {
@@ -73,6 +97,15 @@ export function AdminDashboard() {
     const fetchStats = async () => {
       let currentError = null;
       
+      if (auth.currentUser) {
+        // Force refresh the token to ensure any rules changes or claims update are correctly applied.
+        try {
+          await auth.currentUser.getIdToken(true);
+        } catch (e) {
+          console.error('Error refreshing token:', e);
+        }
+      }
+
       try {
         const usersSnapshot = await getDocs(collection(db, 'users'));
         setUsersCount(usersSnapshot.size);
@@ -82,8 +115,8 @@ export function AdminDashboard() {
         })) as UserRecord[];
         
         usersData.sort((a, b) => {
-           const timeA = a.lastLoginAt ? a.lastLoginAt.toMillis() : (a.createdAt ? a.createdAt.toMillis() : 0);
-           const timeB = b.lastLoginAt ? b.lastLoginAt.toMillis() : (b.createdAt ? b.createdAt.toMillis() : 0);
+           const timeA = a.lastLoginAt ? getTimeMillis(a.lastLoginAt) : (a.createdAt ? getTimeMillis(a.createdAt) : 0);
+           const timeB = b.lastLoginAt ? getTimeMillis(b.lastLoginAt) : (b.createdAt ? getTimeMillis(b.createdAt) : 0);
            return timeB - timeA;
         });
         
@@ -161,6 +194,17 @@ export function AdminDashboard() {
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-8">
+      
+      {user && (
+        <div className="mb-6 mx-auto w-full max-w-3xl bg-[#1a0d06] border border-[#d6c7af]/20 rounded p-4 font-mono text-xs text-[#d6c7af]/50 space-y-1">
+           <div><strong className="text-[#d6c7af]">Debug Auth Info</strong></div>
+           <div className="break-all select-all">UID: {user.uid}</div>
+           <div>Email: {user.email}</div>
+           <div>Verified: {user.emailVerified ? 'Yes' : 'No'}</div>
+           <div className="mt-2 text-red-400">Si sigues viendo el error, confirma que este UID ("{user.uid}") esté escrito exactamente igual en las reglas de Firestore o que el mail esté en la lista permitida.</div>
+        </div>
+      )}
+
       <div className="flex items-center gap-4 mb-8">
         <ShieldAlert className="w-10 h-10 text-primary" />
         <h2 className="font-headline text-4xl md:text-5xl text-primary text-shadow-glow">Panel de Administración</h2>
@@ -239,7 +283,7 @@ export function AdminDashboard() {
                      <td className="py-3 px-4 font-medium text-primary">{intent.email}</td>
                      <td className="py-3 px-4 text-secondary">{intent.bookId}</td>
                      <td className="py-3 px-4 text-tertiary text-sm">
-                        {intent.createdAt ? new Date(intent.createdAt.toDate()).toLocaleString() : 'Reciente'}
+                        {formatDate(intent.createdAt)}
                      </td>
                      <td className="py-3 px-4 text-right">
                        {isPending && (
@@ -287,10 +331,10 @@ export function AdminDashboard() {
                            {user.email}
                         </td>
                         <td className="py-3 px-4 text-secondary text-sm">
-                           {user.lastLoginAt ? new Date(user.lastLoginAt.toDate()).toLocaleString() : '-'}
+                           {formatDate(user.lastLoginAt)}
                         </td>
                         <td className="py-3 px-4 text-tertiary text-sm">
-                           {user.createdAt ? new Date(user.createdAt.toDate()).toLocaleDateString() : '-'}
+                           {formatDate(user.createdAt, true)}
                         </td>
                         <td className="py-3 px-4 text-right font-bold text-accent text-lg flex items-center justify-end gap-2">
                            {user.loginCount || 1}
@@ -310,7 +354,7 @@ export function AdminDashboard() {
                                 {user.sessions.map(session => (
                                   <li key={session.id} className="flex justify-between items-center bg-white/5 p-2 rounded">
                                     <span className="text-primary font-medium">
-                                      {session.startedAt ? new Date(session.startedAt.toDate()).toLocaleString() : 'Reciente'}
+                                      {formatDate(session.startedAt)}
                                     </span>
                                     <span className="text-secondary">
                                       {session.durationMinutes !== undefined 

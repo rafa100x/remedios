@@ -1,5 +1,4 @@
 rules_version = '2';
-
 service cloud.firestore {
   match /databases/{database}/documents {
     // 0. Global Safety Net
@@ -17,22 +16,27 @@ service cloud.firestore {
     function isVerified() {
       return isSignedIn();
     }
+    
+    function isEmailAdmin() {
+      return request.auth != null && 'email' in request.auth.token && (
+        request.auth.token.email == 'rafaelvidetta@gmail.com' ||
+        request.auth.token.email == 'rafaelvidetta32@gmail.com' ||
+        request.auth.token.email == 'marc.zbrun@gmail.com'
+      );
+    }
+
     function isAdmin() {
       return request.auth != null && (
         request.auth.uid == 'jEFywPT0xVP7lA1U6wN095uP3Bn2' ||
         request.auth.uid == 'T6n6G9x3NfR11IUMC79ynxrb7qk1' ||
-        ('email' in request.auth.token && (
-          request.auth.token.email == 'rafaelvidetta@gmail.com' ||
-          request.auth.token.email == 'rafaelvidetta32@gmail.com' ||
-          request.auth.token.email == 'marc.zbrun@gmail.com'
-        )) ||
+        isEmailAdmin() ||
         exists(/databases/$(database)/documents/admins/$(request.auth.uid))
       );
     }
 
     match /admins/{userId} {
       allow read: if isAdmin() || request.auth.uid == userId;
-      allow write: if request.auth.uid == userId;
+      allow write: if false; // Security fix: Do not allow users to make themselves admin
     }
 
     // User Validation Blueprint
