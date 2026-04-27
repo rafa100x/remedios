@@ -49,6 +49,7 @@ export function AdminDashboard() {
   const [loading, setLoading] = useState(true);
   const [processingId, setProcessingId] = useState<string | null>(null);
   const [usersError, setUsersError] = useState<string | null>(null);
+  const [analyticsError, setAnalyticsError] = useState<string | null>(null);
   const [expandedUserId, setExpandedUserId] = useState<string | null>(null);
 
   const formatDate = (dateObj: any, onlyDate = false) => {
@@ -164,18 +165,27 @@ export function AdminDashboard() {
       }
 
       try {
-        const analyticsQuery = query(collection(db, 'analytics'), orderBy('timestamp', 'desc'));
+        const analyticsQuery = query(collection(db, 'analytics'));
         const analyticsSnap = await getDocs(analyticsQuery);
         const analyticsData = analyticsSnap.docs.map(doc => ({
           id: doc.id,
           ...doc.data()
         })) as AnalyticsEvent[];
+        
+        // Sort descending by timestamp, handling nulls as "now"
+        analyticsData.sort((a, b) => {
+          const timeA = a.timestamp ? (a.timestamp.seconds || a.timestamp.valueOf()) : Date.now();
+          const timeB = b.timestamp ? (b.timestamp.seconds || b.timestamp.valueOf()) : Date.now();
+          return timeB - timeA;
+        });
+
         setAnalyticsEvents(analyticsData);
       } catch (err: any) {
         if (err.name === 'AbortError' || err.message?.includes('aborted')) {
           console.log('Analytics fetching aborted');
         } else {
           console.error('Error fetching analytics:', err);
+          setAnalyticsError(err.message || 'Error desconocido');
         }
       } finally {
         setLoading(false);
@@ -295,16 +305,25 @@ export function AdminDashboard() {
         <button 
           onClick={async () => {
             setLoading(true);
+            setAnalyticsError(null);
             try {
-              const analyticsQuery = query(collection(db, 'analytics'), orderBy('timestamp', 'desc'));
+              const analyticsQuery = query(collection(db, 'analytics'));
               const analyticsSnap = await getDocs(analyticsQuery);
               const analyticsData = analyticsSnap.docs.map(doc => ({
                 id: doc.id,
                 ...doc.data()
               })) as AnalyticsEvent[];
+              
+              analyticsData.sort((a, b) => {
+                const timeA = a.timestamp ? (a.timestamp.seconds || a.timestamp.valueOf()) : Date.now();
+                const timeB = b.timestamp ? (b.timestamp.seconds || b.timestamp.valueOf()) : Date.now();
+                return timeB - timeA;
+              });
+
               setAnalyticsEvents(analyticsData);
-            } catch (err) {
+            } catch (err: any) {
               console.error(err);
+              setAnalyticsError(err.message || 'Error desconocido');
             } finally {
               setLoading(false);
             }
@@ -437,6 +456,11 @@ export function AdminDashboard() {
 
       <div className="glass-panel ghost-border p-8 rounded-xl shadow-sm relative overflow-hidden mb-8">
         <h3 className="text-2xl font-bold text-primary mb-6">Registro de Actividad</h3>
+        {analyticsError && (
+           <p className="text-red-500 text-sm mb-4 bg-red-500/10 p-3 rounded">
+             Error al cargar métricas: {analyticsError}
+           </p>
+        )}
         {analyticsEvents.length === 0 ? (
            <p className="text-secondary italic text-sm">El historial acaba de activarse y empieza desde cero ahora. Navega un poco para llenarlo.</p>
         ) : (

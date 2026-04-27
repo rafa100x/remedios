@@ -7,13 +7,16 @@ export const trackEvent = async (eventName: string, params?: Record<string, any>
   }
   
   try {
+    // Remove undefined values from params, which crash the Firestore SDK
+    const safeParams = params ? JSON.parse(JSON.stringify(params)) : {};
+
     await addDoc(collection(db, 'analytics'), {
       eventName,
-      params: params || {},
+      params: safeParams,
       userId: auth?.currentUser?.uid || 'anonymous',
       userEmail: auth?.currentUser?.email || 'anonymous',
       timestamp: serverTimestamp(),
-      userAgent: navigator.userAgent
+      userAgent: navigator.userAgent || 'unknown'
     });
   } catch (e) {
     console.error('Error logging analytics', e);
