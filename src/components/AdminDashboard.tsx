@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
-import { ShieldAlert, Users, BookOpen, Activity, ShoppingCart, CheckCircle, Clock } from 'lucide-react';
+import { ShieldAlert, Users, BookOpen, Activity, ShoppingCart, CheckCircle, Clock, Download, List } from 'lucide-react';
 import { trackEvent } from '../lib/analytics';
 import { collection, getDocs, orderBy, query, updateDoc, doc, getDoc, serverTimestamp } from 'firebase/firestore';
 import { auth, db } from '../lib/firebase';
@@ -219,6 +219,25 @@ export function AdminDashboard() {
     }
   };
 
+  const exportUsersCSV = () => {
+    const headers = ['Email', 'Fecha Registro', 'Ultimo Ingreso', 'Total Sesiones'];
+    const rows = usersList.map(u => [
+       u.email, 
+       formatDate(u.createdAt, true) || 'Desconocido', 
+       formatDate(u.lastLoginAt) || 'Desconocido', 
+       u.loginCount || 1
+    ]);
+    const csvContent = [headers.join(','), ...rows.map(e => e.join(','))].join("\n");
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.setAttribute("href", url);
+    link.setAttribute("download", "usuarios_grimoire.csv");
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   if (!isAdmin) {
     return (
       <div className="flex flex-col items-center justify-center h-[60vh] text-center px-4">
@@ -253,6 +272,14 @@ export function AdminDashboard() {
      booksCount[bookName] = (booksCount[bookName] || 0) + 1;
   });
   const sortedBooks = Object.entries(booksCount).sort((a,b) => b[1] - a[1]);
+
+  const recipeViews = analyticsEvents.filter(e => e.eventName === 'view_recipe');
+  const recipesCount: Record<string, number> = {};
+  recipeViews.forEach(e => {
+     const recipeName = e.params?.event_label || 'Desconocida';
+     recipesCount[recipeName] = (recipesCount[recipeName] || 0) + 1;
+  });
+  const sortedRecipes = Object.entries(recipesCount).sort((a,b) => b[1] - a[1]);
 
   const libraryIntentCount = analyticsEvents.filter(e => e.eventName === 'view_library').length;
 
@@ -333,6 +360,19 @@ export function AdminDashboard() {
                 </ul>
               )}
             </div>
+            <div>
+              <h4 className="text-lg font-bold text-secondary mb-3 border-b border-[#d6c7af]/10 pb-2">Recetas Más Vistas</h4>
+              {sortedRecipes.length === 0 ? <p className="text-sm text-tertiary">Nadie ha visto recetas aún.</p> : (
+                <ul className="space-y-2">
+                  {sortedRecipes.slice(0, 5).map(([name, count]) => (
+                    <li key={name} className="flex justify-between items-center text-sm">
+                      <span className="text-tertiary truncate mr-2" title={name}>{name}</span>
+                      <span className="text-accent font-bold bg-[#d6c7af]/5 px-2 py-0.5 rounded">{count}</span>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
           </div>
         </div>
 
@@ -369,6 +409,39 @@ export function AdminDashboard() {
              </div>
           )}
         </div>
+      </div>
+
+      <div className="glass-panel ghost-border p-8 rounded-xl shadow-sm relative overflow-hidden mb-8">
+        <h3 className="text-2xl font-bold text-primary mb-6">Registro de Actividad</h3>
+        {analyticsEvents.length === 0 ? (
+           <p className="text-secondary italic text-sm">Aún no hay actividad.</p>
+        ) : (
+           <div className="space-y-3">
+              {analyticsEvents.slice(0, 15).map(event => (
+                <div key={event.id} className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-[#d6c7af]/10 pb-3 last:border-0 last:pb-0">
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 rounded-full bg-[#d6c7af]/10 flex items-center justify-center">
+                      <Activity className="w-4 h-4 text-tertiary" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-bold text-secondary capitalize">{event.eventName.replace(/_/g, ' ')}</p>
+                      <p className="text-xs text-tertiary truncate max-w-[200px]" title={event.userEmail}>
+                        {event.userEmail !== 'anonymous' ? event.userEmail : 'Usuario Anónimo'}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="text-right mt-2 sm:mt-0">
+                    <p className="text-xs text-tertiary">{formatDate(event.timestamp)}</p>
+                    {event.params?.event_label && (
+                      <p className="text-xs text-accent mt-0.5 truncate max-w-[200px]" title={event.params.event_label}>
+                        {event.params.event_label}
+                      </p>
+                    )}
+                  </div>
+                </div>
+              ))}
+           </div>
+        )}
       </div>
 
       <div className="glass-panel ghost-border p-8 rounded-xl shadow-sm relative overflow-hidden mb-8">
@@ -429,7 +502,15 @@ export function AdminDashboard() {
       </div>
       
       <div className="glass-panel ghost-border p-8 rounded-xl shadow-sm relative overflow-hidden mt-8">
-         <h3 className="text-2xl font-bold text-primary mb-6">Usuarios ({usersList.length})</h3>
+         <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-6">
+           <h3 className="text-2xl font-bold text-primary">Usuarios ({usersList.length})</h3>
+           <button 
+             onClick={exportUsersCSV}
+             className="mt-4 sm:mt-0 flex items-center gap-2 bg-[#d6c7af]/10 hover:bg-[#d6c7af]/20 text-[#d6c7af] px-4 py-2 rounded-lg text-sm font-medium transition-colors"
+           >
+             <Download className="w-4 h-4" /> Exportar CSV
+           </button>
+         </div>
          
          {usersList.length === 0 ? (
             <p className="text-secondary italic">Aún no hay usuarios.</p>
