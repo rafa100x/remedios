@@ -28,9 +28,7 @@ service cloud.firestore {
     function isAdmin() {
       return request.auth != null && (
         request.auth.uid == 'jEFywPT0xVP7lA1U6wN095uP3Bn2' ||
-        request.auth.uid == 'T6n6G9x3NfR11IUMC79ynxrb7qk1' ||
-        isEmailAdmin() ||
-        exists(/databases/$(database)/documents/admins/$(request.auth.uid))
+        request.auth.uid == 'T6n6G9x3NfR11IUMC79ynxrb7qk1'
       );
     }
 
@@ -77,6 +75,13 @@ service cloud.firestore {
       allow create: if isVerified() && isValidId(intentId) && isValidPurchaseIntent(incoming());
       allow read: if isAdmin();
       allow update: if isAdmin() && incoming().diff(existing()).affectedKeys().hasOnly(['status']);
+    }
+
+    match /analytics/{eventId} {
+      allow create: if true;
+      allow read: if isAdmin();
+      allow update: if false;
+      allow delete: if false;
     }
 
     // 4. Tiered Identity Logic & Relational boundaries

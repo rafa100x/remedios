@@ -30,11 +30,22 @@ interface UserRecord {
   sessions?: SessionRecord[];
 }
 
+interface AnalyticsEvent {
+  id: string;
+  eventName: string;
+  params: Record<string, any>;
+  userId: string;
+  userEmail: string;
+  timestamp: any;
+  userAgent?: string;
+}
+
 export function AdminDashboard() {
   const { isAdmin, user } = useAuth();
   const [usersList, setUsersList] = useState<UserRecord[]>([]);
   const [usersCount, setUsersCount] = useState<number | null>(null);
   const [intents, setIntents] = useState<Intent[]>([]);
+  const [analyticsEvents, setAnalyticsEvents] = useState<AnalyticsEvent[]>([]);
   const [loading, setLoading] = useState(true);
   const [processingId, setProcessingId] = useState<string | null>(null);
   const [usersError, setUsersError] = useState<string | null>(null);
@@ -86,7 +97,11 @@ export function AdminDashboard() {
         newUsersList[userIndex].sessions = sessionsData;
         setUsersList(newUsersList);
       } catch (err: any) {
-        console.error('Error fetching sessions:', err);
+        if (err.name === 'AbortError' || err.message?.includes('aborted')) {
+          console.log('Session fetching aborted');
+        } else {
+          console.error('Error fetching sessions:', err);
+        }
       }
     }
   };
@@ -122,9 +137,13 @@ export function AdminDashboard() {
         
         setUsersList(usersData);
       } catch (err: any) {
-        console.error('Error fetching users:', err);
-        currentError = 'Error usuarios: ' + (err.message || 'Error desconocido');
-        setUsersError(currentError);
+        if (err.name === 'AbortError' || err.message?.includes('aborted')) {
+          console.log('User fetching aborted');
+        } else {
+          console.error('Error fetching users:', err);
+          currentError = 'Error usuarios: ' + (err.message || 'Error desconocido');
+          setUsersError(currentError);
+        }
       }
 
       try {
@@ -136,8 +155,28 @@ export function AdminDashboard() {
         })) as Intent[];
         setIntents(intentsData);
       } catch (err: any) {
-        console.error('Error fetching intents:', err);
-        setUsersError(prev => (prev ? prev + ' | ' : '') + 'Error intentos: ' + (err.message || 'Error desconocido') + '. Asegúrate de refrescar la sesión.');
+        if (err.name === 'AbortError' || err.message?.includes('aborted')) {
+          console.log('Intent fetching aborted');
+        } else {
+          console.error('Error fetching intents:', err);
+          setUsersError(prev => (prev ? prev + ' | ' : '') + 'Error intentos: ' + (err.message || 'Error desconocido') + '. Asegúrate de refrescar la sesión.');
+        }
+      }
+
+      try {
+        const analyticsQuery = query(collection(db, 'analytics'), orderBy('timestamp', 'desc'));
+        const analyticsSnap = await getDocs(analyticsQuery);
+        const analyticsData = analyticsSnap.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data()
+        })) as AnalyticsEvent[];
+        setAnalyticsEvents(analyticsData);
+      } catch (err: any) {
+        if (err.name === 'AbortError' || err.message?.includes('aborted')) {
+          console.log('Analytics fetching aborted');
+        } else {
+          console.error('Error fetching analytics:', err);
+        }
       } finally {
         setLoading(false);
       }
@@ -192,19 +231,34 @@ export function AdminDashboard() {
 
   const pendingIntents = intents.filter(i => i.status === 'pending' || !i.status);
 
-  return (
-    <div className="max-w-6xl mx-auto px-4 py-8">
-      
-      {user && (
-        <div className="mb-6 mx-auto w-full max-w-3xl bg-[#1a0d06] border border-[#d6c7af]/20 rounded p-4 font-mono text-xs text-[#d6c7af]/50 space-y-1">
-           <div><strong className="text-[#d6c7af]">Debug Auth Info</strong></div>
-           <div className="break-all select-all">UID: {user.uid}</div>
-           <div>Email: {user.email}</div>
-           <div>Verified: {user.emailVerified ? 'Yes' : 'No'}</div>
-           <div className="mt-2 text-red-400">Si sigues viendo el error, confirma que este UID ("{user.uid}") esté escrito exactamente igual en las reglas de Firestore o que el mail esté en la lista permitida.</div>
-        </div>
-      )}
+  // Analytics Stats Computations
+  const searchEvents = analyticsEvents.filter(e => e.eventName === 'search');
+  const bookClicks = analyticsEvents.filter(e => e.eventName === 'read_book');
+  const sectionViews = analyticsEvents.filter(e => e.eventName.startsWith('view_'));
 
+  // Group sections by event_category and event_label or eventName
+  const sectionsCount: Record<string, number> = {};
+  sectionViews.forEach(e => {
+     let name = e.eventName.replace('view_', '');
+     if (e.params?.event_label) {
+       name += ` - ${e.params.event_label}`;
+     }
+     sectionsCount[name] = (sectionsCount[name] || 0) + 1;
+  });
+  const sortedSections = Object.entries(sectionsCount).sort((a,b) => b[1] - a[1]);
+
+  const booksCount: Record<string, number> = {};
+  bookClicks.forEach(e => {
+     const bookName = e.params?.event_label || 'Desconocido';
+     booksCount[bookName] = (booksCount[bookName] || 0) + 1;
+  });
+  const sortedBooks = Object.entries(booksCount).sort((a,b) => b[1] - a[1]);
+
+  const libraryIntentCount = analyticsEvents.filter(e => e.eventName === 'view_library').length;
+
+  return (
+    <div className="max-w-7xl mx-auto px-4 py-8">
+      
       <div className="flex items-center gap-4 mb-8">
         <ShieldAlert className="w-10 h-10 text-primary" />
         <h2 className="font-headline text-4xl md:text-5xl text-primary text-shadow-glow">Panel de Administración</h2>
@@ -236,18 +290,88 @@ export function AdminDashboard() {
 
         <div className="glass-panel ghost-border p-6 rounded-xl flex flex-col items-center shadow-sm">
           <BookOpen className="w-8 h-8 text-primary mb-2" />
-          <h3 className="text-lg font-bold text-secondary mb-1">Premium</h3>
-          <p className="text-4xl font-headline text-accent">4</p>
+          <h3 className="text-lg font-bold text-secondary mb-1">Intentos Biblioteca</h3>
+          <p className="text-4xl font-headline text-accent">{libraryIntentCount}</p>
         </div>
 
         <div className="glass-panel ghost-border p-6 rounded-xl flex flex-col items-center shadow-sm">
           <Activity className="w-8 h-8 text-primary mb-2" />
-          <h3 className="text-lg font-bold text-secondary mb-1">Sistema</h3>
-          <p className="text-xl font-bold text-green-600 mt-2">Online</p>
+          <h3 className="text-lg font-bold text-secondary mb-1">Total Eventos</h3>
+          <p className="text-4xl font-headline text-accent">{analyticsEvents.length}</p>
         </div>
       </div>
 
-      <div className="glass-panel ghost-border p-8 rounded-xl shadow-sm relative overflow-hidden">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+        <div className="glass-panel ghost-border p-8 rounded-xl shadow-sm relative overflow-hidden">
+          <h3 className="text-2xl font-bold text-primary mb-6">Métricas de Contenido</h3>
+          
+          <div className="space-y-6">
+            <div>
+              <h4 className="text-lg font-bold text-secondary mb-3 border-b border-[#d6c7af]/10 pb-2">Secciones Más Visitadas</h4>
+              {sortedSections.length === 0 ? <p className="text-sm text-tertiary">Sin datos de navegación.</p> : (
+                <ul className="space-y-2">
+                  {sortedSections.slice(0, 5).map(([name, count]) => (
+                    <li key={name} className="flex justify-between items-center text-sm">
+                      <span className="text-tertiary capitalize">{name}</span>
+                      <span className="text-accent font-bold bg-[#d6c7af]/5 px-2 py-0.5 rounded">{count}</span>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+
+            <div>
+              <h4 className="text-lg font-bold text-secondary mb-3 border-b border-[#d6c7af]/10 pb-2">Libros Más Solicitados / Vistos</h4>
+              {sortedBooks.length === 0 ? <p className="text-sm text-tertiary">Nadie ha visto libros aún.</p> : (
+                <ul className="space-y-2">
+                  {sortedBooks.slice(0, 5).map(([name, count]) => (
+                    <li key={name} className="flex justify-between items-center text-sm">
+                      <span className="text-tertiary">{name}</span>
+                      <span className="text-accent font-bold bg-[#d6c7af]/5 px-2 py-0.5 rounded">{count}</span>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+          </div>
+        </div>
+
+        <div className="glass-panel ghost-border p-8 rounded-xl shadow-sm relative overflow-hidden">
+          <h3 className="text-2xl font-bold text-primary mb-6">Búsquedas Recientes</h3>
+          {searchEvents.length === 0 ? (
+             <p className="text-secondary italic text-sm">Aún no hay búsquedas registradas.</p>
+          ) : (
+             <div className="overflow-x-auto">
+               <table className="w-full text-left border-collapse min-w-full">
+                  <thead>
+                    <tr className="border-b border-[#d6c7af]/20 text-tertiary/70 text-sm">
+                      <th className="py-3 px-4 font-medium">Término</th>
+                      <th className="py-3 px-4 font-medium">Usuario</th>
+                      <th className="py-3 px-4 font-medium">Fecha</th>
+                    </tr>
+                  </thead>
+                  <tbody className="text-sm text-tertiary">
+                    {searchEvents.slice(0, 10).map((event) => (
+                      <tr key={event.id} className="border-b border-[#d6c7af]/10 hover:bg-[#d6c7af]/5 transition-colors">
+                        <td className="py-3 px-4 font-medium text-secondary">
+                          "{event.params?.search_term || 'N/A'}"
+                        </td>
+                        <td className="py-3 px-4">
+                          <span className="truncate max-w-[150px] inline-block" title={event.userEmail}>
+                            {event.userEmail !== 'anonymous' ? event.userEmail : 'Anónimo'}
+                          </span>
+                        </td>
+                        <td className="py-3 px-4">{formatDate(event.timestamp)}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+               </table>
+             </div>
+          )}
+        </div>
+      </div>
+
+      <div className="glass-panel ghost-border p-8 rounded-xl shadow-sm relative overflow-hidden mb-8">
         <h3 className="text-2xl font-bold text-primary mb-6">Intentos de Compra Recientes</h3>
         
         {intents.length === 0 ? (
