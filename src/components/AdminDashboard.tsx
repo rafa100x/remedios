@@ -286,9 +286,33 @@ export function AdminDashboard() {
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
       
-      <div className="flex items-center gap-4 mb-8">
-        <ShieldAlert className="w-10 h-10 text-primary" />
-        <h2 className="font-headline text-4xl md:text-5xl text-primary text-shadow-glow">Panel de Administración</h2>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-8">
+        <div className="flex items-center gap-4">
+          <ShieldAlert className="w-10 h-10 text-primary" />
+          <h2 className="font-headline text-4xl md:text-5xl text-primary text-shadow-glow">Panel de Administración</h2>
+        </div>
+        
+        <button 
+          onClick={async () => {
+            setLoading(true);
+            try {
+              const analyticsQuery = query(collection(db, 'analytics'), orderBy('timestamp', 'desc'));
+              const analyticsSnap = await getDocs(analyticsQuery);
+              const analyticsData = analyticsSnap.docs.map(doc => ({
+                id: doc.id,
+                ...doc.data()
+              })) as AnalyticsEvent[];
+              setAnalyticsEvents(analyticsData);
+            } catch (err) {
+              console.error(err);
+            } finally {
+              setLoading(false);
+            }
+          }}
+          className="mt-4 sm:mt-0 flex items-center gap-2 bg-[#d6c7af]/10 hover:bg-[#d6c7af]/20 text-[#d6c7af] px-4 py-2 rounded-lg text-sm font-medium transition-colors"
+        >
+          <Activity className="w-4 h-4" /> Refrescar Métricas
+        </button>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
@@ -335,7 +359,7 @@ export function AdminDashboard() {
           <div className="space-y-6">
             <div>
               <h4 className="text-lg font-bold text-secondary mb-3 border-b border-[#d6c7af]/10 pb-2">Secciones Más Visitadas</h4>
-              {sortedSections.length === 0 ? <p className="text-sm text-tertiary">Sin datos de navegación.</p> : (
+              {sortedSections.length === 0 ? <p className="text-sm text-tertiary">Navega por la página web para generar los primeros datos.</p> : (
                 <ul className="space-y-2">
                   {sortedSections.slice(0, 5).map(([name, count]) => (
                     <li key={name} className="flex justify-between items-center text-sm">
@@ -349,7 +373,7 @@ export function AdminDashboard() {
 
             <div>
               <h4 className="text-lg font-bold text-secondary mb-3 border-b border-[#d6c7af]/10 pb-2">Libros Más Solicitados / Vistos</h4>
-              {sortedBooks.length === 0 ? <p className="text-sm text-tertiary">Nadie ha visto libros aún.</p> : (
+              {sortedBooks.length === 0 ? <p className="text-sm text-tertiary">Abre un libro en la biblioteca para ver los datos aquí.</p> : (
                 <ul className="space-y-2">
                   {sortedBooks.slice(0, 5).map(([name, count]) => (
                     <li key={name} className="flex justify-between items-center text-sm">
@@ -362,7 +386,7 @@ export function AdminDashboard() {
             </div>
             <div>
               <h4 className="text-lg font-bold text-secondary mb-3 border-b border-[#d6c7af]/10 pb-2">Recetas Más Vistas</h4>
-              {sortedRecipes.length === 0 ? <p className="text-sm text-tertiary">Nadie ha visto recetas aún.</p> : (
+              {sortedRecipes.length === 0 ? <p className="text-sm text-tertiary">Entra a alguna receta del grimorio para activar esta métrica.</p> : (
                 <ul className="space-y-2">
                   {sortedRecipes.slice(0, 5).map(([name, count]) => (
                     <li key={name} className="flex justify-between items-center text-sm">
@@ -379,7 +403,7 @@ export function AdminDashboard() {
         <div className="glass-panel ghost-border p-8 rounded-xl shadow-sm relative overflow-hidden">
           <h3 className="text-2xl font-bold text-primary mb-6">Búsquedas Recientes</h3>
           {searchEvents.length === 0 ? (
-             <p className="text-secondary italic text-sm">Aún no hay búsquedas registradas.</p>
+             <p className="text-secondary italic text-sm">Realiza una búsqueda para verla registrada aquí.</p>
           ) : (
              <div className="overflow-x-auto">
                <table className="w-full text-left border-collapse min-w-full">
@@ -414,7 +438,7 @@ export function AdminDashboard() {
       <div className="glass-panel ghost-border p-8 rounded-xl shadow-sm relative overflow-hidden mb-8">
         <h3 className="text-2xl font-bold text-primary mb-6">Registro de Actividad</h3>
         {analyticsEvents.length === 0 ? (
-           <p className="text-secondary italic text-sm">Aún no hay actividad.</p>
+           <p className="text-secondary italic text-sm">El historial acaba de activarse y empieza desde cero ahora. Navega un poco para llenarlo.</p>
         ) : (
            <div className="space-y-3">
               {analyticsEvents.slice(0, 15).map(event => (
