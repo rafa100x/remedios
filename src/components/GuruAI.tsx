@@ -243,7 +243,7 @@ export function GuruAI({ onSelectRecipe }: { onSelectRecipe?: (recipe: Recipe) =
 
   if (!hasGuruAccess) {
     return (
-      <div className="max-w-4xl mx-auto px-4 py-12 md:py-24 text-center">
+      <div className="max-w-4xl w-full h-full overflow-y-auto mx-auto px-4 py-12 md:py-24 text-center">
         <Sparkles className="w-16 h-16 text-primary mx-auto mb-6 drop-shadow-[0_0_15px_rgba(214,199,175,0.3)]" />
         <h2 className="font-headline text-4xl md:text-5xl text-primary mb-4 text-shadow-glow">
           Consultorio Natural

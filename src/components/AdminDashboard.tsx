@@ -55,6 +55,7 @@ export function AdminDashboard() {
   const [usersError, setUsersError] = useState<string | null>(null);
   const [analyticsError, setAnalyticsError] = useState<string | null>(null);
   const [expandedUserId, setExpandedUserId] = useState<string | null>(null);
+  const [confirmAction, setConfirmAction] = useState<string | null>(null);
 
   const formatDate = (dateObj: any, onlyDate = false) => {
     if (!dateObj) return '-';
@@ -202,7 +203,11 @@ export function AdminDashboard() {
   }, [isAdmin]);
 
   const handleMarkAsPurchased = async (intent: Intent) => {
-    if (!window.confirm(`¿Confirmar la compra de "${intent.bookId}" para el usuario ${intent.email}?`)) return;
+    if (confirmAction !== `confirm_${intent.id}`) {
+        setConfirmAction(`confirm_${intent.id}`);
+        return;
+    }
+    setConfirmAction(null);
     
     setProcessingId(intent.id);
     try {
@@ -411,13 +416,16 @@ REGLAS MUY IMPORTANTES:
             }}
             className="mt-4 sm:mt-0 flex items-center gap-2 bg-[#d6c7af]/10 hover:bg-[#d6c7af]/20 text-[#d6c7af] px-4 py-2 rounded-lg text-sm font-medium transition-colors"
           >
-            <Users className="w-4 h-4" /> Generar Tribu
-
+            <Users className="w-4 h-4" /> {confirmAction === 'generate_tribu' ? '¿Confirmar IA?' : 'Generar Tribu'}
           </button>
           
           <button
             onClick={async () => {
-              if(!window.confirm('¿Estás seguro de que quieres ELIMINAR todos los mensajes de la comunidad?')) return;
+              if (confirmAction !== 'delete_tribu') {
+                  setConfirmAction('delete_tribu');
+                  return;
+              }
+              setConfirmAction(null);
               try {
                 const snap = await getDocs(collection(db, "community_messages"));
                 let deletedCount = 0;
@@ -433,7 +441,7 @@ REGLAS MUY IMPORTANTES:
             }}
             className="mt-4 sm:mt-0 flex items-center gap-2 bg-red-900/40 hover:bg-red-900/60 text-red-100 px-4 py-2 rounded-lg text-sm font-medium transition-colors"
           >
-            Borrar Tribu
+            {confirmAction === 'delete_tribu' ? '¿Confirmar Borrar?' : 'Borrar Tribu'}
           </button>
           <button 
             onClick={async () => {
@@ -671,7 +679,7 @@ REGLAS MUY IMPORTANTES:
                            disabled={processingId === intent.id}
                            className="bg-[#3a1a0f] hover:bg-[#5c3716] text-[#fdfaf2] text-sm font-bold py-2 px-4 rounded-lg transition-colors disabled:opacity-50"
                          >
-                           {processingId === intent.id ? 'Marcando...' : 'Marcar Comprado'}
+                           {processingId === intent.id ? 'Marcando...' : confirmAction === `confirm_${intent.id}` ? '¿Seguro?' : 'Marcar Comprado'}
                          </button>
                        )}
                      </td>

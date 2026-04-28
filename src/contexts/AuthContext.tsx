@@ -280,8 +280,34 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const simulatePurchase = async (bookId: string) => {
-      alert("Configura tu mercado pago. Mientras tanto, tu libro se desbloqueará temporalmente con propósitos de prueba.");
-      setPurchasedBooks(prev => [...prev, bookId]);
+    if (!user) return;
+    try {
+        const res = await fetch('/api/create-preference', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ 
+                bookId: bookId, 
+                title: "Libro Premium", 
+                price: "9990",
+                userId: user.uid
+            })
+        });
+        
+        if (!res.ok) {
+           const errorData = await res.json().catch(() => ({}));
+           throw new Error(errorData.error || 'Network response was not ok');
+        }
+        
+        const data = await res.json();
+        if (data.init_point) {
+            window.location.href = data.init_point;
+        } else {
+            throw new Error("No se pudo generar el link de pago.");
+        }
+    } catch (e: any) {
+      console.error('Error in purchase:', e);
+      alert("Error al iniciar la compra: " + e.message + ". Verifica que tu Token de Mercado Pago esté configurado en el panel lateral.");
+    }
   };
 
   const purchaseGuruAccess = async () => {
@@ -298,22 +324,20 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             })
         });
         
-        if (!res.ok) throw new Error('Network response was not ok');
+        if (!res.ok) {
+           const errorData = await res.json().catch(() => ({}));
+           throw new Error(errorData.error || 'Network response was not ok');
+        }
         
         const data = await res.json();
         if (data.init_point) {
             window.location.href = data.init_point;
         } else {
-            // Fallback for testing if MP fails to generate link
-            const userRef = doc(db, 'users', user.uid);
-            await setDoc(userRef, { hasGuruAccess: true, updatedAt: serverTimestamp() }, { merge: true });
-            alert("¡Felicidades! Se ha desbloqueado tu acceso al Gurú Ancestral.");
+            throw new Error("No se pudo generar el link de pago.");
         }
-    } catch (e) {
+    } catch (e: any) {
       console.error('Error purchasing Guru:', e);
-      const userRef = doc(db, 'users', user.uid);
-      await setDoc(userRef, { hasGuruAccess: true, updatedAt: serverTimestamp() }, { merge: true });
-      alert("¡Felicidades! Se ha desbloqueado tu acceso al Gurú Ancestral (Modo de prueba).");
+      alert("Error al iniciar la compra: " + e.message + ". Verifica que tu Token de Mercado Pago esté configurado en el panel lateral.");
     }
   };
 
