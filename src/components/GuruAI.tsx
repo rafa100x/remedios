@@ -38,6 +38,15 @@ export function GuruAI() {
   useEffect(() => {
     if (user && hasGuruAccess) {
       const loadHistory = async () => {
+        if (user.uid === 'demo-user') {
+          setMessages([{
+             role: 'model',
+             content: 'Las raíces me han hablado de tu llegada (Modo Explorador). Recuerda que las memorias de esta sesión se desvanecerán en el viento ya que no has iniciado sesión. ¿Qué buscas aprender hoy?'
+          }]);
+          setIsInitializing(false);
+          return;
+        }
+
         try {
            const chatDocRef = doc(db, 'guru_chats', user.uid);
            const chatSnap = await getDoc(chatDocRef);
@@ -84,21 +93,23 @@ export function GuruAI() {
 
     try {
       let chatDocRef;
-      try {
-        trackEvent('chat_guru', { event_category: 'engagement', event_label: 'Message Sent' });
-        
-        chatDocRef = doc(db, 'guru_chats', user.uid);
-        console.log("Trying to update user chat doc:", user.uid);
-        await setDoc(chatDocRef, {
-          messages: newMessages,
-          updatedAt: serverTimestamp()
-        }, { merge: true });
-        console.log("Successfully updated chat doc.");
-      } catch (err: any) {
-        console.error('Initial chat save error at setDoc1:', err);
-        setMessages(prev => [...prev, { role: 'model', content: `No pude enviar tu mensaje (Error BD). Detalles: ${err.message || String(err)}` }]);
-        setIsLoading(false);
-        return;
+      if (user.uid !== 'demo-user') {
+        try {
+          trackEvent('chat_guru', { event_category: 'engagement', event_label: 'Message Sent' });
+          
+          chatDocRef = doc(db, 'guru_chats', user.uid);
+          console.log("Trying to update user chat doc:", user.uid);
+          await setDoc(chatDocRef, {
+            messages: newMessages,
+            updatedAt: serverTimestamp()
+          }, { merge: true });
+          console.log("Successfully updated chat doc.");
+        } catch (err: any) {
+          console.error('Initial chat save error at setDoc1:', err);
+          setMessages(prev => [...prev, { role: 'model', content: `No pude enviar tu mensaje (Error BD). Detalles: ${err.message || String(err)}` }]);
+          setIsLoading(false);
+          return;
+        }
       }
 
       const validContents: { role: string; parts: { text: string }[] }[] = [];
@@ -137,10 +148,12 @@ export function GuruAI() {
           const finalMessages: {role: 'user' | 'model', content: string}[] = [...newMessages, { role: 'model', content: response.text }];
           setMessages(finalMessages);
           
-          await setDoc(chatDocRef, {
-            messages: finalMessages,
-            updatedAt: serverTimestamp()
-          }, { merge: true });
+          if (user.uid !== 'demo-user' && chatDocRef) {
+            await setDoc(chatDocRef, {
+              messages: finalMessages,
+              updatedAt: serverTimestamp()
+            }, { merge: true });
+          }
         }
       } catch (err: any) {
         console.error('Firestore save error:', err);
