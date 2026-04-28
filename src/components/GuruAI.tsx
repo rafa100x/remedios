@@ -81,10 +81,10 @@ export function GuruAI() {
       trackEvent('chat_guru', { event_category: 'engagement', event_label: 'Message Sent' });
       
       const chatDocRef = doc(db, 'guru_chats', user.uid);
-      await setDoc(chatDocRef, {
+      await updateDoc(chatDocRef, {
         messages: newMessages,
         updatedAt: serverTimestamp()
-      }, { merge: true });
+      });
 
       const validContents: { role: string; parts: { text: string }[] }[] = [];
       for (const m of newMessages) {
@@ -102,7 +102,7 @@ export function GuruAI() {
       }
 
       const response = await ai.models.generateContent({
-        model: "gemini-3-flash-preview",
+        model: "gemini-2.5-flash",
         contents: validContents,
         config: {
           systemInstruction: INSTRUCTION,
@@ -113,10 +113,10 @@ export function GuruAI() {
         const finalMessages: {role: 'user' | 'model', content: string}[] = [...newMessages, { role: 'model', content: response.text }];
         setMessages(finalMessages);
         
-        await setDoc(chatDocRef, {
+        await updateDoc(chatDocRef, {
           messages: finalMessages,
           updatedAt: serverTimestamp()
-        }, { merge: true });
+        });
       }
 
     } catch (err: any) {
@@ -133,15 +133,22 @@ export function GuruAI() {
     setUnlockError('');
     try {
       const code = unlockCode.trim().toUpperCase();
-      // Validamos un código maestros, por ejemplo: GURU-MAGICO o GURU-2026
-      if (code === 'GURU-MAGICO' || code === 'GURU-2026') {
-        const userRef = doc(db, 'users', user.uid);
-        await updateDoc(userRef, { hasGuruAccess: true, updatedAt: serverTimestamp() });
+      const res = await fetch('/api/unlock-code', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId: user.uid, code })
+      });
+      
+      const data = await res.json();
+      
+      if (!res.ok) {
+        setUnlockError(data.error || 'Error al validar el código.');
       } else {
-        setUnlockError('El código ingresado no es válido.');
+        setUnlockCode('');
       }
-    } catch (e) {
-      setUnlockError('Error al activar el código.');
+    } catch (e: any) {
+      console.error('Error in handleUnlockCode:', e);
+      setUnlockError(`Error al activar el código: ${e.message || 'Desconocido'}`);
     } finally {
       setIsUnlocking(false);
     }

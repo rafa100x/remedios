@@ -141,6 +141,32 @@ async function startServer() {
       }
   });
 
+  app.post("/api/unlock-code", async (req, res) => {
+    try {
+      const { userId, code } = req.body;
+      if (!userId || !code) return res.status(400).json({ error: "Missing parameters" });
+      
+      const cleanCode = code.trim().toUpperCase();
+      if (cleanCode === 'GURU-MAGICO' || cleanCode === 'GURU-2026') {
+         if (firebaseApp) {
+             const FieldValue = getFirestore().FieldValue;
+             await getFirestore().collection('users').doc(userId).update({
+                 hasGuruAccess: true,
+                 updatedAt: FieldValue.serverTimestamp()
+             });
+             return res.json({ success: true });
+         } else {
+             return res.status(500).json({ error: "Firebase Admin not initialized" });
+         }
+      } else {
+          return res.status(400).json({ error: "El código ingresado no es válido." });
+      }
+    } catch (e: any) {
+      console.error(e);
+      return res.status(500).json({ error: "Error interno al procesar el código" });
+    }
+  });
+
   // --- GEMINI IMAGE API ---
 
   app.post("/api/generate-image", async (req, res) => {

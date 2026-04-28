@@ -57,7 +57,7 @@ service cloud.firestore {
         && data.createdAt == existing().createdAt
         && (existing().keys().hasAll(['bookProgress']) == false || data.bookProgress is map)
         && (existing().keys().hasAll(['bookmarks']) == false || data.bookmarks is map)
-        && (data.keys().hasAll(['lastLoginAt']) == false || data.lastLoginAt == request.time)
+        && (data.keys().hasAll(['lastLoginAt']) == false || data.lastLoginAt is timestamp)
         && (data.keys().hasAll(['loginCount']) == false || data.loginCount is number)
         && (data.keys().hasAll(['hasGuruAccess']) == false || data.hasGuruAccess is bool);
     }
@@ -83,8 +83,7 @@ service cloud.firestore {
       allow read: if isVerified() && request.auth.uid == chatId;
       allow create: if isVerified() && request.auth.uid == chatId && isValidGuruChat(incoming());
       allow update: if isVerified() && request.auth.uid == chatId 
-        && incoming().diff(existing()).affectedKeys().hasOnly(['messages', 'updatedAt'])
-        && incoming().updatedAt == request.time;
+        && incoming().diff(existing()).affectedKeys().hasOnly(['messages', 'updatedAt']);
     }
 
     match /purchaseIntents/{intentId} {
@@ -125,7 +124,6 @@ service cloud.firestore {
           (isAdmin() && incoming().diff(existing()).affectedKeys().hasOnly(['purchasedBooks', 'hasGuruAccess', 'updatedAt'])) ||
           (
             request.auth.uid == userId
-            && isValidUserUpdate(incoming())
             && (
                 incoming().diff(existing()).affectedKeys().hasOnly(['updatedAt']) ||
                 incoming().diff(existing()).affectedKeys().hasOnly(['bookProgress', 'updatedAt']) ||
