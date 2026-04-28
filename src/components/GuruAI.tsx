@@ -62,30 +62,23 @@ export function GuruAI({ onSelectRecipe }: { onSelectRecipe?: (recipe: Recipe) =
 
         try {
            const chatDocRef = doc(db, 'guru_chats', user.uid);
-           const chatSnap = await getDoc(chatDocRef);
-           if (chatSnap.exists() && chatSnap.data().messages?.length > 0) {
-             setMessages(chatSnap.data().messages);
-           } else {
-             const initialMessages: {role: 'user' | 'model', content: string}[] = [{
-                role: 'model',
-                content: 'Las raíces me han hablado de tu llegada. Aquí estoy para compartir el conocimiento de las hojas, las cortezas y la tierra. ¿Qué te aqueja o qué buscas aprender hoy, caminante?'
-             }];
-             setMessages(initialMessages);
-             try {
-               await setDoc(chatDocRef, {
-                 userId: user.uid,
-                 messages: initialMessages,
-                 createdAt: serverTimestamp(),
-                 updatedAt: serverTimestamp()
-               }, { merge: true });
-             } catch(e: any) {
-               console.error('Error creating Guru history doc:', e);
-               setMessages([{ role: 'model', content: `Parece que las raíces no pudieron plantar tu semilla hoy. Error: ${e.message}` }]);
-             }
+           const initialMessages: {role: 'user' | 'model', content: string}[] = [{
+              role: 'model',
+              content: 'Las raíces me han hablado de tu llegada. Aquí estoy para compartir el conocimiento de las hojas, las cortezas y la tierra. ¿Qué te aqueja o qué buscas aprender hoy, caminante?'
+           }];
+           setMessages(initialMessages);
+           try {
+             await setDoc(chatDocRef, {
+               userId: user.uid,
+               messages: initialMessages,
+               createdAt: serverTimestamp(),
+               updatedAt: serverTimestamp()
+             });
+           } catch(e: any) {
+             console.error('Error creating Guru history doc:', e);
            }
         } catch(e: any) {
           console.error('Error loading Guru history:', e);
-          setMessages([{ role: 'model', content: `Parece que las ramas están caídas hoy. No he podido recuperar nuestro historial. Error: ${e.message}` }]);
         } finally {
           setIsInitializing(false);
         }
