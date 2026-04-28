@@ -174,8 +174,8 @@ export function AdminDashboard() {
         
         // Sort descending by timestamp, handling nulls as "now"
         analyticsData.sort((a, b) => {
-          const timeA = a.timestamp ? (a.timestamp.seconds || a.timestamp.valueOf()) : Date.now();
-          const timeB = b.timestamp ? (b.timestamp.seconds || b.timestamp.valueOf()) : Date.now();
+          const timeA = a.timestamp ? getTimeMillis(a.timestamp) : Date.now();
+          const timeB = b.timestamp ? getTimeMillis(b.timestamp) : Date.now();
           return timeB - timeA;
         });
 
@@ -263,12 +263,12 @@ export function AdminDashboard() {
   // Analytics Stats Computations
   const searchEvents = analyticsEvents.filter(e => e.eventName === 'search');
   const bookClicks = analyticsEvents.filter(e => e.eventName === 'read_book');
-  const sectionViews = analyticsEvents.filter(e => e.eventName.startsWith('view_'));
+  const sectionViews = analyticsEvents.filter(e => e.eventName?.startsWith('view_'));
 
   // Group sections by event_category and event_label or eventName
   const sectionsCount: Record<string, number> = {};
   sectionViews.forEach(e => {
-     let name = e.eventName.replace('view_', '');
+     let name = e.eventName?.replace('view_', '') || 'unknown';
      if (e.params?.event_label) {
        name += ` - ${e.params.event_label}`;
      }
@@ -362,8 +362,8 @@ export function AdminDashboard() {
               })) as AnalyticsEvent[];
               
               analyticsData.sort((a, b) => {
-                const timeA = a.timestamp ? (a.timestamp.seconds || a.timestamp.valueOf()) : Date.now();
-                const timeB = b.timestamp ? (b.timestamp.seconds || b.timestamp.valueOf()) : Date.now();
+                const timeA = a.timestamp ? getTimeMillis(a.timestamp) : Date.now();
+                const timeB = b.timestamp ? getTimeMillis(b.timestamp) : Date.now();
                 return timeB - timeA;
               });
 
@@ -520,7 +520,7 @@ export function AdminDashboard() {
                       <Activity className="w-4 h-4 text-tertiary" />
                     </div>
                     <div>
-                      <p className="text-sm font-bold text-secondary capitalize">{event.eventName.replace(/_/g, ' ')}</p>
+                      <p className="text-sm font-bold text-secondary capitalize">{(event.eventName || 'unknown').replace(/_/g, ' ')}</p>
                       <p className="text-xs text-tertiary truncate max-w-[200px]" title={event.userEmail}>
                         {event.userEmail !== 'anonymous' ? event.userEmail : 'Usuario Anónimo'}
                       </p>
