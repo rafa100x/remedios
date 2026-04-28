@@ -302,8 +302,55 @@ export function AdminDashboard() {
           <h2 className="font-headline text-4xl md:text-5xl text-primary text-shadow-glow">Panel de Administración</h2>
         </div>
         
-        <button 
-          onClick={async () => {
+        <div className="flex items-center gap-4">
+          <button
+            onClick={async () => {
+              if(!window.confirm('¿Generar mensajes de comunidad?')) return;
+              try {
+                const { collection, addDoc } = await import('firebase/firestore');
+                const users = [
+                  { userName: "Luna M.", uid: "mock-uid-1" },
+                  { userName: "Carlos S.", uid: "mock-uid-2" },
+                  { userName: "María Paz", uid: "mock-uid-3" },
+                  { userName: "Javier C.", uid: "mock-uid-4" },
+                  { userName: "Ana G.", uid: "mock-uid-5" },
+                  { userName: "Diego R.", uid: "mock-uid-6" }
+                ];
+                const messages = [
+                  { userIndex: 0, text: "Hola a todos, ¿alguien probó la receta de valeriana y manzanilla para dormir? Llevo días con insomnio y quería saber si hace efecto rápido." },
+                  { userIndex: 1, text: "Yo, me funciona muy bien. Media hora antes de acostarme es la clave, pero le agrego un poquito de miel." },
+                  { userIndex: 2, text: "A mí me recomendaron lavanda, es excelente. Si puedes, pon unas ramitas debajo de tu almohada o usa aceite esencial." },
+                  { userIndex: 3, text: "La infusión de pasiflora también es un santo remedio. Tienen que probarla si aún no lo hicieron, a mí me deja totalmente relajado." },
+                  { userIndex: 0, text: "¡Gracias por los consejos! Voy a preparar la de pasiflora esta noche a ver qué tal." },
+                  { userIndex: 4, text: "Hablando de plantas relajantes, el toronjil (melisa) me ayuda muchísimo con la ansiedad del día a día." },
+                  { userIndex: 5, text: "Totalmente de acuerdo, Ana. Mi abuela siempre me la preparaba cuando tenía exámenes y mágicamente se me iban los nervios." },
+                  { userIndex: 1, text: "¡Qué hermosa comunidad! Me encanta poder compartir estos saberes ancestrales con ustedes." }
+                ];
+                let msgsAdded = 0;
+                for (let i = 0; i < messages.length; i++) {
+                  const m = messages[i];
+                  const u = users[m.userIndex];
+                  const pastTime = new Date(Date.now() - (messages.length - i) * 15 * 60000);
+                  await addDoc(collection(db, "community_messages"), {
+                    uid: u.uid,
+                    userName: u.userName,
+                    text: m.text,
+                    createdAt: pastTime
+                  });
+                  msgsAdded++;
+                }
+                alert(`¡Se generaron ${msgsAdded} mensajes con éxito!`);
+              } catch(e:any) {
+                console.error(e);
+                alert("Error: " + e.message);
+              }
+            }}
+            className="mt-4 sm:mt-0 flex items-center gap-2 bg-[#d6c7af]/10 hover:bg-[#d6c7af]/20 text-[#d6c7af] px-4 py-2 rounded-lg text-sm font-medium transition-colors"
+          >
+            <Users className="w-4 h-4" /> Generar Tribu
+          </button>
+          <button 
+            onClick={async () => {
             setLoading(true);
             setAnalyticsError(null);
             try {
@@ -332,6 +379,7 @@ export function AdminDashboard() {
         >
           <Activity className="w-4 h-4" /> Refrescar Métricas
         </button>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
