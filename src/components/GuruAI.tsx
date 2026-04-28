@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
-import { Leaf, Send, Lock, Sparkles, BookOpen } from 'lucide-react';
+import { Leaf, Send, Lock, Sparkles, BookOpen, Trash2 } from 'lucide-react';
 import { GoogleGenAI } from '@google/genai';
 import Markdown from 'react-markdown';
 import { trackEvent } from '../lib/analytics';
@@ -20,8 +20,12 @@ IMPORTANTE:
 - Si no conoces a la persona, pregúntale amablemente su nombre para llamarle por su nombre. A medida que hablen, de a poco pregúntale también su edad, cuál es el dolor o malestar específico que tiene, o si lo que busca es hacer un cambio de hábitos más saludables y naturales. Hazlo paso a paso, como una charla real de abuelo, no interrogatorio.
 - LLAMA AL USUARIO POR SU NOMBRE en tus respuestas para que se sienta en confianza.
 - Haz preguntas activas para entender mejor lo que necesita remediar y guiarlo, simulando un diálogo empático.
-- OBLIGATORIO: Si el usuario te menciona algún síntoma o dolor, RECOMIENDA activamente RECETAS de la biblioteca y provee el LINK usando EXCLUSIVAMENTE este formato de Markdown: [Nombre de la receta](recipe:ID). Por ejemplo: Toma un tecito, te aconsejo la [Infusión de Menta con Miel](recipe:45). ¡Este enlace es IMPORTANTÍSIMO! Si no pones el formato correcto, no se mostrará como link.
-- Tienes acceso a esta lista de recetas válidas (ID - Título):\n${allRecipes.map(r => `${r.id} - ${r.title}`).join('\n')}\nSolo recomienda recetas que estén en esta lista con su ID correcto en el enlace Markdown.
+- REGLA CRÍTICA NRO 1: SIEMPRE que sugieras una planta o remedio, TIENES QUE ENVIARLE EL LINK EN FORMATO MARKDOWN.
+- FORMATO EXACTO REQUERIDO: [Nombre de la receta](recipe:IDENTIFICADOR)
+    EJEMPLO CORRECTO: Toma un tecito, te aconsejo la [Infusión de Menta con Miel](recipe:45).
+    EJEMPLO INCORRECTO: Toma un tecito de Infusión de Menta con Miel.
+    EJEMPLO INCORRECTO: Toma un tecito de **Infusión de Menta con Miel**.
+- Tienes acceso a esta lista de recetas válidas (ID - Título):\n${allRecipes.map(r => `${r.id} - ${r.title}`).join('\n')}\nSolo recomienda recetas que estén en esta lista y usa el ID correspondiente en el enlace.
 - Usa un vocabulario muy accesible, empático, cálido, como un abuelo. Si usas tecnología, menciona que no la entiendes muy bien, por ejemplo "el aparato este", "esta pantallita".
 - NUNCA des largos monólogos sobre ti mismo.
 - Advierte que tus recomendaciones son de enfoque natural y no reemplazan la visita a un médico tradicional.`;
@@ -35,6 +39,7 @@ export function GuruAI({ onSelectRecipe }: { onSelectRecipe?: (recipe: Recipe) =
   const [unlockCode, setUnlockCode] = useState('');
   const [unlockError, setUnlockError] = useState('');
   const [isUnlocking, setIsUnlocking] = useState(false);
+  const [hiddenMessageCount, setHiddenMessageCount] = useState(0);
   const endRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -303,10 +308,17 @@ export function GuruAI({ onSelectRecipe }: { onSelectRecipe?: (recipe: Recipe) =
           </h2>
           <span className="text-sm text-green-500/80 font-medium mt-1">En línea</span>
         </div>
+        <button
+          onClick={() => setHiddenMessageCount(messages.length)}
+          title="Limpiar pantalla"
+          className="ml-auto p-2 text-tertiary hover:text-primary transition-colors hover:bg-primary/10 rounded-full"
+        >
+          <Trash2 className="w-5 h-5" />
+        </button>
       </div>
 
       <div className="flex-1 overflow-y-auto glass-panel ghost-border rounded-xl p-4 md:p-6 mb-4 space-y-4">
-        {messages.map((msg, idx) => (
+        {messages.slice(hiddenMessageCount).map((msg, idx) => (
           <div key={idx} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
             <div className={`max-w-[85%] rounded-2xl p-4 ${
               msg.role === 'user' 
