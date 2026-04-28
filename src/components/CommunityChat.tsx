@@ -2,8 +2,12 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { collection, query, orderBy, limit, onSnapshot, addDoc, serverTimestamp } from 'firebase/firestore';
 import { db } from '../lib/firebase';
-import { Send, Users, UserCircle, CornerDownRight, X } from 'lucide-react';
+import { Send, Users, UserCircle, CornerDownRight, X, Bot } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
+import { GoogleGenAI } from '@google/genai';
+
+const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY || process.env.GEMINI_API_KEY || '';
+
 
 interface ChatMessage {
   id?: string;
@@ -18,11 +22,59 @@ interface ChatMessage {
 }
 
 export function CommunityChat() {
-  const { user } = useAuth();
+  const { user, isAdmin } = useAuth();
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [newMessage, setNewMessage] = useState('');
   const [replyingTo, setReplyingTo] = useState<ChatMessage | null>(null);
+  const [isGeneratingResponse, setIsGeneratingResponse] = useState<string | null>(null);
   const endRef = useRef<HTMLDivElement>(null);
+
+  const generateSimulatedResponse = async (msgToReply: ChatMessage) => {
+    if (!isAdmin || !user) return;
+    setIsGeneratingResponse(msgToReply.id || 'temp');
+    try {
+      const mockUsers = [
+        { userName: "Luna M.", uid: "mock-uid-" + Math.floor(Math.random() * 1000) },
+        { userName: "Carlos S.", uid: "mock-uid-" + Math.floor(Math.random() * 1000) },
+        { userName: "María Paz", uid: "mock-uid-" + Math.floor(Math.random() * 1000) },
+        { userName: "Javier C.", uid: "mock-uid-" + Math.floor(Math.random() * 1000) },
+        { userName: "Ana G.", uid: "mock-uid-" + Math.floor(Math.random() * 1000) },
+        { userName: "Diego R.", uid: "mock-uid-" + Math.floor(Math.random() * 1000) },
+      ];
+      const randomUser = mockUsers[Math.floor(Math.random() * mockUsers.length)];
+      
+      const ai = new GoogleGenAI({ apiKey: GEMINI_API_KEY });
+      const prompt = `
+En un foro de herboristería y plantas medicinales, un usuario llamado "${msgToReply.userName}" dijo:
+"${msgToReply.text}"
+
+Genera UNA respuesta natural, humana y amable de otro usuario, simulando la experiencia que tendría con esa inquietud o aportando conocimiento.
+Actúa como un miembro de la comunidad, no como un bot de atención. Responde directamente (hasta 30-40 palabras).
+`;
+      const response = await ai.models.generateContent({
+          model: 'gemini-2.5-flash',
+          contents: prompt,
+      });
+      let text = response.text || "";
+      if (text) {
+        await addDoc(collection(db, 'community_messages'), {
+          text: text.trim().replace(/^"|"$/g, ''),
+          uid: randomUser.uid,
+          userName: randomUser.userName,
+          userPhoto: null,
+          createdAt: serverTimestamp(),
+          replyToId: msgToReply.id,
+          replyToName: msgToReply.userName,
+          replyToText: msgToReply.text.substring(0, 100)
+        });
+      }
+    } catch (e:any) {
+      console.error(e);
+      alert("Error al generar respuesta simulada: " + e.message);
+    } finally {
+      setIsGeneratingResponse(null);
+    }
+  };
 
   useEffect(() => {
     if (!user) return;
@@ -121,6 +173,16 @@ export function CommunityChat() {
                    >
                      <CornerDownRight className="w-3 h-3" />
                    </button>
+                   {isAdmin && !isMe && (
+                     <button
+                       onClick={() => generateSimulatedResponse(msg)}
+                       disabled={isGeneratingResponse === msg.id}
+                       className={`absolute -bottom-2 -right-16 p-1.5 bg-surface text-primary opacity-0 group-hover:opacity-100 transition-opacity rounded-full shadow hover:bg-primary hover:text-white disabled:opacity-50`}
+                       title="Simular respuesta (IA)"
+                     >
+                       <Bot className={`w-3 h-3 ${isGeneratingResponse === msg.id ? 'animate-pulse' : ''}`} />
+                     </button>
+                   )}
                  </div>
                </div>
              </div>

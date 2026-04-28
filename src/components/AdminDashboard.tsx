@@ -5,6 +5,9 @@ import { trackEvent } from '../lib/analytics';
 import { collection, getDocs, orderBy, query, updateDoc, doc, getDoc, serverTimestamp, deleteDoc, addDoc } from 'firebase/firestore';
 import { auth, db } from '../lib/firebase';
 import { ErrorBoundary } from './ErrorBoundary';
+import { GoogleGenAI } from '@google/genai';
+
+const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY || process.env.GEMINI_API_KEY || '';
 
 interface Intent {
   id: string;
@@ -307,79 +310,80 @@ export function AdminDashboard() {
         <div className="flex items-center gap-4">
           <button
             onClick={async () => {
-              if(!window.confirm('¿Generar mensajes de comunidad?')) return;
+              if(!window.confirm('¿Generar mensajes de comunidad con IA?')) return;
+              setLoading(true);
               try {
-                const { collection, addDoc } = await import('firebase/firestore');
-                const users = [
-                  { userName: "Luna M.", uid: "mock-uid-1" },
-                  { userName: "Carlos S.", uid: "mock-uid-2" },
-                  { userName: "María Paz", uid: "mock-uid-3" },
-                  { userName: "Javier C.", uid: "mock-uid-4" },
-                  { userName: "Ana G.", uid: "mock-uid-5" },
-                  { userName: "Diego R.", uid: "mock-uid-6" }
+                const { collection, addDoc, getDocs, doc, deleteDoc } = await import('firebase/firestore');
+                
+                // Get existing real users or use a few simulated names
+                const mockUsers = [
+                  { userName: "Luna M.", uid: "mock-uid-" + Math.floor(Math.random() * 1000) },
+                  { userName: "Carlos S.", uid: "mock-uid-" + Math.floor(Math.random() * 1000) },
+                  { userName: "María Paz", uid: "mock-uid-" + Math.floor(Math.random() * 1000) },
+                  { userName: "Javier C.", uid: "mock-uid-" + Math.floor(Math.random() * 1000) },
+                  { userName: "Ana G.", uid: "mock-uid-" + Math.floor(Math.random() * 1000) },
+                  { userName: "Diego R.", uid: "mock-uid-" + Math.floor(Math.random() * 1000) },
+                  { userName: "Carmen", uid: "mock-uid-" + Math.floor(Math.random() * 1000) },
+                  { userName: "Esteban", uid: "mock-uid-" + Math.floor(Math.random() * 1000) }
                 ];
-                const messages = [
-                  { 
-                    id: 'msg1',
-                    userIndex: 0, 
-                    text: "Hola a todos, ¿alguien probó la receta de valeriana y manzanilla para dormir? Llevo días con insomnio y quería saber si hace efecto rápido." 
-                  },
-                  { 
-                    id: 'msg2',
-                    userIndex: 1, 
-                    text: "A mi me funciona muy bien. Media hora antes de acostarme es la clave, pero le agrego un poquito de miel silvestre para endulzar.", 
-                    replyToId: 'msg1', 
-                    replyToName: 'Luna', 
-                    replyToText: 'Hola a todos, ¿alguien probó la receta de valeriana y manzanilla para dormir?' 
-                  },
-                  { 
-                    id: 'msg3',
-                    userIndex: 2, 
-                    text: "Totalmente de acuerdo con la miel. De todas formas, te recomiendo que también pongas unas ramitas de lavanda debajo de tu almohada o uses aceite esencial para potenciarlo.",
-                    replyToId: 'msg2',
-                    replyToName: 'Carlos',
-                    replyToText: 'A mi me funciona muy bien. Media hora antes de acostarme es la clave...'
-                  },
-                  { 
-                    id: 'msg4',
-                    userIndex: 3, 
-                    text: "La infusión de pasiflora también es un santo remedio. Tienen que probarla si aún no lo hicieron, a mí me deja totalmente relajado, mucho más que la valeriana pura.",
-                    replyToId: 'msg1',
-                    replyToName: 'Luna',
-                    replyToText: 'Llevo días con insomnio y quería saber si hace efecto rápido.'
-                  },
-                  { 
-                    id: 'msg5',
-                    userIndex: 0, 
-                    text: "¡Gracias por el dato de la pasiflora! Voy a preparar justo esa infusión esta noche a ver qué tal me va, le sumaré la miel también.",
-                    replyToId: 'msg4',
-                    replyToName: 'Javier',
-                    replyToText: 'La infusión de pasiflora también es un santo remedio. Tienen que probarla si aún no lo hicieron'
-                  },
-                  { 
-                    id: 'msg6',
-                    userIndex: 4, 
-                    text: "Hablando de plantas relajantes, a mi marido le estuve dando toronjil (melisa) y mejoró muchísimo su ansiedad del día a día, igual no la combinamos con la pasiflora, no sé si se podrá."
-                  },
-                  { 
-                    id: 'msg7',
-                    userIndex: 5, 
-                    text: "¡Qué maravilla la melisa! Mi abuela siempre me la preparaba cuando tenía exámenes en la facultad y mágicamente se me iban todos los nervios.",
-                    replyToId: 'msg6',
-                    replyToName: 'Ana',
-                    replyToText: 'a mi marido le estuve dando toronjil (melisa) y mejoró muchísimo su ansiedad'
-                  },
-                  { 
-                    id: 'msg8',
-                    userIndex: 1, 
-                    text: "¡Qué hermosa comunidad! Me emociona mucho poder leer y compartir todos estos saberes ancestrales que muchas veces se pierden con el tiempo." 
-                  }
-                ];
+
+                // Shuffle and pick 5 users
+                const selectedUsers = mockUsers.sort(() => 0.5 - Math.random()).slice(0, 5);
+
+                const ai = new GoogleGenAI({ apiKey: GEMINI_API_KEY });
+                
+                const prompt = `
+Genera una conversación realista y dinámica para un foro/comunidad de herboristería, plantas medicinales y medicina natural en español.
+Queremos entre 6 y 10 mensajes que se sientan como personas reales compartiendo sus remedios, experiencias o preguntando dudas.
+Usa los siguientes nombres de usuario para los autores de los mensajes de forma aleatoria: ${selectedUsers.map(u => u.userName).join(', ')}.
+
+REGLAS MUY IMPORTANTES:
+1. Algunos mensajes DEBEN ser preguntas nuevas, y otros DEBEN ser respuestas a los mensajes previos (formando hilos o interacciones).
+2. Para que se note que un mensaje es una respuesta a otro anterior, usa el campo "replyToId" y apunta al "id" del mensaje previo. También incluye "replyToName" (nombre de a quien responde) y "replyToText" (un resumen cortito de lo que dijo esa persona al que le responde).
+3. Variedad de tonos: algunos agradeciendo, otros preguntando, otros dando recetas específicas (por ej: "A mi me sirvió combinar X con Y").
+4. Genera SOLAMENTE una lista en JSON con este formato exacto, sin markdown ni comillas invertidas extra:
+[
+  { 
+    "id": "gen_msg_1", 
+    "userName": "<Nombre de los provistos>",
+    "text": "Texto del mensaje",
+    "replyToId": null,
+    "replyToName": null,
+    "replyToText": null
+  },
+  { 
+    "id": "gen_msg_2", 
+    "userName": "<Otro Nombre>",
+    "text": "Totalmente, y si le agregas...",
+    "replyToId": "gen_msg_1",
+    "replyToName": "<El nombre del anterior>",
+    "replyToText": "Texto corto del anterior mensaje"
+  }
+]
+`;
+
+                const response = await ai.models.generateContent({
+                    model: 'gemini-2.5-flash',
+                    contents: prompt,
+                });
+                
+                let text = response.text || "[]";
+                // Limpiar posibles backticks
+                text = text.replace(/^```json\s*/i, '').replace(/\s*```$/i, '').trim();
+
+                const generatedMessages = JSON.parse(text);
+                
                 let msgsAdded = 0;
-                for (let i = 0; i < messages.length; i++) {
-                  const m = messages[i];
-                  const u = users[m.userIndex];
-                  const pastTime = new Date(Date.now() - (messages.length - i) * 15 * 60000);
+                for (let i = 0; i < generatedMessages.length; i++) {
+                  const m = generatedMessages[i];
+                  // find the user uid
+                  let u = selectedUsers.find(u => u.userName === m.userName);
+                  if (!u) {
+                    // fallback if AI invents a name
+                    u = { userName: m.userName || "Caminante", uid: "mock-uid-" + Math.floor(Math.random() * 1000) };
+                  }
+
+                  const pastTime = new Date(Date.now() - (generatedMessages.length - i) * 15 * 60000);
                   
                   const payload: any = {
                     uid: u.uid,
@@ -387,6 +391,7 @@ export function AdminDashboard() {
                     text: m.text,
                     createdAt: pastTime
                   };
+
                   if (m.replyToId) {
                     payload.replyToId = m.replyToId;
                     payload.replyToName = m.replyToName;
@@ -396,15 +401,18 @@ export function AdminDashboard() {
                   await addDoc(collection(db, "community_messages"), payload);
                   msgsAdded++;
                 }
-                alert(`¡Se generaron ${msgsAdded} mensajes con éxito!`);
+                alert(`¡Se generaron ${msgsAdded} mensajes con IA con éxito!`);
               } catch(e:any) {
                 console.error(e);
-                alert("Error: " + e.message);
+                alert("Error generando con IA: " + e.message);
+              } finally {
+                setLoading(false);
               }
             }}
             className="mt-4 sm:mt-0 flex items-center gap-2 bg-[#d6c7af]/10 hover:bg-[#d6c7af]/20 text-[#d6c7af] px-4 py-2 rounded-lg text-sm font-medium transition-colors"
           >
             <Users className="w-4 h-4" /> Generar Tribu
+
           </button>
           
           <button
