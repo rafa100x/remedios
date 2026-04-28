@@ -1,4 +1,4 @@
-import { Search, Bookmark, ShoppingBag, LibraryBig, LogIn, UserCircle, LogOut, Info, Home, Sparkles } from 'lucide-react';
+import { Search, Bookmark, ShoppingBag, LibraryBig, LogIn, UserCircle, LogOut, Info, Home, Sparkles, Users } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
@@ -17,9 +17,10 @@ interface HeaderProps {
   isFavoritesView: boolean;
   isLibraryView: boolean;
   shoppingListCount: number;
+  hideSearch?: boolean;
 }
 
-export function Header({ searchQuery, setSearchQuery, onShowFavorites, onShowShoppingList, onShowLibrary, onShowProfile, onShowAdmin, onShowGuru, onHome, onShowInfo, isFavoritesView, isLibraryView, shoppingListCount }: HeaderProps) {
+export function Header({ searchQuery, setSearchQuery, onShowFavorites, onShowShoppingList, onShowLibrary, onShowProfile, onShowAdmin, onShowGuru, onHome, onShowInfo, isFavoritesView, isLibraryView, shoppingListCount, hideSearch }: HeaderProps) {
   const { user, isAdmin, signIn, logOut } = useAuth();
   const [showUserMenu, setShowUserMenu] = useState(false);
 
@@ -30,7 +31,7 @@ export function Header({ searchQuery, setSearchQuery, onShowFavorites, onShowSho
         Desktop: Full nav
         Mobile: Logo, Search, and User Profile 
       */}
-      <header className="fixed top-0 left-0 right-0 z-40 bg-[#fdfaf2] shadow-sm border-b border-[#d6c7af] px-4 md:px-8 h-[110px] sm:h-20 flex flex-col sm:flex-row items-center justify-between transition-all">
+      <header className={`fixed top-0 left-0 right-0 z-40 bg-[#fdfaf2] shadow-sm border-b border-[#d6c7af] px-4 md:px-8 flex flex-col sm:flex-row items-center justify-between transition-all ${hideSearch ? 'h-[70px] sm:h-20' : 'h-[110px] sm:h-20'}`}>
         
         {/* Top Row (Mobile & Desktop) */}
         <div className="w-full sm:w-auto flex items-center justify-between py-3 sm:py-0">
@@ -85,16 +86,18 @@ export function Header({ searchQuery, setSearchQuery, onShowFavorites, onShowSho
         </div>
 
         {/* Search Bar - Center on Desktop, Bottom Row on Mobile */}
-        <div className="w-full sm:max-w-md md:max-w-lg relative mb-3 sm:mb-0 sm:mx-6">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-[#8a6a4b]" />
-          <input
-            type="text"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Buscar por Ej: tos, estómago..."
-            className="w-full bg-white border border-[#d6c7af] text-[#2c1600] font-body py-2.5 pl-10 pr-4 rounded-xl focus:outline-none focus:border-[#8a6a4b] transition-colors placeholder:text-[#8a6a4b]/60 text-base"
-          />
-        </div>
+        {!hideSearch && (
+          <div className="w-full sm:max-w-md md:max-w-lg relative mb-3 sm:mb-0 sm:mx-6">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-[#8a6a4b]" />
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Buscar por Ej: tos, estómago..."
+              className="w-full bg-white border border-[#d6c7af] text-[#2c1600] font-body py-2.5 pl-10 pr-4 rounded-xl focus:outline-none focus:border-[#8a6a4b] transition-colors placeholder:text-[#8a6a4b]/60 text-base"
+            />
+          </div>
+        )}
 
         {/* Desktop Nav Actions */}
         <div className="hidden sm:flex items-center gap-6">
@@ -177,7 +180,7 @@ export function Header({ searchQuery, setSearchQuery, onShowFavorites, onShowSho
         MOBILE BOTTOM NAVIGATION BAR 
         Highly accessible, large text, fixed to bottom.
       */}
-      <div className="sm:hidden fixed bottom-0 left-0 right-0 z-50 bg-[#1a0f08] border-t border-[#8a6a4b]/30 pb-safe pt-2 px-2 flex justify-around items-end shadow-[0_-10px_30px_rgba(0,0,0,0.3)]">
+      <div className="sm:hidden fixed bottom-0 left-0 right-0 z-50 bg-[#1a0f08] border-t border-[#8a6a4b]/30 h-[70px] pb-safe pt-1 px-2 flex justify-around items-start shadow-[0_-10px_30px_rgba(0,0,0,0.3)]">
           
           <button onClick={onHome} className={`flex flex-col items-center p-2 min-w-[60px] ${!isFavoritesView && !isLibraryView && !searchQuery ? 'text-[#d4af37]' : 'text-[#f4ead0]/60'}`}>
              <Home className="w-6 h-6 mb-1" />

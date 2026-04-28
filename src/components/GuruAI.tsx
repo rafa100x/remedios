@@ -7,17 +7,18 @@ import { trackEvent } from '../lib/analytics';
 import { doc, getDoc, setDoc, updateDoc, serverTimestamp } from 'firebase/firestore';
 import { db } from '../lib/firebase';
 import { Recipe, categories } from '../data/recipes';
+import { CommunityChat } from './CommunityChat';
 
 const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY || process.env.GEMINI_API_KEY || '';
 const ai = new GoogleGenAI({ apiKey: GEMINI_API_KEY });
 
 const allRecipes = categories.flatMap(c => c.recipes);
-const INSTRUCTION = `Eres el Abuelo Amaro, un experto naturópata, botánico y sanador tradicional, profundamente conectado con la fitoterapia y la medicina ancestral. 
+const INSTRUCTION = `Eres un Guía Botánico, un experto naturópata, botánico y sanador tradicional, profundamente conectado con la fitoterapia y la medicina ancestral. 
 IMPORTANTE: 
 - SIEMPRE responde en español, sin importar de qué idioma te hablen o pregunten.
-- NUNCA menciones que eres una Inteligencia Artificial, un modelo de lenguaje, o un bot. Actúa como una persona humana de edad mayor, un abuelo un poco lento con la tecnología, pero un especialista sabio con años de experiencia clínica y en la naturaleza.
+- Actúa como un Guía Botánico experto, cálido y sabio, un especialista con años de experiencia clínica y en la naturaleza.
 - Sé CONCISO y conversacional. Da respuestas de chat (algunas frases cortas). Evita crear grandes bloques de texto a menos que sea estrictamente necesario.
-- Si no conoces a la persona, pregúntale amablemente su nombre para llamarle por su nombre. A medida que hablen, de a poco pregúntale también su edad, cuál es el dolor o malestar específico que tiene, o si lo que busca es hacer un cambio de hábitos más saludables y naturales. Hazlo paso a paso, como una charla real de abuelo, no interrogatorio.
+- Si no conoces a la persona, pregúntale amablemente su nombre para llamarle por su nombre. A medida que hablen, de a poco pregúntale también su edad, cuál es el dolor o malestar específico que tiene, o si lo que busca es hacer un cambio de hábitos más saludables y naturales. Hazlo paso a paso, como una charla real, no interrogatorio.
 - LLAMA AL USUARIO POR SU NOMBRE en tus respuestas para que se sienta en confianza.
 - Haz preguntas activas para entender mejor lo que necesita remediar y guiarlo, simulando un diálogo empático.
 - REGLA CRÍTICA NRO 1: SIEMPRE que sugieras una planta o remedio, TIENES QUE ENVIARLE EL LINK EN FORMATO MARKDOWN.
@@ -26,7 +27,7 @@ IMPORTANTE:
     EJEMPLO INCORRECTO: Toma un tecito de Infusión de Menta con Miel.
     EJEMPLO INCORRECTO: Toma un tecito de **Infusión de Menta con Miel**.
 - Tienes acceso a esta lista de recetas válidas (ID - Título):\n${allRecipes.map(r => `${r.id} - ${r.title}`).join('\n')}\nSolo recomienda recetas que estén en esta lista y usa el ID correspondiente en el enlace.
-- Usa un vocabulario muy accesible, empático, cálido, como un abuelo. Si usas tecnología, menciona que no la entiendes muy bien, por ejemplo "el aparato este", "esta pantallita".
+- Usa un vocabulario muy accesible, empático, cálido y profesional. 
 - NUNCA des largos monólogos sobre ti mismo.
 - Advierte que tus recomendaciones son de enfoque natural y no reemplazan la visita a un médico tradicional.`;
 
@@ -40,6 +41,7 @@ export function GuruAI({ onSelectRecipe }: { onSelectRecipe?: (recipe: Recipe) =
   const [unlockError, setUnlockError] = useState('');
   const [isUnlocking, setIsUnlocking] = useState(false);
   const [hiddenMessageCount, setHiddenMessageCount] = useState(0);
+  const [activeTab, setActiveTab] = useState<'chat' | 'community'>('chat');
   const endRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -141,7 +143,7 @@ export function GuruAI({ onSelectRecipe }: { onSelectRecipe?: (recipe: Recipe) =
       let responseStream;
       try {
         responseStream = await ai.models.generateContentStream({
-          model: "gemini-2.5-flash",
+          model: "gemini-3-flash-preview",
           contents: validContents,
           config: {
             systemInstruction: INSTRUCTION,
@@ -247,7 +249,7 @@ export function GuruAI({ onSelectRecipe }: { onSelectRecipe?: (recipe: Recipe) =
           Consultorio Natural
         </h2>
         <p className="text-xl text-secondary mb-8 max-w-2xl mx-auto leading-relaxed">
-          Un espacio privado para resolver todas tus dudas sobre plantas medicinales, recetas de la abuela y cuidados naturales. Recibe orientación de forma directa y personalizada.
+          Un espacio privado para resolver todas tus dudas sobre plantas medicinales, recetas de la abuela y cuidados naturales. Tu paquete de acceso te abre las puertas al Consultorio Botánico y además a la <strong>Tribu</strong>: nuestra comunidad activa de medicina natural donde encontrarás a otros usuarios.
         </p>
         
         <div className="glass-panel ghost-border p-8 rounded-2xl max-w-lg mx-auto transform hover:scale-[1.02] transition-transform duration-300">
@@ -294,102 +296,131 @@ export function GuruAI({ onSelectRecipe }: { onSelectRecipe?: (recipe: Recipe) =
   }
 
   return (
-    <div className="max-w-4xl mx-auto px-4 py-8 h-[calc(100vh-80px)] flex flex-col">
-      <div className="flex items-center gap-4 mb-6 shrink-0">
-        <div className="relative">
-          <div className="bg-primary/20 p-3 rounded-full border border-primary/30">
-            <Sparkles className="w-8 h-8 text-primary" />
-          </div>
-          <div className="absolute bottom-0 right-0 w-4 h-4 bg-green-500 border-2 border-[#1c1813] rounded-full shadow-[0_0_8px_rgba(34,197,94,0.6)]"></div>
-        </div>
-        <div className="flex flex-col">
-          <h2 className="font-headline text-3xl md:text-4xl text-primary text-shadow-glow leading-none">
-            Abuelo Amaro
-          </h2>
-          <span className="text-sm text-green-500/80 font-medium mt-1">En línea</span>
-        </div>
+    <div className="w-full max-w-4xl mx-auto px-2 md:px-4 py-2 md:py-4 flex flex-col flex-1 min-h-0">
+      <div className="flex bg-black/40 rounded-xl p-1 mb-2 md:mb-4 shrink-0 w-max mx-auto border border-primary/20 shadow-md">
         <button
-          onClick={() => setHiddenMessageCount(messages.length)}
-          title="Limpiar pantalla"
-          className="ml-auto p-2 text-tertiary hover:text-primary transition-colors hover:bg-primary/10 rounded-full"
+           className={`px-3 md:px-6 py-2 rounded-lg font-bold transition-all text-xs md:text-base ${
+             activeTab === 'chat' 
+               ? 'bg-primary text-black shadow-[0_0_10px_rgba(214,199,175,0.3)]' 
+               : 'text-primary/70 hover:text-primary hover:bg-white/5'
+           }`}
+           onClick={() => setActiveTab('chat')}
         >
-          <Trash2 className="w-5 h-5" />
+          Guía Natural
+        </button>
+        <button
+           className={`px-3 md:px-6 py-2 rounded-lg font-bold transition-all text-xs md:text-base ${
+             activeTab === 'community' 
+               ? 'bg-primary text-black shadow-[0_0_10px_rgba(214,199,175,0.3)]' 
+               : 'text-primary/70 hover:text-primary hover:bg-white/5'
+           }`}
+           onClick={() => setActiveTab('community')}
+        >
+          Tribu (Comunidad)
         </button>
       </div>
 
-      <div className="flex-1 overflow-y-auto glass-panel ghost-border rounded-xl p-4 md:p-6 mb-4 space-y-4">
-        {messages.slice(hiddenMessageCount).map((msg, idx) => (
-          <div key={idx} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-            <div className={`max-w-[85%] rounded-2xl p-4 ${
-              msg.role === 'user' 
-                ? 'bg-primary/20 text-secondary rounded-br-sm border border-primary/10' 
-                : 'glass-panel text-secondary rounded-bl-sm border border-white/5'
-            }`}>
-               {msg.role === 'model' ? (
-                 <div className="markdown-body text-sm md:text-base prose prose-invert max-w-none">
-                    <Markdown
-                      urlTransform={(value) => value}
-                      components={{
-                        a: ({ node, href, children, ...props }) => {
-                          if (href?.startsWith('recipe:')) {
-                             const recipeId = parseInt(href.replace('recipe:', ''), 10);
-                             return (
-                               <button 
-                                 type="button"
-                                 className="text-primary hover:text-primary/80 underline decoration-primary/50 underline-offset-2 font-medium transition-colors"
-                                 onClick={() => {
-                                   if (onSelectRecipe && !isNaN(recipeId)) {
-                                      const recipe = allRecipes.find(r => r.id === recipeId);
-                                      if (recipe) onSelectRecipe(recipe);
-                                   }
-                                 }}
-                               >
-                                 {children}
-                               </button>
-                             );
-                          }
-                          return <a href={href} target="_blank" rel="noopener noreferrer" {...props}>{children}</a>;
-                        }
-                      }}
-                    >
-                      {msg.content}
-                    </Markdown>
-                 </div>
-               ) : (
-                 <p className="text-sm md:text-base font-medium">{msg.content}</p>
-               )}
+      {activeTab === 'community' ? (
+        <CommunityChat />
+      ) : (
+        <>
+          <div className="flex items-center gap-4 mb-6 shrink-0">
+            <div className="relative">
+              <div className="bg-primary/20 p-3 rounded-full border border-primary/30">
+                <Sparkles className="w-8 h-8 text-primary" />
+              </div>
+              <div className="absolute bottom-0 right-0 w-4 h-4 bg-green-500 border-2 border-[#1c1813] rounded-full shadow-[0_0_8px_rgba(34,197,94,0.6)]"></div>
             </div>
+            <div className="flex flex-col">
+              <h2 className="font-headline text-3xl md:text-4xl text-primary text-shadow-glow leading-none">
+                Guía Botánico
+              </h2>
+              <span className="text-sm text-green-500/80 font-medium mt-1">En línea</span>
+            </div>
+            <button
+              onClick={() => setHiddenMessageCount(messages.length)}
+              title="Limpiar pantalla"
+              className="ml-auto p-2 text-tertiary hover:text-primary transition-colors hover:bg-primary/10 rounded-full"
+            >
+              <Trash2 className="w-5 h-5" />
+            </button>
           </div>
-        ))}
-        {isLoading && (
-          <div className="flex justify-start">
-             <div className="glass-panel text-tertiary rounded-2xl rounded-bl-sm p-4 text-sm animate-pulse flex items-center gap-2 border border-white/5">
-                <Leaf className="w-4 h-4 animate-spin-slow" />
-                Escribiendo...
-             </div>
-          </div>
-        )}
-        <div ref={endRef} />
-      </div>
 
-      <div className="shrink-0 relative">
-         <input
-           type="text"
-           value={input}
-           onChange={(e) => setInput(e.target.value)}
-           onKeyDown={(e) => e.key === 'Enter' && handleSend()}
-           placeholder="Escribe un mensaje..."
-           className="w-full bg-[#3d3326]/50 border border-[#d6c7af]/20 rounded-xl px-4 py-4 pr-12 text-secondary placeholder-tertiary focus:outline-none focus:border-primary/50 transition-colors shadow-inner"
-           disabled={isLoading}
-         />
-         <button
-           onClick={handleSend}
-           disabled={!input.trim() || isLoading}
-           className="absolute right-3 top-1/2 -translate-y-1/2 p-2 bg-primary/10 hover:bg-primary/20 text-primary rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-         >
-           <Send className="w-5 h-5" />
-         </button>
-      </div>
+          <div className="flex-1 overflow-y-auto glass-panel ghost-border rounded-xl p-4 md:p-6 mb-4 space-y-4">
+            {messages.slice(hiddenMessageCount).map((msg, idx) => (
+              <div key={idx} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
+                <div className={`max-w-[85%] rounded-2xl p-4 ${
+                  msg.role === 'user' 
+                    ? 'bg-primary/20 text-secondary rounded-br-sm border border-primary/10' 
+                    : 'glass-panel text-secondary rounded-bl-sm border border-white/5'
+                }`}>
+                   {msg.role === 'model' ? (
+                     <div className="markdown-body text-sm md:text-base prose prose-invert max-w-none">
+                        <Markdown
+                          urlTransform={(value) => value}
+                          components={{
+                            a: ({ node, href, children, ...props }) => {
+                              if (href?.startsWith('recipe:')) {
+                                 const recipeId = parseInt(href.replace('recipe:', ''), 10);
+                                 return (
+                                   <button 
+                                     type="button"
+                                     className="text-primary hover:text-primary/80 underline decoration-primary/50 underline-offset-2 font-medium transition-colors"
+                                     onClick={() => {
+                                       if (onSelectRecipe && !isNaN(recipeId)) {
+                                          const recipe = allRecipes.find(r => r.id === recipeId);
+                                          if (recipe) onSelectRecipe(recipe);
+                                       }
+                                     }}
+                                   >
+                                     {children}
+                                   </button>
+                                 );
+                              }
+                              return <a href={href} target="_blank" rel="noopener noreferrer" {...props}>{children}</a>;
+                            }
+                          }}
+                        >
+                          {msg.content}
+                        </Markdown>
+                     </div>
+                   ) : (
+                     <p className="text-sm md:text-base font-medium">{msg.content}</p>
+                   )}
+                </div>
+              </div>
+            ))}
+            {isLoading && (
+              <div className="flex justify-start">
+                 <div className="glass-panel text-tertiary rounded-2xl rounded-bl-sm p-4 text-sm animate-pulse flex items-center gap-2 border border-white/5">
+                    <Leaf className="w-4 h-4 animate-spin-slow" />
+                    Escribiendo...
+                 </div>
+              </div>
+            )}
+            <div ref={endRef} />
+          </div>
+
+          <div className="shrink-0 relative">
+             <input
+               type="text"
+               value={input}
+               onChange={(e) => setInput(e.target.value)}
+               onKeyDown={(e) => e.key === 'Enter' && handleSend()}
+               placeholder="Escribe un mensaje..."
+               className="w-full bg-[#3d3326]/50 border border-[#d6c7af]/20 rounded-xl px-4 py-4 pr-12 text-secondary placeholder-tertiary focus:outline-none focus:border-primary/50 transition-colors shadow-inner"
+               disabled={isLoading}
+             />
+             <button
+               onClick={handleSend}
+               disabled={!input.trim() || isLoading}
+               className="absolute right-3 top-1/2 -translate-y-1/2 p-2 bg-primary/10 hover:bg-primary/20 text-primary rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+             >
+               <Send className="w-5 h-5" />
+             </button>
+          </div>
+        </>
+      )}
     </div>
   );
 }
