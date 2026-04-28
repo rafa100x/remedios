@@ -62,20 +62,27 @@ export function GuruAI({ onSelectRecipe }: { onSelectRecipe?: (recipe: Recipe) =
 
         try {
            const chatDocRef = doc(db, 'guru_chats', user.uid);
-           const initialMessages: {role: 'user' | 'model', content: string}[] = [{
-              role: 'model',
-              content: 'Las raíces me han hablado de tu llegada. Aquí estoy para compartir el conocimiento de las hojas, las cortezas y la tierra. ¿Qué te aqueja o qué buscas aprender hoy, caminante?'
-           }];
-           setMessages(initialMessages);
-           try {
-             await setDoc(chatDocRef, {
-               userId: user.uid,
-               messages: initialMessages,
-               createdAt: serverTimestamp(),
-               updatedAt: serverTimestamp()
-             });
-           } catch(e: any) {
-             console.error('Error creating Guru history doc:', e);
+           const chatSnap = await getDoc(chatDocRef);
+           if (chatSnap.exists() && chatSnap.data().messages?.length > 0) {
+             const loaded = chatSnap.data().messages;
+             setMessages(loaded);
+             setHiddenMessageCount(loaded.length);
+           } else {
+             const initialMessages: {role: 'user' | 'model', content: string}[] = [{
+                role: 'model',
+                content: 'Las raíces me han hablado de tu llegada. Aquí estoy para compartir el conocimiento de las hojas, las cortezas y la tierra. ¿Qué te aqueja o qué buscas aprender hoy, caminante?'
+             }];
+             setMessages(initialMessages);
+             try {
+               await setDoc(chatDocRef, {
+                 userId: user.uid,
+                 messages: initialMessages,
+                 createdAt: serverTimestamp(),
+                 updatedAt: serverTimestamp()
+               }, { merge: true });
+             } catch(e: any) {
+               console.error('Error creating Guru history doc:', e);
+             }
            }
         } catch(e: any) {
           console.error('Error loading Guru history:', e);
@@ -340,6 +347,15 @@ export function GuruAI({ onSelectRecipe }: { onSelectRecipe?: (recipe: Recipe) =
           </div>
 
           <div className="flex-1 overflow-y-auto glass-panel ghost-border rounded-xl p-4 md:p-6 mb-4 space-y-4">
+            {messages.slice(hiddenMessageCount).length === 0 && (
+              <div className="flex justify-start">
+                <div className="max-w-[85%] rounded-2xl p-4 glass-panel text-secondary rounded-bl-sm border border-white/5">
+                  <div className="markdown-body text-sm md:text-base prose prose-invert max-w-none">
+                     <p>Las raíces me han hablado de tu llegada. Aquí estoy para compartir el conocimiento de las hojas, las cortezas y la tierra. ¿Qué te aqueja o qué buscas aprender hoy, caminante?</p>
+                  </div>
+                </div>
+              </div>
+            )}
             {messages.slice(hiddenMessageCount).map((msg, idx) => (
               <div key={idx} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
                 <div className={`max-w-[85%] rounded-2xl p-4 ${
