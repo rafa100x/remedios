@@ -80,10 +80,7 @@ service cloud.firestore {
     }
 
     match /guru_chats/{chatId} {
-      allow read: if isVerified() && request.auth.uid == chatId;
-      allow create: if isVerified() && request.auth.uid == chatId;
-      allow update: if isVerified() && request.auth.uid == chatId;
-      allow delete: if isAdmin() || (isVerified() && request.auth.uid == chatId);
+      allow read, write: if request.auth != null && request.auth.uid == chatId;
     }
 
     match /purchaseIntents/{intentId} {

@@ -49,16 +49,21 @@ export function GuruAI() {
                 content: 'Las raíces me han hablado de tu llegada. Aquí estoy para compartir el conocimiento de las hojas, las cortezas y la tierra. ¿Qué te aqueja o qué buscas aprender hoy, caminante?'
              }];
              setMessages(initialMessages);
-             await setDoc(chatDocRef, {
-               userId: user.uid,
-               messages: initialMessages,
-               createdAt: serverTimestamp(),
-               updatedAt: serverTimestamp()
-             }, { merge: true });
+             try {
+               await setDoc(chatDocRef, {
+                 userId: user.uid,
+                 messages: initialMessages,
+                 createdAt: serverTimestamp(),
+                 updatedAt: serverTimestamp()
+               }, { merge: true });
+             } catch(e: any) {
+               console.error('Error creating Guru history doc:', e);
+               setMessages([{ role: 'model', content: `Parece que las raíces no pudieron plantar tu semilla hoy. Error: ${e.message}` }]);
+             }
            }
-        } catch(e) {
+        } catch(e: any) {
           console.error('Error loading Guru history:', e);
-          setMessages([{ role: 'model', content: 'Parece que las ramas están caídas hoy. No he podido recuperar nuestro historial.' }]);
+          setMessages([{ role: 'model', content: `Parece que las ramas están caídas hoy. No he podido recuperar nuestro historial. Error: ${e.message}` }]);
         } finally {
           setIsInitializing(false);
         }
@@ -78,13 +83,23 @@ export function GuruAI() {
     setIsLoading(true);
 
     try {
-      trackEvent('chat_guru', { event_category: 'engagement', event_label: 'Message Sent' });
-      
-      const chatDocRef = doc(db, 'guru_chats', user.uid);
-      await setDoc(chatDocRef, {
-        messages: newMessages,
-        updatedAt: serverTimestamp()
-      }, { merge: true });
+      let chatDocRef;
+      try {
+        trackEvent('chat_guru', { event_category: 'engagement', event_label: 'Message Sent' });
+        
+        chatDocRef = doc(db, 'guru_chats', user.uid);
+        console.log("Trying to update user chat doc:", user.uid);
+        await setDoc(chatDocRef, {
+          messages: newMessages,
+          updatedAt: serverTimestamp()
+        }, { merge: true });
+        console.log("Successfully updated chat doc.");
+      } catch (err: any) {
+        console.error('Initial chat save error at setDoc1:', err);
+        setMessages(prev => [...prev, { role: 'model', content: `No pude enviar tu mensaje (Error BD). Detalles: ${err.message || String(err)}` }]);
+        setIsLoading(false);
+        return;
+      }
 
       const validContents: { role: string; parts: { text: string }[] }[] = [];
       for (const m of newMessages) {
