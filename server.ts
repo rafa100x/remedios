@@ -149,7 +149,6 @@ async function startServer() {
       const cleanCode = code.trim().toUpperCase();
       if (cleanCode === 'GURU-MAGICO' || cleanCode === 'GURU-2026') {
          if (firebaseApp) {
-             const FieldValue = getFirestore().FieldValue;
              await getFirestore().collection('users').doc(userId).update({
                  hasGuruAccess: true,
                  updatedAt: FieldValue.serverTimestamp()

@@ -181,7 +181,7 @@ export default function App() {
         <main className="w-full relative z-10 bg-[#1a0f08] min-h-screen">
             <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/dark-leather.png')] opacity-30 mix-blend-overlay pointer-events-none z-0"></div>
             <div className="relative z-10">
-               <GuruAI />
+               <GuruAI onSelectRecipe={setSelectedRecipe} />
             </div>
         </main>
       ) : !selectedCategory ? (

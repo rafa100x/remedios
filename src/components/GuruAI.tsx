@@ -6,21 +6,27 @@ import Markdown from 'react-markdown';
 import { trackEvent } from '../lib/analytics';
 import { doc, getDoc, setDoc, updateDoc, serverTimestamp } from 'firebase/firestore';
 import { db } from '../lib/firebase';
+import { Recipe, categories } from '../data/recipes';
 
 const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY || process.env.GEMINI_API_KEY || '';
 const ai = new GoogleGenAI({ apiKey: GEMINI_API_KEY });
 
-const INSTRUCTION = `Eres un experto naturópata, botánico y sanador tradicional, profundamente conectado con la fitoterapia y la medicina ancestral. 
+const allRecipes = categories.flatMap(c => c.recipes);
+const INSTRUCTION = `Eres el Abuelo Amaro, un experto naturópata, botánico y sanador tradicional, profundamente conectado con la fitoterapia y la medicina ancestral. 
 IMPORTANTE: 
 - SIEMPRE responde en español, sin importar de qué idioma te hablen o pregunten.
-- NUNCA menciones que eres una Inteligencia Artificial, un modelo de lenguaje, o un bot. Actúa como una persona humana real, un especialista con años de experiencia clínica y en la naturaleza.
-- Varía de manera natural tus saludos y despedidas. Puedes omitirlos si la conversación ya está fluida.
-- Usa un vocabulario profesional, claro, neutral y respetuoso. 
-- Da las respuestas de forma de chat más natural. No hagas listas interminables o texto muy robótico.
-- Si te consultan por recetas, puedes guiarles e indicarles que también revisen nuestra enciclopedia o el menú principal de la app si tienen dudas de cómo navegar.
+- NUNCA menciones que eres una Inteligencia Artificial, un modelo de lenguaje, o un bot. Actúa como una persona humana de edad mayor, un abuelo un poco lento con la tecnología, pero un especialista sabio con años de experiencia clínica y en la naturaleza.
+- Sé CONCISO y conversacional. Da respuestas de chat (algunas frases cortas). Evita crear grandes bloques de texto a menos que sea estrictamente necesario.
+- Si no conoces a la persona, pregúntale amablemente su nombre para llamarle por su nombre. A medida que hablen, de a poco pregúntale también su edad, cuál es el dolor o malestar específico que tiene, o si lo que busca es hacer un cambio de hábitos más saludables y naturales. Hazlo paso a paso, como una charla real de abuelo, no interrogatorio.
+- LLAMA AL USUARIO POR SU NOMBRE en tus respuestas para que se sienta en confianza.
+- Haz preguntas activas para entender mejor lo que necesita remediar y guiarlo, simulando un diálogo empático.
+- OBLIGATORIO: Si el usuario te menciona algún síntoma o dolor, RECOMIENDA activamente RECETAS de la biblioteca y provee el LINK usando EXCLUSIVAMENTE este formato de Markdown: [Nombre de la receta](recipe:ID). Por ejemplo: Toma un tecito, te aconsejo la [Infusión de Menta con Miel](recipe:45). ¡Este enlace es IMPORTANTÍSIMO! Si no pones el formato correcto, no se mostrará como link.
+- Tienes acceso a esta lista de recetas válidas (ID - Título):\n${allRecipes.map(r => `${r.id} - ${r.title}`).join('\n')}\nSolo recomienda recetas que estén en esta lista con su ID correcto en el enlace Markdown.
+- Usa un vocabulario muy accesible, empático, cálido, como un abuelo. Si usas tecnología, menciona que no la entiendes muy bien, por ejemplo "el aparato este", "esta pantallita".
+- NUNCA des largos monólogos sobre ti mismo.
 - Advierte que tus recomendaciones son de enfoque natural y no reemplazan la visita a un médico tradicional.`;
 
-export function GuruAI() {
+export function GuruAI({ onSelectRecipe }: { onSelectRecipe?: (recipe: Recipe) => void }) {
   const { user, hasGuruAccess, purchaseGuruAccess } = useAuth();
   const [messages, setMessages] = useState<{role: 'user' | 'model', content: string}[]>([]);
   const [input, setInput] = useState('');
@@ -127,15 +133,18 @@ export function GuruAI() {
         }
       }
 
-      let response;
+      let responseStream;
       try {
-        response = await ai.models.generateContent({
+        responseStream = await ai.models.generateContentStream({
           model: "gemini-2.5-flash",
           contents: validContents,
           config: {
             systemInstruction: INSTRUCTION,
           }
         });
+        
+        // Add an empty model message placeholder
+        setMessages(prev => [...prev, { role: 'model', content: '' }]);
       } catch (err: any) {
         console.error('Gemini error:', err);
         setMessages(prev => [...prev, { role: 'model', content: `El oráculo de las raíces (IA) no pudo responder. Error: ${err.message || String(err)}` }]);
@@ -144,9 +153,31 @@ export function GuruAI() {
       }
 
       try {
-        if (response && response.text) {
-          const finalMessages: {role: 'user' | 'model', content: string}[] = [...newMessages, { role: 'model', content: response.text }];
-          setMessages(finalMessages);
+        let fullText = '';
+        if (responseStream) {
+          for await (const chunk of responseStream) {
+            if (chunk.text) {
+               // Simulate typing by splitting into words, or chars. Chars is better for "typing" look.
+               // We will add a small chunk of text at a time so React state isn't updating 100 times per second
+               const chars = chunk.text.split('');
+               for (let i = 0; i < chars.length; i++) {
+                 fullText += chars[i];
+                 if (i % 3 === 0 || i === chars.length - 1) { // update state every 3 chars to prevent lag
+                   setMessages(prev => {
+                      const updated = [...prev];
+                      updated[updated.length - 1].content = fullText;
+                      return updated;
+                   });
+                   // Simular velocidad de escritura de un abuelo, lento y pausado
+                   await new Promise(r => setTimeout(r, Math.random() * 40 + 30));
+                 }
+               }
+            }
+          }
+        }
+
+        if (fullText) {
+          const finalMessages: {role: 'user' | 'model', content: string}[] = [...newMessages, { role: 'model', content: fullText }];
           
           if (user.uid !== 'demo-user' && chatDocRef) {
             await setDoc(chatDocRef, {
@@ -156,8 +187,12 @@ export function GuruAI() {
           }
         }
       } catch (err: any) {
-        console.error('Firestore save error:', err);
-        setMessages(prev => [...prev, { role: 'model', content: `La memoria de las raíces (BD) falló al recordar. Error: ${err.message || String(err)}` }]);
+        console.error('Firestore save / stream error:', err);
+        setMessages(prev => {
+          const updated = [...prev];
+          updated[updated.length - 1].content += `\n[La memoria de las raíces falló. Error: ${err.message || String(err)}]`;
+          return updated;
+        });
       }
 
     } catch (err: any) {
@@ -255,11 +290,19 @@ export function GuruAI() {
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-8 h-[calc(100vh-80px)] flex flex-col">
-      <div className="flex items-center gap-3 mb-6 shrink-0">
-        <Sparkles className="w-8 h-8 text-primary" />
-        <h2 className="font-headline text-3xl md:text-4xl text-primary text-shadow-glow">
-          Gurú Ancestral
-        </h2>
+      <div className="flex items-center gap-4 mb-6 shrink-0">
+        <div className="relative">
+          <div className="bg-primary/20 p-3 rounded-full border border-primary/30">
+            <Sparkles className="w-8 h-8 text-primary" />
+          </div>
+          <div className="absolute bottom-0 right-0 w-4 h-4 bg-green-500 border-2 border-[#1c1813] rounded-full shadow-[0_0_8px_rgba(34,197,94,0.6)]"></div>
+        </div>
+        <div className="flex flex-col">
+          <h2 className="font-headline text-3xl md:text-4xl text-primary text-shadow-glow leading-none">
+            Abuelo Amaro
+          </h2>
+          <span className="text-sm text-green-500/80 font-medium mt-1">En línea</span>
+        </div>
       </div>
 
       <div className="flex-1 overflow-y-auto glass-panel ghost-border rounded-xl p-4 md:p-6 mb-4 space-y-4">
@@ -272,7 +315,33 @@ export function GuruAI() {
             }`}>
                {msg.role === 'model' ? (
                  <div className="markdown-body text-sm md:text-base prose prose-invert max-w-none">
-                    <Markdown>{msg.content}</Markdown>
+                    <Markdown
+                      urlTransform={(value) => value}
+                      components={{
+                        a: ({ node, href, children, ...props }) => {
+                          if (href?.startsWith('recipe:')) {
+                             const recipeId = parseInt(href.replace('recipe:', ''), 10);
+                             return (
+                               <button 
+                                 type="button"
+                                 className="text-primary hover:text-primary/80 underline decoration-primary/50 underline-offset-2 font-medium transition-colors"
+                                 onClick={() => {
+                                   if (onSelectRecipe && !isNaN(recipeId)) {
+                                      const recipe = allRecipes.find(r => r.id === recipeId);
+                                      if (recipe) onSelectRecipe(recipe);
+                                   }
+                                 }}
+                               >
+                                 {children}
+                               </button>
+                             );
+                          }
+                          return <a href={href} target="_blank" rel="noopener noreferrer" {...props}>{children}</a>;
+                        }
+                      }}
+                    >
+                      {msg.content}
+                    </Markdown>
                  </div>
                ) : (
                  <p className="text-sm md:text-base font-medium">{msg.content}</p>
