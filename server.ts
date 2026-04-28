@@ -122,10 +122,16 @@ async function startServer() {
                        const [userId, bookId] = parts;
 
                        // By using Admin SDK, we bypass Firestore Security Rules (Inquebrantable!)
-                       console.log(`Unlocking book [${bookId}] for user [${userId}]`);
-                       await getFirestore().collection('users').doc(userId).update({
-                           purchasedBooks: FieldValue.arrayUnion(bookId)
-                       });
+                       console.log(`Unlocking item [${bookId}] for user [${userId}]`);
+                       
+                       const updateData: any = {};
+                       if (bookId === 'guru') {
+                           updateData.hasGuruAccess = true;
+                       } else {
+                           updateData.purchasedBooks = FieldValue.arrayUnion(bookId);
+                       }
+
+                       await getFirestore().collection('users').doc(userId).update(updateData);
                        console.log("Database updated successfully.");
                    }
               }

@@ -1,0 +1,266 @@
+import React, { useState, useRef, useEffect } from 'react';
+import { useAuth } from '../contexts/AuthContext';
+import { Leaf, Send, Lock, Sparkles, BookOpen } from 'lucide-react';
+import { GoogleGenAI } from '@google/genai';
+import Markdown from 'react-markdown';
+import { trackEvent } from '../lib/analytics';
+import { doc, getDoc, setDoc, updateDoc, serverTimestamp } from 'firebase/firestore';
+import { db } from '../lib/firebase';
+
+const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY || process.env.GEMINI_API_KEY || '';
+const ai = new GoogleGenAI({ apiKey: GEMINI_API_KEY });
+
+const INSTRUCTION = `Eres un experto naturópata, botánico y sanador tradicional, profundamente conectado con la fitoterapia y la medicina ancestral. 
+IMPORTANTE: 
+- SIEMPRE responde en español, sin importar de qué idioma te hablen o pregunten.
+- NUNCA menciones que eres una Inteligencia Artificial, un modelo de lenguaje, o un bot. Actúa como una persona humana real, un especialista con años de experiencia clínica y en la naturaleza.
+- Varía de manera natural tus saludos y despedidas. Puedes omitirlos si la conversación ya está fluida.
+- Usa un vocabulario profesional, claro, neutral y respetuoso. 
+- Da las respuestas de forma de chat más natural. No hagas listas interminables o texto muy robótico.
+- Si te consultan por recetas, puedes guiarles e indicarles que también revisen nuestra enciclopedia o el menú principal de la app si tienen dudas de cómo navegar.
+- Advierte que tus recomendaciones son de enfoque natural y no reemplazan la visita a un médico tradicional.`;
+
+export function GuruAI() {
+  const { user, hasGuruAccess, purchaseGuruAccess } = useAuth();
+  const [messages, setMessages] = useState<{role: 'user' | 'model', content: string}[]>([]);
+  const [input, setInput] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [isInitializing, setIsInitializing] = useState(true);
+  const [unlockCode, setUnlockCode] = useState('');
+  const [unlockError, setUnlockError] = useState('');
+  const [isUnlocking, setIsUnlocking] = useState(false);
+  const endRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    endRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messages]);
+
+  useEffect(() => {
+    if (user && hasGuruAccess) {
+      const loadHistory = async () => {
+        try {
+           const chatDocRef = doc(db, 'guru_chats', user.uid);
+           const chatSnap = await getDoc(chatDocRef);
+           if (chatSnap.exists() && chatSnap.data().messages?.length > 0) {
+             setMessages(chatSnap.data().messages);
+           } else {
+             const initialMessages: {role: 'user' | 'model', content: string}[] = [{
+                role: 'model',
+                content: 'Las raíces me han hablado de tu llegada. Aquí estoy para compartir el conocimiento de las hojas, las cortezas y la tierra. ¿Qué te aqueja o qué buscas aprender hoy, caminante?'
+             }];
+             setMessages(initialMessages);
+             await setDoc(chatDocRef, {
+               userId: user.uid,
+               messages: initialMessages,
+               createdAt: serverTimestamp(),
+               updatedAt: serverTimestamp()
+             });
+           }
+        } catch(e) {
+          console.error('Error loading Guru history:', e);
+          setMessages([{ role: 'model', content: 'Parece que las ramas están caídas hoy. No he podido recuperar nuestro historial.' }]);
+        } finally {
+          setIsInitializing(false);
+        }
+      }
+      loadHistory();
+    } else {
+      setIsInitializing(false);
+    }
+  }, [user, hasGuruAccess]);
+
+  const handleSend = async () => {
+    if (!input.trim() || isLoading || !user) return;
+    const userMessage = input;
+    setInput('');
+    const newMessages: {role: 'user' | 'model', content: string}[] = [...messages, { role: 'user', content: userMessage }];
+    setMessages(newMessages);
+    setIsLoading(true);
+
+    try {
+      trackEvent('chat_guru', { event_category: 'engagement', event_label: 'Message Sent' });
+      
+      const chatDocRef = doc(db, 'guru_chats', user.uid);
+      await setDoc(chatDocRef, {
+        messages: newMessages,
+        updatedAt: serverTimestamp()
+      }, { merge: true });
+
+      const validContents: { role: string; parts: { text: string }[] }[] = [];
+      for (const m of newMessages) {
+        if (validContents.length === 0) {
+          if (m.role === 'model') {
+            validContents.push({ role: 'user', parts: [{ text: 'Hola' }] });
+          }
+        }
+        const lastRole = validContents.length > 0 ? validContents[validContents.length - 1].role : null;
+        if (m.role === lastRole) {
+           validContents[validContents.length - 1].parts[0].text += '\\n\\n' + m.content;
+        } else {
+           validContents.push({ role: m.role, parts: [{ text: m.content }] });
+        }
+      }
+
+      const response = await ai.models.generateContent({
+        model: "gemini-3-flash-preview",
+        contents: validContents,
+        config: {
+          systemInstruction: INSTRUCTION,
+        }
+      });
+
+      if (response.text) {
+        const finalMessages: {role: 'user' | 'model', content: string}[] = [...newMessages, { role: 'model', content: response.text }];
+        setMessages(finalMessages);
+        
+        await setDoc(chatDocRef, {
+          messages: finalMessages,
+          updatedAt: serverTimestamp()
+        }, { merge: true });
+      }
+
+    } catch (err: any) {
+      console.error(err);
+      setMessages(prev => [...prev, { role: 'model', content: `He perdido un momento la conexión con el entorno. Error: ${err.message || String(err)}` }]);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleUnlockCode = async () => {
+    if (!unlockCode.trim() || !user) return;
+    setIsUnlocking(true);
+    setUnlockError('');
+    try {
+      const code = unlockCode.trim().toUpperCase();
+      // Validamos un código maestros, por ejemplo: GURU-MAGICO o GURU-2026
+      if (code === 'GURU-MAGICO' || code === 'GURU-2026') {
+        const userRef = doc(db, 'users', user.uid);
+        await updateDoc(userRef, { hasGuruAccess: true, updatedAt: serverTimestamp() });
+      } else {
+        setUnlockError('El código ingresado no es válido.');
+      }
+    } catch (e) {
+      setUnlockError('Error al activar el código.');
+    } finally {
+      setIsUnlocking(false);
+    }
+  };
+
+  if (isInitializing) {
+     return <div className="p-12 text-center text-tertiary">Conectando con las raíces...</div>;
+  }
+
+  if (!hasGuruAccess) {
+    return (
+      <div className="max-w-4xl mx-auto px-4 py-12 md:py-24 text-center">
+        <Sparkles className="w-16 h-16 text-primary mx-auto mb-6 drop-shadow-[0_0_15px_rgba(214,199,175,0.3)]" />
+        <h2 className="font-headline text-4xl md:text-5xl text-primary mb-4 text-shadow-glow">
+          Consultorio Natural
+        </h2>
+        <p className="text-xl text-secondary mb-8 max-w-2xl mx-auto leading-relaxed">
+          Un espacio privado para resolver todas tus dudas sobre plantas medicinales, recetas de la abuela y cuidados naturales. Recibe orientación de forma directa y personalizada.
+        </p>
+        
+        <div className="glass-panel ghost-border p-8 rounded-2xl max-w-lg mx-auto transform hover:scale-[1.02] transition-transform duration-300">
+          <div className="flex items-center justify-center w-12 h-12 bg-primary/20 rounded-full mx-auto mb-4 border border-primary/30 shadow-[0_0_10px_rgba(214,199,175,0.2)]">
+            <Lock className="w-6 h-6 text-primary" />
+          </div>
+          <h3 className="text-2xl font-bold text-secondary mb-2">Acceso Ilimitado a Consultas</h3>
+          <p className="text-tertiary mb-6">
+            Realiza todas las consultas que necesites en cualquier momento. Pagas una sola vez y lo usas para siempre, sin límites.
+          </p>
+          <div className="text-3xl font-bold text-accent drop-shadow-sm mb-6">
+             $24.990 <span className="text-sm font-normal text-tertiary">ARS</span>
+          </div>
+          <button 
+            onClick={purchaseGuruAccess}
+            className="w-full bg-gradient-to-r from-[#d6c7af] to-[#c2b092] text-[#2c241b] hover:from-[#c2b092] hover:to-[#a99473] font-bold py-4 px-6 rounded-xl transition-all shadow-lg hover:shadow-xl text-lg flex items-center justify-center gap-2 mb-4"
+          >
+            <BookOpen className="w-5 h-5" /> Desbloquear Sabiduría Ancestral
+          </button>
+          
+          <div className="pt-4 border-t border-white/5">
+             <p className="text-sm text-tertiary mb-3">¿Ya pagaste con MercadoPago u otro medio? Ingresa tu código:</p>
+             <div className="flex gap-2">
+                <input 
+                  type="text" 
+                  value={unlockCode}
+                  onChange={e => setUnlockCode(e.target.value)}
+                  placeholder="GURU-XXXX"
+                  className="flex-1 bg-[#3d3326]/50 border border-[#d6c7af]/20 rounded-xl px-4 py-2 text-secondary placeholder-tertiary focus:outline-none focus:border-primary/50 transition-colors uppercase"
+                />
+                <button 
+                  onClick={handleUnlockCode}
+                  disabled={isUnlocking || !unlockCode.trim()}
+                  className="bg-primary/20 hover:bg-primary/30 text-primary font-bold py-2 px-4 rounded-xl transition-colors shrink-0 disabled:opacity-50"
+                >
+                  {isUnlocking ? '...' : 'Activar'}
+                </button>
+             </div>
+             {unlockError && <p className="text-red-400 text-sm mt-2">{unlockError}</p>}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="max-w-4xl mx-auto px-4 py-8 h-[calc(100vh-80px)] flex flex-col">
+      <div className="flex items-center gap-3 mb-6 shrink-0">
+        <Sparkles className="w-8 h-8 text-primary" />
+        <h2 className="font-headline text-3xl md:text-4xl text-primary text-shadow-glow">
+          Gurú Ancestral
+        </h2>
+      </div>
+
+      <div className="flex-1 overflow-y-auto glass-panel ghost-border rounded-xl p-4 md:p-6 mb-4 space-y-4">
+        {messages.map((msg, idx) => (
+          <div key={idx} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
+            <div className={`max-w-[85%] rounded-2xl p-4 ${
+              msg.role === 'user' 
+                ? 'bg-primary/20 text-secondary rounded-br-sm border border-primary/10' 
+                : 'glass-panel text-secondary rounded-bl-sm border border-white/5'
+            }`}>
+               {msg.role === 'model' ? (
+                 <div className="markdown-body text-sm md:text-base prose prose-invert max-w-none">
+                    <Markdown>{msg.content}</Markdown>
+                 </div>
+               ) : (
+                 <p className="text-sm md:text-base font-medium">{msg.content}</p>
+               )}
+            </div>
+          </div>
+        ))}
+        {isLoading && (
+          <div className="flex justify-start">
+             <div className="glass-panel text-tertiary rounded-2xl rounded-bl-sm p-4 text-sm animate-pulse flex items-center gap-2 border border-white/5">
+                <Leaf className="w-4 h-4 animate-spin-slow" />
+                Escribiendo...
+             </div>
+          </div>
+        )}
+        <div ref={endRef} />
+      </div>
+
+      <div className="shrink-0 relative">
+         <input
+           type="text"
+           value={input}
+           onChange={(e) => setInput(e.target.value)}
+           onKeyDown={(e) => e.key === 'Enter' && handleSend()}
+           placeholder="Escribe un mensaje..."
+           className="w-full bg-[#3d3326]/50 border border-[#d6c7af]/20 rounded-xl px-4 py-4 pr-12 text-secondary placeholder-tertiary focus:outline-none focus:border-primary/50 transition-colors shadow-inner"
+           disabled={isLoading}
+         />
+         <button
+           onClick={handleSend}
+           disabled={!input.trim() || isLoading}
+           className="absolute right-3 top-1/2 -translate-y-1/2 p-2 bg-primary/10 hover:bg-primary/20 text-primary rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+         >
+           <Send className="w-5 h-5" />
+         </button>
+      </div>
+    </div>
+  );
+}

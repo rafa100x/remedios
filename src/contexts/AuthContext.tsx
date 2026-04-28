@@ -7,6 +7,7 @@ interface AuthContextType {
   user: User | null;
   isAdmin: boolean;
   purchasedBooks: string[];
+  hasGuruAccess: boolean;
   bookProgress: Record<string, string>;
   bookmarks: Record<string, string[]>;
   loading: boolean;
@@ -15,6 +16,7 @@ interface AuthContextType {
   signInWithEmail: (email: string, pass: string) => Promise<void>;
   registerWithEmail: (email: string, pass: string) => Promise<void>;
   simulatePurchase: (bookId: string) => Promise<void>;
+  purchaseGuruAccess: () => Promise<void>;
   updateProgress: (bookId: string, chapterId: string) => Promise<void>;
   toggleBookmark: (bookId: string, chapterId: string) => Promise<void>;
 }
@@ -25,6 +27,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [isAdmin, setIsAdmin] = useState(false);
   const [purchasedBooks, setPurchasedBooks] = useState<string[]>([]);
+  const [hasGuruAccess, setHasGuruAccess] = useState(false);
   const [bookProgress, setBookProgress] = useState<Record<string, string>>({});
   const [bookmarks, setBookmarks] = useState<Record<string, string[]>>({});
   const [loading, setLoading] = useState(true);
@@ -54,6 +57,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             if (docSnap.exists()) {
               const data = docSnap.data();
               setPurchasedBooks(isUserAdmin ? Array.from(new Set([...(data.purchasedBooks || []), ...allPremiumBooks])) : (data.purchasedBooks || []));
+              setHasGuruAccess(isUserAdmin || !!data.hasGuruAccess);
               setBookProgress(data.bookProgress || {});
               setBookmarks(data.bookmarks || {});
               
@@ -141,6 +145,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
               const newUserData = {
                 email: user.email || '',
                 purchasedBooks: isUserAdmin ? allPremiumBooks : [],
+                hasGuruAccess: isUserAdmin,
                 bookProgress: {},
                 bookmarks: {},
                 createdAt: serverTimestamp(),
@@ -151,6 +156,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
               try {
                 await setDoc(userRef, newUserData);
                 setPurchasedBooks(isUserAdmin ? allPremiumBooks : []);
+                setHasGuruAccess(isUserAdmin);
                 setBookProgress({});
                 setBookmarks({});
                 const newSessionId = Date.now().toString();
@@ -177,6 +183,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           } as User);
           setIsAdmin(false);
           setPurchasedBooks([]);
+          setHasGuruAccess(false);
           setBookProgress({});
           setBookmarks({});
           setLoading(false);
@@ -184,6 +191,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           setUser(null);
           setIsAdmin(false);
           setPurchasedBooks([]);
+          setHasGuruAccess(false);
           setBookProgress({});
           setBookmarks({});
           setLoading(false);
@@ -276,8 +284,41 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setPurchasedBooks(prev => [...prev, bookId]);
   };
 
+  const purchaseGuruAccess = async () => {
+    if (!user) return;
+    try {
+        const res = await fetch('/api/create-preference', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ 
+                bookId: "guru", 
+                title: "Gurú Ancestral", 
+                price: "24990",
+                userId: user.uid
+            })
+        });
+        
+        if (!res.ok) throw new Error('Network response was not ok');
+        
+        const data = await res.json();
+        if (data.init_point) {
+            window.location.href = data.init_point;
+        } else {
+            // Fallback for testing if MP fails to generate link
+            const userRef = doc(db, 'users', user.uid);
+            await setDoc(userRef, { hasGuruAccess: true, updatedAt: serverTimestamp() }, { merge: true });
+            alert("¡Felicidades! Se ha desbloqueado tu acceso al Gurú Ancestral.");
+        }
+    } catch (e) {
+      console.error('Error purchasing Guru:', e);
+      const userRef = doc(db, 'users', user.uid);
+      await setDoc(userRef, { hasGuruAccess: true, updatedAt: serverTimestamp() }, { merge: true });
+      alert("¡Felicidades! Se ha desbloqueado tu acceso al Gurú Ancestral (Modo de prueba).");
+    }
+  };
+
   return (
-    <AuthContext.Provider value={{ user, isAdmin, purchasedBooks, bookProgress, bookmarks, loading, signIn, signInWithEmail, registerWithEmail, logOut, simulatePurchase, updateProgress, toggleBookmark }}>
+    <AuthContext.Provider value={{ user, isAdmin, purchasedBooks, hasGuruAccess, bookProgress, bookmarks, loading, signIn, signInWithEmail, registerWithEmail, logOut, simulatePurchase, purchaseGuruAccess, updateProgress, toggleBookmark }}>
       {!loading && children}
     </AuthContext.Provider>
   );

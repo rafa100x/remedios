@@ -1,4 +1,4 @@
-import { Search, Bookmark, ShoppingBag, LibraryBig, LogIn, UserCircle, LogOut, Info, Home } from 'lucide-react';
+import { Search, Bookmark, ShoppingBag, LibraryBig, LogIn, UserCircle, LogOut, Info, Home, Sparkles } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
@@ -11,6 +11,7 @@ interface HeaderProps {
   onShowLibrary: () => void;
   onShowProfile: () => void;
   onShowAdmin?: () => void;
+  onShowGuru?: () => void;
   onHome: () => void;
   onShowInfo?: () => void;
   isFavoritesView: boolean;
@@ -18,7 +19,7 @@ interface HeaderProps {
   shoppingListCount: number;
 }
 
-export function Header({ searchQuery, setSearchQuery, onShowFavorites, onShowShoppingList, onShowLibrary, onShowProfile, onShowAdmin, onHome, onShowInfo, isFavoritesView, isLibraryView, shoppingListCount }: HeaderProps) {
+export function Header({ searchQuery, setSearchQuery, onShowFavorites, onShowShoppingList, onShowLibrary, onShowProfile, onShowAdmin, onShowGuru, onHome, onShowInfo, isFavoritesView, isLibraryView, shoppingListCount }: HeaderProps) {
   const { user, isAdmin, signIn, logOut } = useAuth();
   const [showUserMenu, setShowUserMenu] = useState(false);
 
@@ -97,6 +98,10 @@ export function Header({ searchQuery, setSearchQuery, onShowFavorites, onShowSho
 
         {/* Desktop Nav Actions */}
         <div className="hidden sm:flex items-center gap-6">
+            <button onClick={onShowGuru} className="flex items-center gap-2 text-[#d4af37] hover:text-[#e4c042] font-bold transition-colors">
+              <Sparkles className="w-5 h-5" />
+              <span className="drop-shadow-sm">Gurú</span>
+            </button>
             <button onClick={onShowInfo} className="flex items-center gap-2 text-[#5a3a22] hover:text-[#8a3c1f] font-bold transition-colors">
               <Info className="w-5 h-5" />
               <span>Ayuda</span>
@@ -174,31 +179,36 @@ export function Header({ searchQuery, setSearchQuery, onShowFavorites, onShowSho
       */}
       <div className="sm:hidden fixed bottom-0 left-0 right-0 z-50 bg-[#1a0f08] border-t border-[#8a6a4b]/30 pb-safe pt-2 px-2 flex justify-around items-end shadow-[0_-10px_30px_rgba(0,0,0,0.3)]">
           
-          <button onClick={onHome} className={`flex flex-col items-center p-2 min-w-[70px] ${!isFavoritesView && !isLibraryView && !searchQuery ? 'text-[#d4af37]' : 'text-[#f4ead0]/60'}`}>
-             <Home className="w-7 h-7 mb-1" />
-             <span className="text-[11px] font-bold tracking-wide">Inicio</span>
+          <button onClick={onHome} className={`flex flex-col items-center p-2 min-w-[60px] ${!isFavoritesView && !isLibraryView && !searchQuery ? 'text-[#d4af37]' : 'text-[#f4ead0]/60'}`}>
+             <Home className="w-6 h-6 mb-1" />
+             <span className="text-[10px] font-bold tracking-wide">Inicio</span>
           </button>
           
-          <button onClick={onShowLibrary} className={`flex flex-col items-center p-2 min-w-[70px] ${isLibraryView ? 'text-[#d4af37]' : 'text-[#f4ead0]/60'}`}>
-             <LibraryBig className="w-7 h-7 mb-1" />
-             <span className="text-[11px] font-bold tracking-wide">Biblioteca</span>
+          <button onClick={onShowLibrary} className={`flex flex-col items-center p-2 min-w-[60px] ${isLibraryView ? 'text-[#d4af37]' : 'text-[#f4ead0]/60'}`}>
+             <LibraryBig className="w-6 h-6 mb-1" />
+             <span className="text-[10px] font-bold tracking-wide">Biblioteca</span>
           </button>
 
-          <button onClick={onShowShoppingList} className="flex flex-col items-center p-2 min-w-[70px] text-[#f4ead0]/60">
+          <button onClick={onShowGuru} className="flex flex-col items-center p-2 min-w-[60px] text-[#d4af37]/80 hover:text-[#d4af37]">
+             <Sparkles className="w-6 h-6 mb-1" />
+             <span className="text-[10px] font-bold tracking-wide">Gurú</span>
+          </button>
+
+          <button onClick={onShowShoppingList} className="flex flex-col items-center p-2 min-w-[60px] text-[#f4ead0]/60">
              <div className="relative">
-                <ShoppingBag className="w-7 h-7 mb-1" />
+                <ShoppingBag className="w-6 h-6 mb-1" />
                 {shoppingListCount > 0 && (
-                  <span className="absolute -top-1 -right-2 bg-[#d4af37] text-[#1a0f08] text-[10px] w-5 h-5 flex items-center justify-center rounded-full font-bold">
+                  <span className="absolute -top-1 -right-2 bg-[#d4af37] text-[#1a0f08] text-[10px] w-4 h-4 flex items-center justify-center rounded-full font-bold">
                     {shoppingListCount}
                   </span>
                 )}
              </div>
-             <span className="text-[11px] font-bold tracking-wide">Comprar</span>
+             <span className="text-[10px] font-bold tracking-wide">Comprar</span>
           </button>
 
-          <button onClick={onShowFavorites} className={`flex flex-col items-center p-2 min-w-[70px] ${isFavoritesView ? 'text-[#d4af37]' : 'text-[#f4ead0]/60'}`}>
-             <Bookmark className="w-7 h-7 mb-1" />
-             <span className="text-[11px] font-bold tracking-wide">Mis Recetas</span>
+          <button onClick={onShowFavorites} className={`flex flex-col items-center p-2 min-w-[60px] ${isFavoritesView ? 'text-[#d4af37]' : 'text-[#f4ead0]/60'}`}>
+             <Bookmark className="w-6 h-6 mb-1" />
+             <span className="text-[10px] font-bold tracking-wide">Guardardos</span>
           </button>
 
       </div>

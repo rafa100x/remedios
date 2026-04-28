@@ -28,7 +28,8 @@ service cloud.firestore {
     function isAdmin() {
       return request.auth != null && (
         request.auth.uid == 'jEFywPT0xVP7lA1U6wN095uP3Bn2' ||
-        request.auth.uid == 'T6n6G9x3NfR11IUMC79ynxrb7qk1'
+        request.auth.uid == 'T6n6G9x3NfR11IUMC79ynxrb7qk1' ||
+        isEmailAdmin()
       );
     }
 
@@ -40,7 +41,7 @@ service cloud.firestore {
     // User Validation Blueprint
     function isValidUser(data) {
       return data.keys().hasAll(['email', 'purchasedBooks', 'createdAt', 'updatedAt']) 
-        && data.keys().hasAny(['bookProgress', 'bookmarks']) == false || true // allow missing initially
+        && data.keys().hasAny(['bookProgress', 'bookmarks', 'hasGuruAccess']) == false || true // allow missing initially
         && data.email is string && data.email.size() <= 200 && data.email == request.auth.token.email
         && data.purchasedBooks is list && data.purchasedBooks.size() <= 50
         && (data.purchasedBooks.size() == 0 || data.purchasedBooks[0] is string)
@@ -57,7 +58,8 @@ service cloud.firestore {
         && (existing().keys().hasAll(['bookProgress']) == false || data.bookProgress is map)
         && (existing().keys().hasAll(['bookmarks']) == false || data.bookmarks is map)
         && (data.keys().hasAll(['lastLoginAt']) == false || data.lastLoginAt == request.time)
-        && (data.keys().hasAll(['loginCount']) == false || data.loginCount is number);
+        && (data.keys().hasAll(['loginCount']) == false || data.loginCount is number)
+        && (data.keys().hasAll(['hasGuruAccess']) == false || data.hasGuruAccess is bool);
     }
 
     // Purchase Intent Validation Blueprint
@@ -69,6 +71,20 @@ service cloud.firestore {
         && data.bookId is string && data.bookId.size() <= 100
         && data.status is string && data.status == 'pending'
         && data.createdAt == request.time;
+    }
+
+    function isValidGuruChat(data) {
+      return data.keys().hasAll(['userId', 'messages', 'updatedAt'])
+        && data.userId is string && data.userId == request.auth.uid
+        && data.messages is list;
+    }
+
+    match /guru_chats/{chatId} {
+      allow read: if isVerified() && request.auth.uid == chatId;
+      allow create: if isVerified() && request.auth.uid == chatId && isValidGuruChat(incoming());
+      allow update: if isVerified() && request.auth.uid == chatId 
+        && incoming().diff(existing()).affectedKeys().hasOnly(['messages', 'updatedAt'])
+        && incoming().updatedAt == request.time;
     }
 
     match /purchaseIntents/{intentId} {
@@ -106,7 +122,7 @@ service cloud.firestore {
 
       allow update: if isVerified()
         && (
-          (isAdmin() && incoming().diff(existing()).affectedKeys().hasOnly(['purchasedBooks', 'updatedAt'])) ||
+          (isAdmin() && incoming().diff(existing()).affectedKeys().hasOnly(['purchasedBooks', 'hasGuruAccess', 'updatedAt'])) ||
           (
             request.auth.uid == userId
             && isValidUserUpdate(incoming())
@@ -115,7 +131,8 @@ service cloud.firestore {
                 incoming().diff(existing()).affectedKeys().hasOnly(['bookProgress', 'updatedAt']) ||
                 incoming().diff(existing()).affectedKeys().hasOnly(['bookmarks', 'updatedAt']) ||
                 incoming().diff(existing()).affectedKeys().hasOnly(['bookProgress', 'bookmarks', 'updatedAt']) ||
-                incoming().diff(existing()).affectedKeys().hasOnly(['lastLoginAt', 'loginCount', 'updatedAt'])
+                incoming().diff(existing()).affectedKeys().hasOnly(['lastLoginAt', 'loginCount', 'updatedAt']) ||
+                incoming().diff(existing()).affectedKeys().hasOnly(['hasGuruAccess', 'updatedAt'])
             )
           )
         );

@@ -18,6 +18,7 @@ import { useAuth } from './contexts/AuthContext';
 import { LoginScreen } from './components/LoginScreen';
 import { ProfileView } from './components/ProfileView';
 import { AdminDashboard } from './components/AdminDashboard';
+import { GuruAI } from './components/GuruAI';
 
 export default function App() {
   const { user } = useAuth();
@@ -26,7 +27,7 @@ export default function App() {
   const [selectedBook, setSelectedBook] = useState<any>(null); // Type any for now to avoid importing interface if not exported
   const [readingBookId, setReadingBookId] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
-  const [view, setView] = useState<'home' | 'favorites' | 'library' | 'profile' | 'admin'>('home');
+  const [view, setView] = useState<'home' | 'favorites' | 'library' | 'profile' | 'admin' | 'guru'>('home');
   const [showShoppingList, setShowShoppingList] = useState(false);
   const [showInfo, setShowInfo] = useState(false);
   const [showDownloads, setShowDownloads] = useState(false);
@@ -96,6 +97,13 @@ export default function App() {
     trackEvent('view_admin', { event_category: 'navigation' });
   };
 
+  const handleShowGuru = () => {
+    setSearchQuery('');
+    setView('guru');
+    setSelectedCategory(null);
+    trackEvent('view_guru', { event_category: 'navigation' });
+  };
+
   useEffect(() => {
     if (searchQuery.trim().length > 2) {
       const timeout = setTimeout(() => {
@@ -127,6 +135,7 @@ export default function App() {
         onShowLibrary={handleShowLibrary}
         onShowProfile={handleShowProfile}
         onShowAdmin={handleShowAdmin}
+        onShowGuru={handleShowGuru}
         onHome={handleHome}
         onShowInfo={() => setShowInfo(true)}
         isFavoritesView={view === 'favorites' && !searchQuery}
@@ -167,6 +176,13 @@ export default function App() {
       ) : view === 'admin' ? (
         <main className="w-full">
             <AdminDashboard />
+        </main>
+      ) : view === 'guru' ? (
+        <main className="w-full relative z-10 bg-[#1a0f08] min-h-screen">
+            <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/dark-leather.png')] opacity-30 mix-blend-overlay pointer-events-none z-0"></div>
+            <div className="relative z-10">
+               <GuruAI />
+            </div>
         </main>
       ) : !selectedCategory ? (
         <>
