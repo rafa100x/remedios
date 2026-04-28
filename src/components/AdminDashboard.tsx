@@ -2,8 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { ShieldAlert, Users, BookOpen, Activity, ShoppingCart, CheckCircle, Clock, Download, List } from 'lucide-react';
 import { trackEvent } from '../lib/analytics';
-import { collection, getDocs, orderBy, query, updateDoc, doc, getDoc, serverTimestamp } from 'firebase/firestore';
+import { collection, getDocs, orderBy, query, updateDoc, doc, getDoc, serverTimestamp, deleteDoc, addDoc } from 'firebase/firestore';
 import { auth, db } from '../lib/firebase';
+import { ErrorBoundary } from './ErrorBoundary';
 
 interface Intent {
   id: string;
@@ -263,12 +264,12 @@ export function AdminDashboard() {
   // Analytics Stats Computations
   const searchEvents = analyticsEvents.filter(e => e.eventName === 'search');
   const bookClicks = analyticsEvents.filter(e => e.eventName === 'read_book');
-  const sectionViews = analyticsEvents.filter(e => e.eventName?.startsWith('view_'));
+  const sectionViews = analyticsEvents.filter(e => String(e.eventName || '').startsWith('view_'));
 
   // Group sections by event_category and event_label or eventName
   const sectionsCount: Record<string, number> = {};
   sectionViews.forEach(e => {
-     let name = e.eventName?.replace('view_', '') || 'unknown';
+     let name = String(e.eventName || '').replace('view_', '') || 'unknown';
      if (e.params?.event_label) {
        name += ` - ${e.params.event_label}`;
      }
@@ -278,7 +279,7 @@ export function AdminDashboard() {
 
   const booksCount: Record<string, number> = {};
   bookClicks.forEach(e => {
-     const bookName = e.params?.event_label || 'Desconocido';
+     const bookName = String(e.params?.event_label || 'Desconocido');
      booksCount[bookName] = (booksCount[bookName] || 0) + 1;
   });
   const sortedBooks = Object.entries(booksCount).sort((a,b) => b[1] - a[1]);
@@ -286,7 +287,7 @@ export function AdminDashboard() {
   const recipeViews = analyticsEvents.filter(e => e.eventName === 'view_recipe');
   const recipesCount: Record<string, number> = {};
   recipeViews.forEach(e => {
-     const recipeName = e.params?.event_label || 'Desconocida';
+     const recipeName = String(e.params?.event_label || 'Desconocida');
      recipesCount[recipeName] = (recipesCount[recipeName] || 0) + 1;
   });
   const sortedRecipes = Object.entries(recipesCount).sort((a,b) => b[1] - a[1]);
@@ -294,6 +295,7 @@ export function AdminDashboard() {
   const libraryIntentCount = analyticsEvents.filter(e => e.eventName === 'view_library').length;
 
   return (
+    <ErrorBoundary>
     <div className="max-w-7xl mx-auto px-4 py-8">
       
       <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-8">
@@ -348,6 +350,27 @@ export function AdminDashboard() {
             className="mt-4 sm:mt-0 flex items-center gap-2 bg-[#d6c7af]/10 hover:bg-[#d6c7af]/20 text-[#d6c7af] px-4 py-2 rounded-lg text-sm font-medium transition-colors"
           >
             <Users className="w-4 h-4" /> Generar Tribu
+          </button>
+          
+          <button
+            onClick={async () => {
+              if(!window.confirm('¿Estás seguro de que quieres ELIMINAR todos los mensajes de la comunidad?')) return;
+              try {
+                const snap = await getDocs(collection(db, "community_messages"));
+                let deletedCount = 0;
+                for (const d of snap.docs) {
+                  await deleteDoc(doc(db, "community_messages", d.id));
+                  deletedCount++;
+                }
+                alert(`¡Se eliminaron ${deletedCount} mensajes con éxito!`);
+              } catch(e:any) {
+                console.error(e);
+                alert("Error: " + e.message);
+              }
+            }}
+            className="mt-4 sm:mt-0 flex items-center gap-2 bg-red-900/40 hover:bg-red-900/60 text-red-100 px-4 py-2 rounded-lg text-sm font-medium transition-colors"
+          >
+            Borrar Tribu
           </button>
           <button 
             onClick={async () => {
@@ -520,9 +543,9 @@ export function AdminDashboard() {
                       <Activity className="w-4 h-4 text-tertiary" />
                     </div>
                     <div>
-                      <p className="text-sm font-bold text-secondary capitalize">{(event.eventName || 'unknown').replace(/_/g, ' ')}</p>
+                      <p className="text-sm font-bold text-secondary capitalize">{String(event.eventName || 'unknown').replace(/_/g, ' ')}</p>
                       <p className="text-xs text-tertiary truncate max-w-[200px]" title={event.userEmail}>
-                        {event.userEmail !== 'anonymous' ? event.userEmail : 'Usuario Anónimo'}
+                        {event.userEmail !== 'anonymous' ? String(event.userEmail) : 'Usuario Anónimo'}
                       </p>
                     </div>
                   </div>
@@ -677,5 +700,6 @@ export function AdminDashboard() {
          )}
       </div>
     </div>
+    </ErrorBoundary>
   );
 }

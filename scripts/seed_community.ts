@@ -1,5 +1,5 @@
 import { initializeApp } from 'firebase/app';
-import { getFirestore, collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import { getFirestore, collection, addDoc, serverTimestamp, getDocs, deleteDoc } from 'firebase/firestore';
 import fs from 'fs';
 
 const configStr = fs.readFileSync('firebase-applet-config.json', 'utf8');
@@ -10,30 +10,32 @@ const db = getFirestore(app, config.firestoreDatabaseId);
 
 async function seed() {
   const users = [
-    { userName: "Luna M.", uid: "mock-uid-1" },
-    { userName: "Carlos S.", uid: "mock-uid-2" },
-    { userName: "María Paz", uid: "mock-uid-3" },
-    { userName: "Javier C.", uid: "mock-uid-4" },
-    { userName: "Ana G.", uid: "mock-uid-5" },
-    { userName: "Diego R.", uid: "mock-uid-6" }
+    { userName: "Silvia", uid: "mock-uid-1" },
+    { userName: "jose", uid: "mock-uid-2" },
+    { userName: "Caro", uid: "mock-uid-3" },
+    { userName: "Marcos", uid: "mock-uid-4" },
+    { userName: "Beatriz", uid: "mock-uid-5" },
+    { userName: "Ramiro", uid: "mock-uid-6" },
+    { userName: "paola", uid: "mock-uid-7"}
   ];
 
   const messages = [
-    { userIndex: 0, text: "Hola a todos, ¿alguien probó la receta de valeriana y manzanilla para dormir? Llevo días con insomnio y quería saber si hace efecto rápido." },
-    { userIndex: 1, text: "Yo, me funciona muy bien. Media hora antes de acostarme es la clave, pero le agrego un poquito de miel." },
-    { userIndex: 2, text: "A mí me recomendaron lavanda, es excelente. Si puedes, pon unas ramitas debajo de tu almohada o usa aceite esencial." },
-    { userIndex: 3, text: "La infusión de pasiflora también es un santo remedio. Tienen que probarla si aún no lo hicieron, a mí me deja totalmente relajado." },
-    { userIndex: 0, text: "¡Gracias por los consejos! Voy a preparar la de pasiflora esta noche a ver qué tal." },
-    { userIndex: 4, text: "Hablando de plantas relajantes, el toronjil (melisa) me ayuda muchísimo con la ansiedad del día a día." },
-    { userIndex: 5, text: "Totalmente de acuerdo, Ana. Mi abuela siempre me la preparaba cuando tenía exámenes y mágicamente se me iban los nervios." },
-    { userIndex: 1, text: "¡Qué hermosa comunidad! Me encanta poder compartir estos saberes ancestrales con ustedes." }
+    { userIndex: 0, text: "Holaa a todos!!! Queria saber si alguien tiene idea que puedo tomar para el dolor de estomago fte. Comi algo q me cayo re mal ayer" },
+    { userIndex: 1, text: "hacete un te de manzanilla con un poquito de limon" },
+    { userIndex: 2, text: "Silvia, yo cuando estoy así me preparo la infusión de hinojo que está en el libro. Te calma los retorcijones casi al instante. Ojalá te sirva! 🙏" },
+    { userIndex: 3, text: "buenas tardes, queria consultar si el jarabe de cebolla y miel se le puede dar a un nene de 5 años?? tose mucho a la noche" },
+    { userIndex: 4, text: "Marcos, sí, perfectamente. Mis nietos lo toman desde los 3 años. Dáselo puro o mezclado con apenitas de agua calentita." },
+    { userIndex: 0, text: "Gracias chicos, me hice el de manzanilla recien y ya me siento un poco mejor. despues pruebo el hinojo" },
+    { userIndex: 5, text: "Alguien probó el ungüento de caléndula para las quemaduras de sol? Me re pasé de rosca el finde y ardo jaja" },
+    { userIndex: 6, text: "Sisisis re ayuda !! ponetelo frio de la heladera si podes" },
+    { userIndex: 1, text: "aloe vera directo de la planta tambien sirve" }
   ];
 
   for (let i = 0; i < messages.length; i++) {
     const m = messages[i];
     const u = users[m.userIndex];
     // stagger timestamps, e.g. starting from a few hours ago
-    const pastTime = new Date(Date.now() - (messages.length - i) * 15 * 60000); // 15 mins apart
+    const pastTime = new Date(Date.now() - (messages.length - i) * 22 * 60000); // spread out
     await addDoc(collection(db, "community_messages"), {
       uid: u.uid,
       userName: u.userName,

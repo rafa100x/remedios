@@ -124,7 +124,7 @@ export default function App() {
     return <LoginScreen />;
   }
 
-  const isChatView = view === 'guru' || view === 'community';
+  const isChatView = view === 'guru';
 
   return (
     <div className={`flex flex-col bg-surface text-tertiary font-body relative selection:bg-primary-container selection:text-primary ${isChatView ? 'h-[100dvh] overflow-hidden pt-[70px] sm:pt-20 pb-[70px] sm:pb-0' : 'min-h-screen overflow-x-hidden pt-[110px] sm:pt-20 pb-24 sm:pb-0'}`}>

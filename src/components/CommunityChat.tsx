@@ -78,16 +78,12 @@ export function CommunityChat() {
           return (
              <div key={msg.id || idx} className={`flex gap-3 ${isMe ? 'flex-row-reverse' : ''}`}>
                {!isMe && (
-                 <div className="w-8 h-8 rounded-full overflow-hidden shrink-0 border border-primary/20 bg-primary/10 flex items-center justify-center">
-                   {msg.userPhoto ? (
-                     <img src={msg.userPhoto} alt={msg.userName} className="w-full h-full object-cover" />
-                   ) : (
-                     <UserCircle className="w-5 h-5 text-primary/60" />
-                   )}
+                 <div className="w-8 h-8 rounded-full overflow-hidden shrink-0 border border-primary/20 bg-primary/10 flex items-center justify-center font-bold text-primary">
+                    {msg.userName ? msg.userName.charAt(0).toUpperCase() : '?'}
                  </div>
                )}
                <div className={`flex flex-col ${isMe ? 'items-end' : 'items-start'} max-w-[80%]`}>
-                 <span className="text-xs text-primary/60 mb-1 px-1">{isMe ? 'Tú' : msg.userName}</span>
+                 <span className="text-xs text-primary/60 mb-1 px-1">{isMe ? 'Tú' : (msg.userName ? msg.userName.split(' ')[0] : 'Usuario')}</span>
                  <div className={`rounded-2xl p-4 ${
                    isMe 
                     ? 'bg-primary/20 text-secondary rounded-tr-sm border border-primary/10' 
