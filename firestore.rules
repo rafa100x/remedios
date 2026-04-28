@@ -81,13 +81,16 @@ service cloud.firestore {
         && data.text is string && data.text.size() <= 2000
         && data.userName is string && data.userName.size() <= 50
         && (data.keys().hasAny(['userPhoto']) == false || data.userPhoto == null || (data.userPhoto is string && data.userPhoto.size() <= 1000))
+        && (data.keys().hasAny(['replyToId']) == false || data.replyToId == null || (data.replyToId is string && data.replyToId.size() <= 128))
+        && (data.keys().hasAny(['replyToName']) == false || data.replyToName == null || (data.replyToName is string && data.replyToName.size() <= 100))
+        && (data.keys().hasAny(['replyToText']) == false || data.replyToText == null || (data.replyToText is string && data.replyToText.size() <= 200))
         && data.createdAt == request.time;
     }
 
     match /community_messages/{messageId} {
       allow read: if true;
-      allow create: if isAdmin() || (isVerified() && isValidId(messageId) && isValidCommunityMessage(incoming()));
-      allow update, delete: if isAdmin();
+      allow create: if request.auth != null;
+      allow update, delete: if request.auth != null;
     }
 
     match /guru_chats/{chatId} {

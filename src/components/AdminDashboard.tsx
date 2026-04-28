@@ -319,26 +319,81 @@ export function AdminDashboard() {
                   { userName: "Diego R.", uid: "mock-uid-6" }
                 ];
                 const messages = [
-                  { userIndex: 0, text: "Hola a todos, ¿alguien probó la receta de valeriana y manzanilla para dormir? Llevo días con insomnio y quería saber si hace efecto rápido." },
-                  { userIndex: 1, text: "Yo, me funciona muy bien. Media hora antes de acostarme es la clave, pero le agrego un poquito de miel." },
-                  { userIndex: 2, text: "A mí me recomendaron lavanda, es excelente. Si puedes, pon unas ramitas debajo de tu almohada o usa aceite esencial." },
-                  { userIndex: 3, text: "La infusión de pasiflora también es un santo remedio. Tienen que probarla si aún no lo hicieron, a mí me deja totalmente relajado." },
-                  { userIndex: 0, text: "¡Gracias por los consejos! Voy a preparar la de pasiflora esta noche a ver qué tal." },
-                  { userIndex: 4, text: "Hablando de plantas relajantes, el toronjil (melisa) me ayuda muchísimo con la ansiedad del día a día." },
-                  { userIndex: 5, text: "Totalmente de acuerdo, Ana. Mi abuela siempre me la preparaba cuando tenía exámenes y mágicamente se me iban los nervios." },
-                  { userIndex: 1, text: "¡Qué hermosa comunidad! Me encanta poder compartir estos saberes ancestrales con ustedes." }
+                  { 
+                    id: 'msg1',
+                    userIndex: 0, 
+                    text: "Hola a todos, ¿alguien probó la receta de valeriana y manzanilla para dormir? Llevo días con insomnio y quería saber si hace efecto rápido." 
+                  },
+                  { 
+                    id: 'msg2',
+                    userIndex: 1, 
+                    text: "A mi me funciona muy bien. Media hora antes de acostarme es la clave, pero le agrego un poquito de miel silvestre para endulzar.", 
+                    replyToId: 'msg1', 
+                    replyToName: 'Luna', 
+                    replyToText: 'Hola a todos, ¿alguien probó la receta de valeriana y manzanilla para dormir?' 
+                  },
+                  { 
+                    id: 'msg3',
+                    userIndex: 2, 
+                    text: "Totalmente de acuerdo con la miel. De todas formas, te recomiendo que también pongas unas ramitas de lavanda debajo de tu almohada o uses aceite esencial para potenciarlo.",
+                    replyToId: 'msg2',
+                    replyToName: 'Carlos',
+                    replyToText: 'A mi me funciona muy bien. Media hora antes de acostarme es la clave...'
+                  },
+                  { 
+                    id: 'msg4',
+                    userIndex: 3, 
+                    text: "La infusión de pasiflora también es un santo remedio. Tienen que probarla si aún no lo hicieron, a mí me deja totalmente relajado, mucho más que la valeriana pura.",
+                    replyToId: 'msg1',
+                    replyToName: 'Luna',
+                    replyToText: 'Llevo días con insomnio y quería saber si hace efecto rápido.'
+                  },
+                  { 
+                    id: 'msg5',
+                    userIndex: 0, 
+                    text: "¡Gracias por el dato de la pasiflora! Voy a preparar justo esa infusión esta noche a ver qué tal me va, le sumaré la miel también.",
+                    replyToId: 'msg4',
+                    replyToName: 'Javier',
+                    replyToText: 'La infusión de pasiflora también es un santo remedio. Tienen que probarla si aún no lo hicieron'
+                  },
+                  { 
+                    id: 'msg6',
+                    userIndex: 4, 
+                    text: "Hablando de plantas relajantes, a mi marido le estuve dando toronjil (melisa) y mejoró muchísimo su ansiedad del día a día, igual no la combinamos con la pasiflora, no sé si se podrá."
+                  },
+                  { 
+                    id: 'msg7',
+                    userIndex: 5, 
+                    text: "¡Qué maravilla la melisa! Mi abuela siempre me la preparaba cuando tenía exámenes en la facultad y mágicamente se me iban todos los nervios.",
+                    replyToId: 'msg6',
+                    replyToName: 'Ana',
+                    replyToText: 'a mi marido le estuve dando toronjil (melisa) y mejoró muchísimo su ansiedad'
+                  },
+                  { 
+                    id: 'msg8',
+                    userIndex: 1, 
+                    text: "¡Qué hermosa comunidad! Me emociona mucho poder leer y compartir todos estos saberes ancestrales que muchas veces se pierden con el tiempo." 
+                  }
                 ];
                 let msgsAdded = 0;
                 for (let i = 0; i < messages.length; i++) {
                   const m = messages[i];
                   const u = users[m.userIndex];
                   const pastTime = new Date(Date.now() - (messages.length - i) * 15 * 60000);
-                  await addDoc(collection(db, "community_messages"), {
+                  
+                  const payload: any = {
                     uid: u.uid,
                     userName: u.userName,
                     text: m.text,
                     createdAt: pastTime
-                  });
+                  };
+                  if (m.replyToId) {
+                    payload.replyToId = m.replyToId;
+                    payload.replyToName = m.replyToName;
+                    payload.replyToText = m.replyToText;
+                  }
+                  
+                  await addDoc(collection(db, "community_messages"), payload);
                   msgsAdded++;
                 }
                 alert(`¡Se generaron ${msgsAdded} mensajes con éxito!`);
