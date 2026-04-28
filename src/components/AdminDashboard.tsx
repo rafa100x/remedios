@@ -333,20 +333,20 @@ export function AdminDashboard() {
                 const ai = new GoogleGenAI({ apiKey: GEMINI_API_KEY });
                 
                 const prompt = `
-Genera una conversación realista y dinámica para un foro/comunidad de herboristería, plantas medicinales y medicina natural en español.
-Queremos entre 6 y 10 mensajes que se sientan como personas reales compartiendo sus remedios, experiencias o preguntando dudas.
-Usa los siguientes nombres de usuario para los autores de los mensajes de forma aleatoria: ${selectedUsers.map(u => u.userName).join(', ')}.
+Genera una conversación realista y fluida para un foro/comunidad online de medicina natural y herboristería, en español.
+Queremos entre 6 y 10 mensajes. Los participantes son gente normal (no expertos), así que el lenguaje debe ser súper casual, corto, cotidiano, como si fuera un grupo de WhatsApp o un foro muy relajado. NO uses signos de exclamación exagerados (¡!) y mantén las frases breves, como lo haría alguien desde su celular.
+Usa estos nombres de usuario para los autores, elige 5 de ellos aleatoriamente: ${selectedUsers.map(u => u.userName).join(', ')}.
 
 REGLAS MUY IMPORTANTES:
-1. Algunos mensajes DEBEN ser preguntas nuevas, y otros DEBEN ser respuestas a los mensajes previos (formando hilos o interacciones).
-2. Para que se note que un mensaje es una respuesta a otro anterior, usa el campo "replyToId" y apunta al "id" del mensaje previo. También incluye "replyToName" (nombre de a quien responde) y "replyToText" (un resumen cortito de lo que dijo esa persona al que le responde).
-3. Variedad de tonos: algunos agradeciendo, otros preguntando, otros dando recetas específicas (por ej: "A mi me sirvió combinar X con Y").
-4. Genera SOLAMENTE una lista en JSON con este formato exacto, sin markdown ni comillas invertidas extra:
+1. Las frases deben ser cotidianas: "alguien probó...", "yo uso esto y me sirve", "sabes si funciona?". NADA de lenguaje robótico ni formal.
+2. Algunos deben ser preguntas iniciales y otros deben ser respuestas a esos mensajes.
+3. Para marcar que un mensaje responde a otro, usa el campo "replyToId" apuntando al "id" del mensaje previo, y llena "replyToName" (nombre de a quien responde) y "replyToText" (un mini resumen de la frase original, de 5-6 palabras).
+4. Genera SOLAMENTE una lista en JSON con este formato exacto, sin markdown extra:
 [
   { 
     "id": "gen_msg_1", 
-    "userName": "<Nombre de los provistos>",
-    "text": "Texto del mensaje",
+    "userName": "<Nombre>",
+    "text": "alguien probó pasiflora para la ansiedad? ando medio mal estos dias",
     "replyToId": null,
     "replyToName": null,
     "replyToText": null
@@ -354,10 +354,10 @@ REGLAS MUY IMPORTANTES:
   { 
     "id": "gen_msg_2", 
     "userName": "<Otro Nombre>",
-    "text": "Totalmente, y si le agregas...",
+    "text": "yo la tomo en té antes de dormir y me re sirve la verdad",
     "replyToId": "gen_msg_1",
-    "replyToName": "<El nombre del anterior>",
-    "replyToText": "Texto corto del anterior mensaje"
+    "replyToName": "<El nombre anterior>",
+    "replyToText": "alguien probó pasiflora para la ansiedad?"
   }
 ]
 `;

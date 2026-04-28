@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { collection, query, orderBy, limit, onSnapshot, addDoc, serverTimestamp } from 'firebase/firestore';
 import { db } from '../lib/firebase';
-import { Send, Users, UserCircle, CornerDownRight, X, Bot } from 'lucide-react';
+import { Send, Users, UserCircle, CornerDownRight, X, Bot, Maximize2, Minimize2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { GoogleGenAI } from '@google/genai';
 
@@ -27,6 +27,7 @@ export function CommunityChat() {
   const [newMessage, setNewMessage] = useState('');
   const [replyingTo, setReplyingTo] = useState<ChatMessage | null>(null);
   const [isGeneratingResponse, setIsGeneratingResponse] = useState<string | null>(null);
+  const [isFullscreen, setIsFullscreen] = useState(false);
   const endRef = useRef<HTMLDivElement>(null);
 
   const generateSimulatedResponse = async (msgToReply: ChatMessage) => {
@@ -45,11 +46,12 @@ export function CommunityChat() {
       
       const ai = new GoogleGenAI({ apiKey: GEMINI_API_KEY });
       const prompt = `
-En un foro de herboristería y plantas medicinales, un usuario llamado "${msgToReply.userName}" dijo:
+En un foro de medicina natural muy casual (estilo WhatsApp), un usuario llamado "${msgToReply.userName}" dijo:
 "${msgToReply.text}"
 
-Genera UNA respuesta natural, humana y amable de otro usuario, simulando la experiencia que tendría con esa inquietud o aportando conocimiento.
-Actúa como un miembro de la comunidad, no como un bot de atención. Responde directamente (hasta 30-40 palabras).
+Genera UNA respuesta natural, corta y amigable de otro usuario, simulando una experiencia propia.
+Es MUY IMPORTANTE que el lenguaje sea súper relajado, sin mayúsculas exageradas y NADA de signos de exclamación (¡!). 
+Responde directo al punto en 1 o 2 líneas como mucho (tipo mensaje de móvil).
 `;
       const response = await ai.models.generateContent({
           model: 'gemini-2.5-flash',
@@ -129,7 +131,42 @@ Actúa como un miembro de la comunidad, no como un bot de atención. Responde di
   };
 
   return (
-    <div className="flex flex-col flex-1 min-h-0 gap-4">
+    <div className={isFullscreen ? "fixed inset-0 z-[100] bg-[#2a241e] p-2 sm:p-4 flex flex-col gap-4" : "flex flex-col flex-1 min-h-0 gap-4 relative"}>
+      {isFullscreen && (
+        <div className="flex justify-between items-center px-2 py-1 shrink-0">
+          <div className="flex items-center gap-2 text-primary font-headline text-xl">
+            <Users className="w-5 h-5" />
+            Tribu
+          </div>
+          <button 
+            onClick={() => setIsFullscreen(false)}
+            className="p-2 text-primary hover:bg-primary/10 rounded-full transition-colors"
+          >
+            <Minimize2 className="w-5 h-5" />
+          </button>
+        </div>
+      )}
+      {!isFullscreen && (
+         <button 
+            onClick={() => setIsFullscreen(true)}
+            title="Pantalla Completa"
+            className="absolute -top-12 right-2 p-2 text-primary hover:bg-primary/10 rounded-full transition-colors z-10 hidden sm:block"
+         >
+            <Maximize2 className="w-4 h-4" />
+         </button>
+      )}
+      
+      {/* Boton visible solo en movil si no está fullscreen para expandir */}
+      {!isFullscreen && (
+          <button 
+            onClick={() => setIsFullscreen(true)}
+            className="sm:hidden mb-2 flex items-center justify-center gap-2 p-2 glass-panel ghost-border rounded-lg text-primary text-sm font-medium"
+          >
+            <Maximize2 className="w-4 h-4" />
+            Ampliar Chat
+          </button>
+      )}
+
       <div className="flex-1 overflow-y-auto glass-panel ghost-border rounded-xl p-4 md:p-6 space-y-4">
         {messages.length === 0 && (
           <div className="text-center text-primary/60 mt-10 italic">
@@ -166,23 +203,25 @@ Actúa como un miembro de la comunidad, no como un bot de atención. Responde di
                      </div>
                    )}
                    <p className="text-sm md:text-base font-medium whitespace-pre-wrap">{msg.text}</p>
-                   <button
-                     onClick={() => setReplyingTo(msg)}
-                     className={`absolute -bottom-2 ${isMe ? '-left-8' : '-right-8'} p-1.5 bg-surface text-primary opacity-0 group-hover:opacity-100 transition-opacity rounded-full shadow hover:bg-primary hover:text-white`}
-                     title="Responder"
-                   >
-                     <CornerDownRight className="w-3 h-3" />
-                   </button>
-                   {isAdmin && !isMe && (
+                   <div className={`absolute -bottom-3 ${isMe ? 'left-2 md:-left-8' : 'right-2 md:-right-8 flex-row-reverse'} flex gap-1 items-center z-10 md:opacity-0 md:group-hover:opacity-100 transition-opacity`}>
                      <button
-                       onClick={() => generateSimulatedResponse(msg)}
-                       disabled={isGeneratingResponse === msg.id}
-                       className={`absolute -bottom-2 -right-16 p-1.5 bg-surface text-primary opacity-0 group-hover:opacity-100 transition-opacity rounded-full shadow hover:bg-primary hover:text-white disabled:opacity-50`}
-                       title="Simular respuesta (IA)"
+                       onClick={() => setReplyingTo(msg)}
+                       className="p-1.5 bg-surface text-primary rounded-full shadow border border-primary/10 hover:bg-primary hover:text-white"
+                       title="Responder"
                      >
-                       <Bot className={`w-3 h-3 ${isGeneratingResponse === msg.id ? 'animate-pulse' : ''}`} />
+                       <CornerDownRight className="w-3 h-3" />
                      </button>
-                   )}
+                     {isAdmin && !isMe && (
+                       <button
+                         onClick={() => generateSimulatedResponse(msg)}
+                         disabled={isGeneratingResponse === msg.id}
+                         className="p-1.5 bg-surface text-primary rounded-full shadow border border-primary/10 hover:bg-primary hover:text-white disabled:opacity-50"
+                         title="Simular respuesta (IA)"
+                       >
+                         <Bot className={`w-3 h-3 ${isGeneratingResponse === msg.id ? 'animate-pulse' : ''}`} />
+                       </button>
+                     )}
+                   </div>
                  </div>
                </div>
              </div>
