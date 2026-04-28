@@ -54,7 +54,7 @@ export function GuruAI() {
                messages: initialMessages,
                createdAt: serverTimestamp(),
                updatedAt: serverTimestamp()
-             });
+             }, { merge: true });
            }
         } catch(e) {
           console.error('Error loading Guru history:', e);
@@ -81,10 +81,10 @@ export function GuruAI() {
       trackEvent('chat_guru', { event_category: 'engagement', event_label: 'Message Sent' });
       
       const chatDocRef = doc(db, 'guru_chats', user.uid);
-      await updateDoc(chatDocRef, {
+      await setDoc(chatDocRef, {
         messages: newMessages,
         updatedAt: serverTimestamp()
-      });
+      }, { merge: true });
 
       const validContents: { role: string; parts: { text: string }[] }[] = [];
       for (const m of newMessages) {
@@ -101,27 +101,40 @@ export function GuruAI() {
         }
       }
 
-      const response = await ai.models.generateContent({
-        model: "gemini-2.5-flash",
-        contents: validContents,
-        config: {
-          systemInstruction: INSTRUCTION,
-        }
-      });
-
-      if (response.text) {
-        const finalMessages: {role: 'user' | 'model', content: string}[] = [...newMessages, { role: 'model', content: response.text }];
-        setMessages(finalMessages);
-        
-        await updateDoc(chatDocRef, {
-          messages: finalMessages,
-          updatedAt: serverTimestamp()
+      let response;
+      try {
+        response = await ai.models.generateContent({
+          model: "gemini-2.5-flash",
+          contents: validContents,
+          config: {
+            systemInstruction: INSTRUCTION,
+          }
         });
+      } catch (err: any) {
+        console.error('Gemini error:', err);
+        setMessages(prev => [...prev, { role: 'model', content: `El oráculo de las raíces (IA) no pudo responder. Error: ${err.message || String(err)}` }]);
+        setIsLoading(false);
+        return;
+      }
+
+      try {
+        if (response && response.text) {
+          const finalMessages: {role: 'user' | 'model', content: string}[] = [...newMessages, { role: 'model', content: response.text }];
+          setMessages(finalMessages);
+          
+          await setDoc(chatDocRef, {
+            messages: finalMessages,
+            updatedAt: serverTimestamp()
+          }, { merge: true });
+        }
+      } catch (err: any) {
+        console.error('Firestore save error:', err);
+        setMessages(prev => [...prev, { role: 'model', content: `La memoria de las raíces (BD) falló al recordar. Error: ${err.message || String(err)}` }]);
       }
 
     } catch (err: any) {
-      console.error(err);
-      setMessages(prev => [...prev, { role: 'model', content: `He perdido un momento la conexión con el entorno. Error: ${err.message || String(err)}` }]);
+      console.error('Initial chat save error:', err);
+      setMessages(prev => [...prev, { role: 'model', content: `No pude enviar tu mensaje. Error: ${err.message || String(err)}` }]);
     } finally {
       setIsLoading(false);
     }

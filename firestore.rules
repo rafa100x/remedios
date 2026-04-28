@@ -81,9 +81,9 @@ service cloud.firestore {
 
     match /guru_chats/{chatId} {
       allow read: if isVerified() && request.auth.uid == chatId;
-      allow create: if isVerified() && request.auth.uid == chatId && isValidGuruChat(incoming());
-      allow update: if isVerified() && request.auth.uid == chatId 
-        && incoming().diff(existing()).affectedKeys().hasOnly(['messages', 'updatedAt']);
+      allow create: if isVerified() && request.auth.uid == chatId;
+      allow update: if isVerified() && request.auth.uid == chatId;
+      allow delete: if isAdmin() || (isVerified() && request.auth.uid == chatId);
     }
 
     match /purchaseIntents/{intentId} {

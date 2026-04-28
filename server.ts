@@ -167,6 +167,37 @@ async function startServer() {
     }
   });
 
+  // --- GEMINI CHAT API ---
+  app.post("/api/guru-chat", async (req, res) => {
+    try {
+      const { contents, instruction } = req.body;
+      if (!contents) return res.status(400).json({ error: "Missing contents" });
+
+      if (!ai && process.env.GEMINI_API_KEY) {
+         try {
+           ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+         } catch (e) {
+           console.error("Failed to dynamically initialize AI:", e);
+         }
+      }
+
+      if (!ai) {
+        return res.status(500).json({ error: "API key not configured." });
+      }
+
+      const response = await ai.models.generateContent({
+        model: "gemini-2.5-flash",
+        contents,
+        config: { systemInstruction: instruction },
+      });
+
+      return res.json({ text: response.text });
+    } catch (e: any) {
+      console.error("Guru Chat error:", e);
+      return res.status(500).json({ error: e.message || "Failed to generate content" });
+    }
+  });
+
   // --- GEMINI IMAGE API ---
 
   app.post("/api/generate-image", async (req, res) => {
