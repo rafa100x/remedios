@@ -1,6 +1,7 @@
 export interface Ingredient {
   es: string;
   la: string;
+  quantity?: string;
 }
 
 export interface Recipe {
@@ -27,6 +28,7 @@ import { featuredCategory } from './featured';
 
 export const categories: Category[] = [
   featuredCategory,
+
   {
     "id": 1,
     "name": "SISTEMA RESPIRATORIO",
@@ -43,15 +45,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Llantén",
-            "la": "Plantago major"
+            "la": "Plantago major",
+            "quantity": "1 cucharada sopera"
           },
           {
             "es": "Malva",
-            "la": "Malva sylvestris"
+            "la": "Malva sylvestris",
+            "quantity": "1 cucharada sopera"
           },
           {
             "es": "Vino blanco",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "250 ml (1 taza)"
           }
         ],
         "instructions": "Herví el vino blanco y agregale llantén y malva. Dejalo reposar tapado durante 13 minutos. Colalo antes de usarlo.",
@@ -67,15 +72,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Saúco",
-            "la": "Sambucus nigra"
+            "la": "Sambucus nigra",
+            "quantity": "100 gramos"
           },
           {
             "es": "Gordolobo",
-            "la": "Verbascum thapsus"
+            "la": "Verbascum thapsus",
+            "quantity": "100 gramos"
           },
           {
             "es": "Vino blanco",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "1 litro"
           }
         ],
         "instructions": "Dejá macerar saúco y gordolobo en vino blanco durante 16 días en un lugar oscuro y fresco. Agitalo todos los días. Filtralo bien con un paño de lino y guardalo en un frasco de vidrio oscuro.",
@@ -91,15 +99,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Eucalipto",
-            "la": "Eucalyptus globulus"
+            "la": "Eucalyptus globulus",
+            "quantity": "1 cucharada sopera"
           },
           {
             "es": "Orégano",
-            "la": "Origanum vulgare"
+            "la": "Origanum vulgare",
+            "quantity": "1 cucharada sopera"
           },
           {
             "es": "Agua de manantial",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "250 ml (1 taza)"
           }
         ],
         "instructions": "Herví el agua de manantial y agregale eucalipto y orégano. Dejalo reposar tapado durante 13 minutos. Colalo antes de usarlo.",
@@ -115,15 +126,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Pino silvestre",
-            "la": "Pinus sylvestris"
+            "la": "Pinus sylvestris",
+            "quantity": "15 gramos"
           },
           {
             "es": "Llantén",
-            "la": "Plantago major"
+            "la": "Plantago major",
+            "quantity": "15 gramos"
           },
           {
             "es": "Agua de manantial",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "1 vaso / 250 ml"
           }
         ],
         "instructions": "Herví el agua de manantial y agregale pino silvestre y llantén. Dejalo reposar tapado durante 8 minutos. Colalo antes de usarlo.",
@@ -139,15 +153,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Orégano",
-            "la": "Origanum vulgare"
+            "la": "Origanum vulgare",
+            "quantity": "15 gramos"
           },
           {
             "es": "Malva",
-            "la": "Malva sylvestris"
+            "la": "Malva sylvestris",
+            "quantity": "15 gramos"
           },
           {
             "es": "Agua de manantial",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "1 vaso / 250 ml"
           }
         ],
         "instructions": "Herví el agua de manantial y agregale orégano y malva. Dejalo reposar tapado durante 5 minutos. Colalo antes de usarlo.",
@@ -163,15 +180,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Gordolobo",
-            "la": "Verbascum thapsus"
+            "la": "Verbascum thapsus",
+            "quantity": "15 gramos"
           },
           {
             "es": "Tomillo",
-            "la": "Thymus vulgaris"
+            "la": "Thymus vulgaris",
+            "quantity": "15 gramos"
           },
           {
             "es": "Vino blanco",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "1 vaso / 250 ml"
           }
         ],
         "instructions": "Dejá macerar gordolobo y tomillo en vino blanco durante 11 días en un lugar oscuro y fresco. Agitalo todos los días. Filtralo bien con un paño de lino y guardalo en un frasco de vidrio oscuro.",
@@ -187,15 +207,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Saúco",
-            "la": "Sambucus nigra"
+            "la": "Sambucus nigra",
+            "quantity": "1 cucharada sopera"
           },
           {
             "es": "Llantén",
-            "la": "Plantago major"
+            "la": "Plantago major",
+            "quantity": "1 cucharada sopera"
           },
           {
             "es": "Vino blanco",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "250 ml (1 taza)"
           }
         ],
         "instructions": "Herví el vino blanco y agregale saúco y llantén. Dejalo reposar tapado durante 5 minutos. Colalo antes de usarlo.",
@@ -211,15 +234,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Regaliz",
-            "la": "Glycyrrhiza glabra"
+            "la": "Glycyrrhiza glabra",
+            "quantity": "15 gramos"
           },
           {
             "es": "Gordolobo",
-            "la": "Verbascum thapsus"
+            "la": "Verbascum thapsus",
+            "quantity": "15 gramos"
           },
           {
             "es": "Aceite de almendras",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "1 vaso / 250 ml"
           }
         ],
         "instructions": "Derretí aceite de almendras al baño maría. Agregá los extractos de regaliz y gordolobo. Revolvé constante con espátula de madera hasta que quede todo parejo y dejá enfriar en tarro de cristal.",
@@ -235,15 +261,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Gordolobo",
-            "la": "Verbascum thapsus"
+            "la": "Verbascum thapsus",
+            "quantity": "1 cucharada sopera"
           },
           {
             "es": "Regaliz",
-            "la": "Glycyrrhiza glabra"
+            "la": "Glycyrrhiza glabra",
+            "quantity": "1 cucharada sopera"
           },
           {
             "es": "Vino blanco",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "250 ml (1 taza)"
           }
         ],
         "instructions": "Herví el vino blanco y agregale gordolobo y regaliz. Dejalo reposar tapado durante 5 minutos. Colalo antes de usarlo.",
@@ -259,15 +288,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Gordolobo",
-            "la": "Verbascum thapsus"
+            "la": "Verbascum thapsus",
+            "quantity": "1 cucharada sopera"
           },
           {
             "es": "Tomillo",
-            "la": "Thymus vulgaris"
+            "la": "Thymus vulgaris",
+            "quantity": "1 cucharada sopera"
           },
           {
             "es": "Aceite de almendras",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "250 ml (1 taza)"
           }
         ],
         "instructions": "Herví el aceite de almendras y agregale gordolobo y tomillo. Dejalo reposar tapado durante 5 minutos. Colalo antes de usarlo.",
@@ -283,15 +315,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Llantén",
-            "la": "Plantago major"
+            "la": "Plantago major",
+            "quantity": "50 gramos"
           },
           {
             "es": "Gordolobo",
-            "la": "Verbascum thapsus"
+            "la": "Verbascum thapsus",
+            "quantity": "50 gramos"
           },
           {
             "es": "Aceite de almendras",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "500 ml"
           }
         ],
         "instructions": "Dejá macerar llantén y gordolobo en aceite de almendras durante 10 días en un lugar oscuro y fresco. Agitalo todos los días. Filtralo bien con un paño de lino y guardalo en un frasco de vidrio oscuro.",
@@ -307,15 +342,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Pulmonaria",
-            "la": "Pulmonaria officinalis"
+            "la": "Pulmonaria officinalis",
+            "quantity": "15 gramos"
           },
           {
             "es": "Eucalipto",
-            "la": "Eucalyptus globulus"
+            "la": "Eucalyptus globulus",
+            "quantity": "15 gramos"
           },
           {
             "es": "Aceite de almendras",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "1 vaso / 250 ml"
           }
         ],
         "instructions": "Derretí aceite de almendras al baño maría. Agregá los extractos de pulmonaria y eucalipto. Revolvé constante con espátula de madera hasta que quede todo parejo y dejá enfriar en tarro de cristal.",
@@ -331,15 +369,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Pulmonaria",
-            "la": "Pulmonaria officinalis"
+            "la": "Pulmonaria officinalis",
+            "quantity": "1 cucharada sopera"
           },
           {
             "es": "Regaliz",
-            "la": "Glycyrrhiza glabra"
+            "la": "Glycyrrhiza glabra",
+            "quantity": "1 cucharada sopera"
           },
           {
             "es": "Aceite de almendras",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "250 ml (1 taza)"
           }
         ],
         "instructions": "Herví el aceite de almendras y agregale pulmonaria y regaliz. Dejalo reposar tapado durante 5 minutos. Colalo antes de usarlo.",
@@ -355,15 +396,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Eucalipto",
-            "la": "Eucalyptus globulus"
+            "la": "Eucalyptus globulus",
+            "quantity": "1 cucharada sopera"
           },
           {
             "es": "Malva",
-            "la": "Malva sylvestris"
+            "la": "Malva sylvestris",
+            "quantity": "1 cucharada sopera"
           },
           {
             "es": "Alcohol de 70°",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "250 ml (1 taza)"
           }
         ],
         "instructions": "Herví el alcohol de 70° y agregale eucalipto y malva. Dejalo reposar tapado durante 10 minutos. Colalo antes de usarlo.",
@@ -379,15 +423,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Saúco",
-            "la": "Sambucus nigra"
+            "la": "Sambucus nigra",
+            "quantity": "15 gramos"
           },
           {
             "es": "Pulmonaria",
-            "la": "Pulmonaria officinalis"
+            "la": "Pulmonaria officinalis",
+            "quantity": "15 gramos"
           },
           {
             "es": "Miel cruda de abeja",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "1 vaso / 250 ml"
           }
         ],
         "instructions": "Herví el miel cruda de abeja y agregale saúco y pulmonaria. Dejalo reposar tapado durante 8 minutos. Colalo antes de usarlo.",
@@ -403,15 +450,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Regaliz",
-            "la": "Glycyrrhiza glabra"
+            "la": "Glycyrrhiza glabra",
+            "quantity": "50 gramos"
           },
           {
             "es": "Orégano",
-            "la": "Origanum vulgare"
+            "la": "Origanum vulgare",
+            "quantity": "50 gramos"
           },
           {
             "es": "Miel cruda de abeja",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "500 ml"
           }
         ],
         "instructions": "Dejá macerar regaliz y orégano en miel cruda de abeja durante 8 días en un lugar oscuro y fresco. Agitalo todos los días. Filtralo bien con un paño de lino y guardalo en un frasco de vidrio oscuro.",
@@ -427,15 +477,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Tomillo",
-            "la": "Thymus vulgaris"
+            "la": "Thymus vulgaris",
+            "quantity": "50 gramos"
           },
           {
             "es": "Pino silvestre",
-            "la": "Pinus sylvestris"
+            "la": "Pinus sylvestris",
+            "quantity": "50 gramos"
           },
           {
             "es": "Alcohol de 70°",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "500 ml"
           }
         ],
         "instructions": "Dejá macerar tomillo y pino silvestre en alcohol de 70° durante 26 días en un lugar oscuro y fresco. Agitalo todos los días. Filtralo bien con un paño de lino y guardalo en un frasco de vidrio oscuro.",
@@ -451,15 +504,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Orégano",
-            "la": "Origanum vulgare"
+            "la": "Origanum vulgare",
+            "quantity": "1 cucharada sopera"
           },
           {
             "es": "Eucalipto",
-            "la": "Eucalyptus globulus"
+            "la": "Eucalyptus globulus",
+            "quantity": "1 cucharada sopera"
           },
           {
             "es": "Alcohol de 70°",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "250 ml (1 taza)"
           }
         ],
         "instructions": "Herví el alcohol de 70° y agregale orégano y eucalipto. Dejalo reposar tapado durante 12 minutos. Colalo antes de usarlo.",
@@ -475,15 +531,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Malva",
-            "la": "Malva sylvestris"
+            "la": "Malva sylvestris",
+            "quantity": "100 gramos"
           },
           {
             "es": "Pino silvestre",
-            "la": "Pinus sylvestris"
+            "la": "Pinus sylvestris",
+            "quantity": "100 gramos"
           },
           {
             "es": "Vino blanco",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "1 litro"
           }
         ],
         "instructions": "Dejá macerar malva y pino silvestre en vino blanco durante 21 días en un lugar oscuro y fresco. Agitalo todos los días. Filtralo bien con un paño de lino y guardalo en un frasco de vidrio oscuro.",
@@ -499,15 +558,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Pino silvestre",
-            "la": "Pinus sylvestris"
+            "la": "Pinus sylvestris",
+            "quantity": "1 cucharada sopera"
           },
           {
             "es": "Pulmonaria",
-            "la": "Pulmonaria officinalis"
+            "la": "Pulmonaria officinalis",
+            "quantity": "1 cucharada sopera"
           },
           {
             "es": "Agua de manantial",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "250 ml (1 taza)"
           }
         ],
         "instructions": "Herví el agua de manantial y agregale pino silvestre y pulmonaria. Dejalo reposar tapado durante 11 minutos. Colalo antes de usarlo.",
@@ -534,15 +596,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Melisa",
-            "la": "Melissa officinalis"
+            "la": "Melissa officinalis",
+            "quantity": "1 cucharada sopera"
           },
           {
             "es": "Anís verde",
-            "la": "Pimpinella anisum"
+            "la": "Pimpinella anisum",
+            "quantity": "1 cucharada sopera"
           },
           {
             "es": "Agua purificada",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "250 ml (1 taza)"
           }
         ],
         "instructions": "Herví el agua purificada y agregale melisa y anís verde. Dejalo reposar tapado durante 6 minutos. Colalo antes de usarlo.",
@@ -558,15 +623,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Melisa",
-            "la": "Melissa officinalis"
+            "la": "Melissa officinalis",
+            "quantity": "1 cucharada sopera"
           },
           {
             "es": "Hinojo",
-            "la": "Foeniculum vulgare"
+            "la": "Foeniculum vulgare",
+            "quantity": "1 cucharada sopera"
           },
           {
             "es": "Alcohol de 60°",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "250 ml (1 taza)"
           }
         ],
         "instructions": "Herví el alcohol de 60° y agregale melisa y hinojo. Dejalo reposar tapado durante 5 minutos. Colalo antes de usarlo.",
@@ -582,15 +650,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Manzanilla",
-            "la": "Matricaria chamomilla"
+            "la": "Matricaria chamomilla",
+            "quantity": "15 gramos"
           },
           {
             "es": "Hinojo",
-            "la": "Foeniculum vulgare"
+            "la": "Foeniculum vulgare",
+            "quantity": "15 gramos"
           },
           {
             "es": "Vinagre de manzana",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "1 vaso / 250 ml"
           }
         ],
         "instructions": "Dejá macerar manzanilla y hinojo en vinagre de manzana durante 10 días en un lugar oscuro y fresco. Agitalo todos los días. Filtralo bien con un paño de lino y guardalo en un frasco de vidrio oscuro.",
@@ -606,15 +677,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Hinojo",
-            "la": "Foeniculum vulgare"
+            "la": "Foeniculum vulgare",
+            "quantity": "1 cucharada sopera"
           },
           {
             "es": "Jengibre",
-            "la": "Zingiber officinale"
+            "la": "Zingiber officinale",
+            "quantity": "1 cucharada sopera"
           },
           {
             "es": "Agua purificada",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "250 ml (1 taza)"
           }
         ],
         "instructions": "Herví el agua purificada y agregale hinojo y jengibre. Dejalo reposar tapado durante 11 minutos. Colalo antes de usarlo.",
@@ -630,15 +704,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Manzanilla",
-            "la": "Matricaria chamomilla"
+            "la": "Matricaria chamomilla",
+            "quantity": "15 gramos"
           },
           {
             "es": "Boldo",
-            "la": "Peumus boldus"
+            "la": "Peumus boldus",
+            "quantity": "15 gramos"
           },
           {
             "es": "Vino tinto",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "1 vaso / 250 ml"
           }
         ],
         "instructions": "Dejá macerar manzanilla y boldo en vino tinto durante 26 días en un lugar oscuro y fresco. Agitalo todos los días. Filtralo bien con un paño de lino y guardalo en un frasco de vidrio oscuro.",
@@ -654,15 +731,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Menta piperita",
-            "la": "Mentha x piperita"
+            "la": "Mentha x piperita",
+            "quantity": "15 gramos"
           },
           {
             "es": "Melisa",
-            "la": "Melissa officinalis"
+            "la": "Melissa officinalis",
+            "quantity": "15 gramos"
           },
           {
             "es": "Glicerina vegetal",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "1 vaso / 250 ml"
           }
         ],
         "instructions": "Dejá macerar menta piperita y melisa en glicerina vegetal durante 16 días en un lugar oscuro y fresco. Agitalo todos los días. Filtralo bien con un paño de lino y guardalo en un frasco de vidrio oscuro.",
@@ -678,15 +758,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Diente de león",
-            "la": "Taraxacum officinale"
+            "la": "Taraxacum officinale",
+            "quantity": "15 gramos"
           },
           {
             "es": "Hinojo",
-            "la": "Foeniculum vulgare"
+            "la": "Foeniculum vulgare",
+            "quantity": "15 gramos"
           },
           {
             "es": "Agua purificada",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "1 vaso / 250 ml"
           }
         ],
         "instructions": "Dejá macerar diente de león y hinojo en agua purificada durante 11 días en un lugar oscuro y fresco. Agitalo todos los días. Filtralo bien con un paño de lino y guardalo en un frasco de vidrio oscuro.",
@@ -702,15 +785,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Diente de león",
-            "la": "Taraxacum officinale"
+            "la": "Taraxacum officinale",
+            "quantity": "15 gramos"
           },
           {
             "es": "Boldo",
-            "la": "Peumus boldus"
+            "la": "Peumus boldus",
+            "quantity": "15 gramos"
           },
           {
             "es": "Alcohol de 60°",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "1 vaso / 250 ml"
           }
         ],
         "instructions": "Dejá macerar diente de león y boldo en alcohol de 60° durante 12 días en un lugar oscuro y fresco. Agitalo todos los días. Filtralo bien con un paño de lino y guardalo en un frasco de vidrio oscuro.",
@@ -726,15 +812,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Hinojo",
-            "la": "Foeniculum vulgare"
+            "la": "Foeniculum vulgare",
+            "quantity": "15 gramos"
           },
           {
             "es": "Anís verde",
-            "la": "Pimpinella anisum"
+            "la": "Pimpinella anisum",
+            "quantity": "15 gramos"
           },
           {
             "es": "Vinagre de manzana",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "1 vaso / 250 ml"
           }
         ],
         "instructions": "Dejá macerar hinojo y anís verde en vinagre de manzana durante 11 días en un lugar oscuro y fresco. Agitalo todos los días. Filtralo bien con un paño de lino y guardalo en un frasco de vidrio oscuro.",
@@ -750,15 +839,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Alcachofera",
-            "la": "Cynara scolymus"
+            "la": "Cynara scolymus",
+            "quantity": "15 gramos"
           },
           {
             "es": "Genciana",
-            "la": "Gentiana lutea"
+            "la": "Gentiana lutea",
+            "quantity": "15 gramos"
           },
           {
             "es": "Agua purificada",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "1 vaso / 250 ml"
           }
         ],
         "instructions": "Dejá macerar alcachofera y genciana en agua purificada durante 9 días en un lugar oscuro y fresco. Agitalo todos los días. Filtralo bien con un paño de lino y guardalo en un frasco de vidrio oscuro.",
@@ -774,15 +866,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Melisa",
-            "la": "Melissa officinalis"
+            "la": "Melissa officinalis",
+            "quantity": "15 gramos"
           },
           {
             "es": "Boldo",
-            "la": "Peumus boldus"
+            "la": "Peumus boldus",
+            "quantity": "15 gramos"
           },
           {
             "es": "Glicerina vegetal",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "1 vaso / 250 ml"
           }
         ],
         "instructions": "Dejá macerar melisa y boldo en glicerina vegetal durante 15 días en un lugar oscuro y fresco. Agitalo todos los días. Filtralo bien con un paño de lino y guardalo en un frasco de vidrio oscuro.",
@@ -798,15 +893,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Menta piperita",
-            "la": "Mentha x piperita"
+            "la": "Mentha x piperita",
+            "quantity": "15 gramos"
           },
           {
             "es": "Anís verde",
-            "la": "Pimpinella anisum"
+            "la": "Pimpinella anisum",
+            "quantity": "15 gramos"
           },
           {
             "es": "Glicerina vegetal",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "1 vaso / 250 ml"
           }
         ],
         "instructions": "Dejá macerar menta piperita y anís verde en glicerina vegetal durante 11 días en un lugar oscuro y fresco. Agitalo todos los días. Filtralo bien con un paño de lino y guardalo en un frasco de vidrio oscuro.",
@@ -822,15 +920,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Hinojo",
-            "la": "Foeniculum vulgare"
+            "la": "Foeniculum vulgare",
+            "quantity": "15 gramos"
           },
           {
             "es": "Genciana",
-            "la": "Gentiana lutea"
+            "la": "Gentiana lutea",
+            "quantity": "15 gramos"
           },
           {
             "es": "Vinagre de manzana",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "1 vaso / 250 ml"
           }
         ],
         "instructions": "Dejá macerar hinojo y genciana en vinagre de manzana durante 21 días en un lugar oscuro y fresco. Agitalo todos los días. Filtralo bien con un paño de lino y guardalo en un frasco de vidrio oscuro.",
@@ -846,15 +947,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Jengibre",
-            "la": "Zingiber officinale"
+            "la": "Zingiber officinale",
+            "quantity": "15 gramos"
           },
           {
             "es": "Melisa",
-            "la": "Melissa officinalis"
+            "la": "Melissa officinalis",
+            "quantity": "15 gramos"
           },
           {
             "es": "Agua purificada",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "1 vaso / 250 ml"
           }
         ],
         "instructions": "Dejá macerar jengibre y melisa en agua purificada durante 12 días en un lugar oscuro y fresco. Agitalo todos los días. Filtralo bien con un paño de lino y guardalo en un frasco de vidrio oscuro.",
@@ -870,15 +974,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Melisa",
-            "la": "Melissa officinalis"
+            "la": "Melissa officinalis",
+            "quantity": "15 gramos"
           },
           {
             "es": "Genciana",
-            "la": "Gentiana lutea"
+            "la": "Gentiana lutea",
+            "quantity": "15 gramos"
           },
           {
             "es": "Vinagre de manzana",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "1 vaso / 250 ml"
           }
         ],
         "instructions": "Dejá macerar melisa y genciana en vinagre de manzana durante 8 días en un lugar oscuro y fresco. Agitalo todos los días. Filtralo bien con un paño de lino y guardalo en un frasco de vidrio oscuro.",
@@ -894,15 +1001,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Melisa",
-            "la": "Melissa officinalis"
+            "la": "Melissa officinalis",
+            "quantity": "15 gramos"
           },
           {
             "es": "Manzanilla",
-            "la": "Matricaria chamomilla"
+            "la": "Matricaria chamomilla",
+            "quantity": "15 gramos"
           },
           {
             "es": "Glicerina vegetal",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "1 vaso / 250 ml"
           }
         ],
         "instructions": "Dejá macerar melisa y manzanilla en glicerina vegetal durante 17 días en un lugar oscuro y fresco. Agitalo todos los días. Filtralo bien con un paño de lino y guardalo en un frasco de vidrio oscuro.",
@@ -918,15 +1028,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Menta piperita",
-            "la": "Mentha x piperita"
+            "la": "Mentha x piperita",
+            "quantity": "15 gramos"
           },
           {
             "es": "Jengibre",
-            "la": "Zingiber officinale"
+            "la": "Zingiber officinale",
+            "quantity": "15 gramos"
           },
           {
             "es": "Alcohol de 60°",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "1 vaso / 250 ml"
           }
         ],
         "instructions": "Dejá macerar menta piperita y jengibre en alcohol de 60° durante 9 días en un lugar oscuro y fresco. Agitalo todos los días. Filtralo bien con un paño de lino y guardalo en un frasco de vidrio oscuro.",
@@ -942,15 +1055,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Manzanilla",
-            "la": "Matricaria chamomilla"
+            "la": "Matricaria chamomilla",
+            "quantity": "15 gramos"
           },
           {
             "es": "Hinojo",
-            "la": "Foeniculum vulgare"
+            "la": "Foeniculum vulgare",
+            "quantity": "15 gramos"
           },
           {
             "es": "Vino tinto",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "1 vaso / 250 ml"
           }
         ],
         "instructions": "Dejá macerar manzanilla y hinojo en vino tinto durante 19 días en un lugar oscuro y fresco. Agitalo todos los días. Filtralo bien con un paño de lino y guardalo en un frasco de vidrio oscuro.",
@@ -966,15 +1082,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Anís verde",
-            "la": "Pimpinella anisum"
+            "la": "Pimpinella anisum",
+            "quantity": "15 gramos"
           },
           {
             "es": "Jengibre",
-            "la": "Zingiber officinale"
+            "la": "Zingiber officinale",
+            "quantity": "15 gramos"
           },
           {
             "es": "Vino tinto",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "1 vaso / 250 ml"
           }
         ],
         "instructions": "Dejá macerar anís verde y jengibre en vino tinto durante 15 días en un lugar oscuro y fresco. Agitalo todos los días. Filtralo bien con un paño de lino y guardalo en un frasco de vidrio oscuro.",
@@ -990,15 +1109,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Manzanilla",
-            "la": "Matricaria chamomilla"
+            "la": "Matricaria chamomilla",
+            "quantity": "15 gramos"
           },
           {
             "es": "Genciana",
-            "la": "Gentiana lutea"
+            "la": "Gentiana lutea",
+            "quantity": "15 gramos"
           },
           {
             "es": "Alcohol de 60°",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "1 vaso / 250 ml"
           }
         ],
         "instructions": "Dejá macerar manzanilla y genciana en alcohol de 60° durante 11 días en un lugar oscuro y fresco. Agitalo todos los días. Filtralo bien con un paño de lino y guardalo en un frasco de vidrio oscuro.",
@@ -1025,15 +1147,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Tila",
-            "la": "Tilia platyphyllos"
+            "la": "Tilia platyphyllos",
+            "quantity": "15 gramos"
           },
           {
             "es": "Lúpulo",
-            "la": "Humulus lupulus"
+            "la": "Humulus lupulus",
+            "quantity": "15 gramos"
           },
           {
             "es": "Vino dulce",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "1 vaso / 250 ml"
           }
         ],
         "instructions": "Derretí vino dulce al baño maría. Agregá los extractos de tila y lúpulo. Revolvé constante con espátula de madera hasta que quede todo parejo y dejá enfriar en tarro de cristal.",
@@ -1049,15 +1174,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Melisa",
-            "la": "Melissa officinalis"
+            "la": "Melissa officinalis",
+            "quantity": "15 gramos"
           },
           {
             "es": "Azahar",
-            "la": "Citrus aurantium"
+            "la": "Citrus aurantium",
+            "quantity": "15 gramos"
           },
           {
             "es": "Vino dulce",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "1 vaso / 250 ml"
           }
         ],
         "instructions": "Derretí vino dulce al baño maría. Agregá los extractos de melisa y azahar. Revolvé constante con espátula de madera hasta que quede todo parejo y dejá enfriar en tarro de cristal.",
@@ -1073,15 +1201,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Lavanda",
-            "la": "Lavandula angustifolia"
+            "la": "Lavandula angustifolia",
+            "quantity": "15 gramos"
           },
           {
             "es": "Amapola de California",
-            "la": "Eschscholzia californica"
+            "la": "Eschscholzia californica",
+            "quantity": "15 gramos"
           },
           {
             "es": "Miel de azahar",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "1 vaso / 250 ml"
           }
         ],
         "instructions": "Dejá macerar lavanda y amapola de california en miel de azahar durante 16 días en un lugar oscuro y fresco. Agitalo todos los días. Filtralo bien con un paño de lino y guardalo en un frasco de vidrio oscuro.",
@@ -1097,15 +1228,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Tila",
-            "la": "Tilia platyphyllos"
+            "la": "Tilia platyphyllos",
+            "quantity": "15 gramos"
           },
           {
             "es": "Lavanda",
-            "la": "Lavandula angustifolia"
+            "la": "Lavandula angustifolia",
+            "quantity": "15 gramos"
           },
           {
             "es": "Alcohol de 70°",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "1 vaso / 250 ml"
           }
         ],
         "instructions": "Dejá macerar tila y lavanda en alcohol de 70° durante 24 días en un lugar oscuro y fresco. Agitalo todos los días. Filtralo bien con un paño de lino y guardalo en un frasco de vidrio oscuro.",
@@ -1121,15 +1255,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Amapola de California",
-            "la": "Eschscholzia californica"
+            "la": "Eschscholzia californica",
+            "quantity": "15 gramos"
           },
           {
             "es": "Melisa",
-            "la": "Melissa officinalis"
+            "la": "Melissa officinalis",
+            "quantity": "15 gramos"
           },
           {
             "es": "Aceite esencial",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "1 vaso / 250 ml"
           }
         ],
         "instructions": "Dejá macerar amapola de california y melisa en aceite esencial durante 14 días en un lugar oscuro y fresco. Agitalo todos los días. Filtralo bien con un paño de lino y guardalo en un frasco de vidrio oscuro.",
@@ -1145,15 +1282,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Melisa",
-            "la": "Melissa officinalis"
+            "la": "Melissa officinalis",
+            "quantity": "15 gramos"
           },
           {
             "es": "Valeriana",
-            "la": "Valeriana officinalis"
+            "la": "Valeriana officinalis",
+            "quantity": "15 gramos"
           },
           {
             "es": "Agua de manantial",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "1 vaso / 250 ml"
           }
         ],
         "instructions": "Derretí agua de manantial al baño maría. Agregá los extractos de melisa y valeriana. Revolvé constante con espátula de madera hasta que quede todo parejo y dejá enfriar en tarro de cristal.",
@@ -1169,15 +1309,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Melisa",
-            "la": "Melissa officinalis"
+            "la": "Melissa officinalis",
+            "quantity": "15 gramos"
           },
           {
             "es": "Tila",
-            "la": "Tilia platyphyllos"
+            "la": "Tilia platyphyllos",
+            "quantity": "15 gramos"
           },
           {
             "es": "Aceite esencial",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "1 vaso / 250 ml"
           }
         ],
         "instructions": "Dejá macerar melisa y tila en aceite esencial durante 13 días en un lugar oscuro y fresco. Agitalo todos los días. Filtralo bien con un paño de lino y guardalo en un frasco de vidrio oscuro.",
@@ -1193,15 +1336,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Hierba de San Juan",
-            "la": "Hypericum perforatum"
+            "la": "Hypericum perforatum",
+            "quantity": "1 cucharada sopera"
           },
           {
             "es": "Azahar",
-            "la": "Citrus aurantium"
+            "la": "Citrus aurantium",
+            "quantity": "1 cucharada sopera"
           },
           {
             "es": "Aceite esencial",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "250 ml (1 taza)"
           }
         ],
         "instructions": "Herví el aceite esencial y agregale hierba de san juan y azahar. Dejalo reposar tapado durante 5 minutos. Colalo antes de usarlo.",
@@ -1217,15 +1363,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Amapola de California",
-            "la": "Eschscholzia californica"
+            "la": "Eschscholzia californica",
+            "quantity": "15 gramos"
           },
           {
             "es": "Ashwagandha",
-            "la": "Withania somnifera"
+            "la": "Withania somnifera",
+            "quantity": "15 gramos"
           },
           {
             "es": "Miel de azahar",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "1 vaso / 250 ml"
           }
         ],
         "instructions": "Dejá macerar amapola de california y ashwagandha en miel de azahar durante 7 días en un lugar oscuro y fresco. Agitalo todos los días. Filtralo bien con un paño de lino y guardalo en un frasco de vidrio oscuro.",
@@ -1241,15 +1390,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Lúpulo",
-            "la": "Humulus lupulus"
+            "la": "Humulus lupulus",
+            "quantity": "1 cucharada sopera"
           },
           {
             "es": "Ashwagandha",
-            "la": "Withania somnifera"
+            "la": "Withania somnifera",
+            "quantity": "1 cucharada sopera"
           },
           {
             "es": "Agua de manantial",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "250 ml (1 taza)"
           }
         ],
         "instructions": "Herví el agua de manantial y agregale lúpulo y ashwagandha. Dejalo reposar tapado durante 13 minutos. Colalo antes de usarlo.",
@@ -1265,15 +1417,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Melisa",
-            "la": "Melissa officinalis"
+            "la": "Melissa officinalis",
+            "quantity": "15 gramos"
           },
           {
             "es": "Lavanda",
-            "la": "Lavandula angustifolia"
+            "la": "Lavandula angustifolia",
+            "quantity": "15 gramos"
           },
           {
             "es": "Aceite esencial",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "1 vaso / 250 ml"
           }
         ],
         "instructions": "Dejá macerar melisa y lavanda en aceite esencial durante 16 días en un lugar oscuro y fresco. Agitalo todos los días. Filtralo bien con un paño de lino y guardalo en un frasco de vidrio oscuro.",
@@ -1289,15 +1444,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Valeriana",
-            "la": "Valeriana officinalis"
+            "la": "Valeriana officinalis",
+            "quantity": "15 gramos"
           },
           {
             "es": "Ashwagandha",
-            "la": "Withania somnifera"
+            "la": "Withania somnifera",
+            "quantity": "15 gramos"
           },
           {
             "es": "Miel de azahar",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "1 vaso / 250 ml"
           }
         ],
         "instructions": "Derretí miel de azahar al baño maría. Agregá los extractos de valeriana y ashwagandha. Revolvé constante con espátula de madera hasta que quede todo parejo y dejá enfriar en tarro de cristal.",
@@ -1313,15 +1471,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Pasiflora",
-            "la": "Passiflora incarnata"
+            "la": "Passiflora incarnata",
+            "quantity": "50 gramos"
           },
           {
             "es": "Ashwagandha",
-            "la": "Withania somnifera"
+            "la": "Withania somnifera",
+            "quantity": "50 gramos"
           },
           {
             "es": "Alcohol de 70°",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "500 ml"
           }
         ],
         "instructions": "Dejá macerar pasiflora y ashwagandha en alcohol de 70° durante 25 días en un lugar oscuro y fresco. Agitalo todos los días. Filtralo bien con un paño de lino y guardalo en un frasco de vidrio oscuro.",
@@ -1337,15 +1498,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Amapola de California",
-            "la": "Eschscholzia californica"
+            "la": "Eschscholzia californica",
+            "quantity": "15 gramos"
           },
           {
             "es": "Ashwagandha",
-            "la": "Withania somnifera"
+            "la": "Withania somnifera",
+            "quantity": "15 gramos"
           },
           {
             "es": "Alcohol de 70°",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "1 vaso / 250 ml"
           }
         ],
         "instructions": "Derretí alcohol de 70° al baño maría. Agregá los extractos de amapola de california y ashwagandha. Revolvé constante con espátula de madera hasta que quede todo parejo y dejá enfriar en tarro de cristal.",
@@ -1361,15 +1525,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Lúpulo",
-            "la": "Humulus lupulus"
+            "la": "Humulus lupulus",
+            "quantity": "15 gramos"
           },
           {
             "es": "Azahar",
-            "la": "Citrus aurantium"
+            "la": "Citrus aurantium",
+            "quantity": "15 gramos"
           },
           {
             "es": "Agua de manantial",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "1 vaso / 250 ml"
           }
         ],
         "instructions": "Derretí agua de manantial al baño maría. Agregá los extractos de lúpulo y azahar. Revolvé constante con espátula de madera hasta que quede todo parejo y dejá enfriar en tarro de cristal.",
@@ -1385,15 +1552,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Tila",
-            "la": "Tilia platyphyllos"
+            "la": "Tilia platyphyllos",
+            "quantity": "15 gramos"
           },
           {
             "es": "Ashwagandha",
-            "la": "Withania somnifera"
+            "la": "Withania somnifera",
+            "quantity": "15 gramos"
           },
           {
             "es": "Alcohol de 70°",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "1 vaso / 250 ml"
           }
         ],
         "instructions": "Dejá macerar tila y ashwagandha en alcohol de 70° durante 20 días en un lugar oscuro y fresco. Agitalo todos los días. Filtralo bien con un paño de lino y guardalo en un frasco de vidrio oscuro.",
@@ -1409,15 +1579,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Azahar",
-            "la": "Citrus aurantium"
+            "la": "Citrus aurantium",
+            "quantity": "15 gramos"
           },
           {
             "es": "Melisa",
-            "la": "Melissa officinalis"
+            "la": "Melissa officinalis",
+            "quantity": "15 gramos"
           },
           {
             "es": "Aceite esencial",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "1 vaso / 250 ml"
           }
         ],
         "instructions": "Dejá macerar azahar y melisa en aceite esencial durante 23 días en un lugar oscuro y fresco. Agitalo todos los días. Filtralo bien con un paño de lino y guardalo en un frasco de vidrio oscuro.",
@@ -1433,15 +1606,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Pasiflora",
-            "la": "Passiflora incarnata"
+            "la": "Passiflora incarnata",
+            "quantity": "15 gramos"
           },
           {
             "es": "Lúpulo",
-            "la": "Humulus lupulus"
+            "la": "Humulus lupulus",
+            "quantity": "15 gramos"
           },
           {
             "es": "Agua de manantial",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "1 vaso / 250 ml"
           }
         ],
         "instructions": "Dejá macerar pasiflora y lúpulo en agua de manantial durante 25 días en un lugar oscuro y fresco. Agitalo todos los días. Filtralo bien con un paño de lino y guardalo en un frasco de vidrio oscuro.",
@@ -1457,15 +1633,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Lúpulo",
-            "la": "Humulus lupulus"
+            "la": "Humulus lupulus",
+            "quantity": "15 gramos"
           },
           {
             "es": "Tila",
-            "la": "Tilia platyphyllos"
+            "la": "Tilia platyphyllos",
+            "quantity": "15 gramos"
           },
           {
             "es": "Aceite esencial",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "1 vaso / 250 ml"
           }
         ],
         "instructions": "Dejá macerar lúpulo y tila en aceite esencial durante 25 días en un lugar oscuro y fresco. Agitalo todos los días. Filtralo bien con un paño de lino y guardalo en un frasco de vidrio oscuro.",
@@ -1481,15 +1660,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Ashwagandha",
-            "la": "Withania somnifera"
+            "la": "Withania somnifera",
+            "quantity": "15 gramos"
           },
           {
             "es": "Pasiflora",
-            "la": "Passiflora incarnata"
+            "la": "Passiflora incarnata",
+            "quantity": "15 gramos"
           },
           {
             "es": "Agua de manantial",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "1 vaso / 250 ml"
           }
         ],
         "instructions": "Dejá macerar ashwagandha y pasiflora en agua de manantial durante 8 días en un lugar oscuro y fresco. Agitalo todos los días. Filtralo bien con un paño de lino y guardalo en un frasco de vidrio oscuro.",
@@ -1516,15 +1698,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Romero",
-            "la": "Rosmarinus officinalis"
+            "la": "Rosmarinus officinalis",
+            "quantity": "1 cucharada sopera"
           },
           {
             "es": "Reishi",
-            "la": "Ganoderma lucidum"
+            "la": "Ganoderma lucidum",
+            "quantity": "1 cucharada sopera"
           },
           {
             "es": "Miel cruda",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "250 ml (1 taza)"
           }
         ],
         "instructions": "Herví el miel cruda y agregale romero y reishi. Dejalo reposar tapado durante 9 minutos. Colalo antes de usarlo.",
@@ -1540,15 +1725,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Eleuterococo",
-            "la": "Eleutherococcus senticosus"
+            "la": "Eleutherococcus senticosus",
+            "quantity": "100 gramos"
           },
           {
             "es": "Tomillo",
-            "la": "Thymus vulgaris"
+            "la": "Thymus vulgaris",
+            "quantity": "100 gramos"
           },
           {
             "es": "Vinagre de sidra de manzana",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "1 litro"
           }
         ],
         "instructions": "Dejá macerar eleuterococo y tomillo en vinagre de sidra de manzana durante 10 días en un lugar oscuro y fresco. Agitalo todos los días. Filtralo bien con un paño de lino y guardalo en un frasco de vidrio oscuro.",
@@ -1564,15 +1752,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Reishi",
-            "la": "Ganoderma lucidum"
+            "la": "Ganoderma lucidum",
+            "quantity": "1 cucharada sopera"
           },
           {
             "es": "Cúrcuma",
-            "la": "Curcuma longa"
+            "la": "Curcuma longa",
+            "quantity": "1 cucharada sopera"
           },
           {
             "es": "Vinagre de sidra de manzana",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "250 ml (1 taza)"
           }
         ],
         "instructions": "Herví el vinagre de sidra de manzana y agregale reishi y cúrcuma. Dejalo reposar tapado durante 10 minutos. Colalo antes de usarlo.",
@@ -1588,15 +1779,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Ajo negro",
-            "la": "Allium sativum"
+            "la": "Allium sativum",
+            "quantity": "15 gramos"
           },
           {
             "es": "Uña de gato",
-            "la": "Uncaria tomentosa"
+            "la": "Uncaria tomentosa",
+            "quantity": "15 gramos"
           },
           {
             "es": "Agua purificada",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "1 vaso / 250 ml"
           }
         ],
         "instructions": "Dejá macerar ajo negro y uña de gato en agua purificada durante 20 días en un lugar oscuro y fresco. Agitalo todos los días. Filtralo bien con un paño de lino y guardalo en un frasco de vidrio oscuro.",
@@ -1612,15 +1806,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Eleuterococo",
-            "la": "Eleutherococcus senticosus"
+            "la": "Eleutherococcus senticosus",
+            "quantity": "15 gramos"
           },
           {
             "es": "Escaramujo",
-            "la": "Rosa canina"
+            "la": "Rosa canina",
+            "quantity": "15 gramos"
           },
           {
             "es": "Vinagre de sidra de manzana",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "1 vaso / 250 ml"
           }
         ],
         "instructions": "Dejá macerar eleuterococo y escaramujo en vinagre de sidra de manzana durante 22 días en un lugar oscuro y fresco. Agitalo todos los días. Filtralo bien con un paño de lino y guardalo en un frasco de vidrio oscuro.",
@@ -1636,15 +1833,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Escaramujo",
-            "la": "Rosa canina"
+            "la": "Rosa canina",
+            "quantity": "15 gramos"
           },
           {
             "es": "Uña de gato",
-            "la": "Uncaria tomentosa"
+            "la": "Uncaria tomentosa",
+            "quantity": "15 gramos"
           },
           {
             "es": "Agua purificada",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "1 vaso / 250 ml"
           }
         ],
         "instructions": "Dejá macerar escaramujo y uña de gato en agua purificada durante 8 días en un lugar oscuro y fresco. Agitalo todos los días. Filtralo bien con un paño de lino y guardalo en un frasco de vidrio oscuro.",
@@ -1660,15 +1860,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Ajo negro",
-            "la": "Allium sativum"
+            "la": "Allium sativum",
+            "quantity": "15 gramos"
           },
           {
             "es": "Equinácea",
-            "la": "Echinacea purpurea"
+            "la": "Echinacea purpurea",
+            "quantity": "15 gramos"
           },
           {
             "es": "Vinagre de sidra de manzana",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "1 vaso / 250 ml"
           }
         ],
         "instructions": "Dejá macerar ajo negro y equinácea en vinagre de sidra de manzana durante 15 días en un lugar oscuro y fresco. Agitalo todos los días. Filtralo bien con un paño de lino y guardalo en un frasco de vidrio oscuro.",
@@ -1684,15 +1887,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Astrágalo",
-            "la": "Astragalus membranaceus"
+            "la": "Astragalus membranaceus",
+            "quantity": "15 gramos"
           },
           {
             "es": "Equinácea",
-            "la": "Echinacea purpurea"
+            "la": "Echinacea purpurea",
+            "quantity": "15 gramos"
           },
           {
             "es": "Alcohol de 70°",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "1 vaso / 250 ml"
           }
         ],
         "instructions": "Dejá macerar astrágalo y equinácea en alcohol de 70° durante 14 días en un lugar oscuro y fresco. Agitalo todos los días. Filtralo bien con un paño de lino y guardalo en un frasco de vidrio oscuro.",
@@ -1708,15 +1914,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Equinácea",
-            "la": "Echinacea purpurea"
+            "la": "Echinacea purpurea",
+            "quantity": "15 gramos"
           },
           {
             "es": "Escaramujo",
-            "la": "Rosa canina"
+            "la": "Rosa canina",
+            "quantity": "15 gramos"
           },
           {
             "es": "Alcohol de 70°",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "1 vaso / 250 ml"
           }
         ],
         "instructions": "Dejá macerar equinácea y escaramujo en alcohol de 70° durante 8 días en un lugar oscuro y fresco. Agitalo todos los días. Filtralo bien con un paño de lino y guardalo en un frasco de vidrio oscuro.",
@@ -1732,15 +1941,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Romero",
-            "la": "Rosmarinus officinalis"
+            "la": "Rosmarinus officinalis",
+            "quantity": "15 gramos"
           },
           {
             "es": "Ajo negro",
-            "la": "Allium sativum"
+            "la": "Allium sativum",
+            "quantity": "15 gramos"
           },
           {
             "es": "Miel cruda",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "1 vaso / 250 ml"
           }
         ],
         "instructions": "Dejá macerar romero y ajo negro en miel cruda durante 24 días en un lugar oscuro y fresco. Agitalo todos los días. Filtralo bien con un paño de lino y guardalo en un frasco de vidrio oscuro.",
@@ -1756,15 +1968,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Eleuterococo",
-            "la": "Eleutherococcus senticosus"
+            "la": "Eleutherococcus senticosus",
+            "quantity": "50 gramos"
           },
           {
             "es": "Reishi",
-            "la": "Ganoderma lucidum"
+            "la": "Ganoderma lucidum",
+            "quantity": "50 gramos"
           },
           {
             "es": "Vinagre de sidra de manzana",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "500 ml"
           }
         ],
         "instructions": "Dejá macerar eleuterococo y reishi en vinagre de sidra de manzana durante 17 días en un lugar oscuro y fresco. Agitalo todos los días. Filtralo bien con un paño de lino y guardalo en un frasco de vidrio oscuro.",
@@ -1780,15 +1995,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Eleuterococo",
-            "la": "Eleutherococcus senticosus"
+            "la": "Eleutherococcus senticosus",
+            "quantity": "15 gramos"
           },
           {
             "es": "Astrágalo",
-            "la": "Astragalus membranaceus"
+            "la": "Astragalus membranaceus",
+            "quantity": "15 gramos"
           },
           {
             "es": "Miel cruda",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "1 vaso / 250 ml"
           }
         ],
         "instructions": "Dejá macerar eleuterococo y astrágalo en miel cruda durante 9 días en un lugar oscuro y fresco. Agitalo todos los días. Filtralo bien con un paño de lino y guardalo en un frasco de vidrio oscuro.",
@@ -1804,15 +2022,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Ajo negro",
-            "la": "Allium sativum"
+            "la": "Allium sativum",
+            "quantity": "15 gramos"
           },
           {
             "es": "Tomillo",
-            "la": "Thymus vulgaris"
+            "la": "Thymus vulgaris",
+            "quantity": "15 gramos"
           },
           {
             "es": "Agua purificada",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "1 vaso / 250 ml"
           }
         ],
         "instructions": "Dejá macerar ajo negro y tomillo en agua purificada durante 15 días en un lugar oscuro y fresco. Agitalo todos los días. Filtralo bien con un paño de lino y guardalo en un frasco de vidrio oscuro.",
@@ -1828,15 +2049,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Astrágalo",
-            "la": "Astragalus membranaceus"
+            "la": "Astragalus membranaceus",
+            "quantity": "15 gramos"
           },
           {
             "es": "Tomillo",
-            "la": "Thymus vulgaris"
+            "la": "Thymus vulgaris",
+            "quantity": "15 gramos"
           },
           {
             "es": "Vinagre de sidra de manzana",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "1 vaso / 250 ml"
           }
         ],
         "instructions": "Dejá macerar astrágalo y tomillo en vinagre de sidra de manzana durante 24 días en un lugar oscuro y fresco. Agitalo todos los días. Filtralo bien con un paño de lino y guardalo en un frasco de vidrio oscuro.",
@@ -1852,15 +2076,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Equinácea",
-            "la": "Echinacea purpurea"
+            "la": "Echinacea purpurea",
+            "quantity": "15 gramos"
           },
           {
             "es": "Eleuterococo",
-            "la": "Eleutherococcus senticosus"
+            "la": "Eleutherococcus senticosus",
+            "quantity": "15 gramos"
           },
           {
             "es": "Miel cruda",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "1 vaso / 250 ml"
           }
         ],
         "instructions": "Dejá macerar equinácea y eleuterococo en miel cruda durante 16 días en un lugar oscuro y fresco. Agitalo todos los días. Filtralo bien con un paño de lino y guardalo en un frasco de vidrio oscuro.",
@@ -1876,15 +2103,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Romero",
-            "la": "Rosmarinus officinalis"
+            "la": "Rosmarinus officinalis",
+            "quantity": "15 gramos"
           },
           {
             "es": "Escaramujo",
-            "la": "Rosa canina"
+            "la": "Rosa canina",
+            "quantity": "15 gramos"
           },
           {
             "es": "Agua purificada",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "1 vaso / 250 ml"
           }
         ],
         "instructions": "Dejá macerar romero y escaramujo en agua purificada durante 21 días en un lugar oscuro y fresco. Agitalo todos los días. Filtralo bien con un paño de lino y guardalo en un frasco de vidrio oscuro.",
@@ -1900,15 +2130,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Astrágalo",
-            "la": "Astragalus membranaceus"
+            "la": "Astragalus membranaceus",
+            "quantity": "50 gramos"
           },
           {
             "es": "Equinácea",
-            "la": "Echinacea purpurea"
+            "la": "Echinacea purpurea",
+            "quantity": "50 gramos"
           },
           {
             "es": "Glicerina",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "500 ml"
           }
         ],
         "instructions": "Dejá macerar astrágalo y equinácea en glicerina durante 9 días en un lugar oscuro y fresco. Agitalo todos los días. Filtralo bien con un paño de lino y guardalo en un frasco de vidrio oscuro.",
@@ -1924,15 +2157,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Escaramujo",
-            "la": "Rosa canina"
+            "la": "Rosa canina",
+            "quantity": "15 gramos"
           },
           {
             "es": "Equinácea",
-            "la": "Echinacea purpurea"
+            "la": "Echinacea purpurea",
+            "quantity": "15 gramos"
           },
           {
             "es": "Miel cruda",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "1 vaso / 250 ml"
           }
         ],
         "instructions": "Dejá macerar escaramujo y equinácea en miel cruda durante 15 días en un lugar oscuro y fresco. Agitalo todos los días. Filtralo bien con un paño de lino y guardalo en un frasco de vidrio oscuro.",
@@ -1948,15 +2184,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Cúrcuma",
-            "la": "Curcuma longa"
+            "la": "Curcuma longa",
+            "quantity": "50 gramos"
           },
           {
             "es": "Escaramujo",
-            "la": "Rosa canina"
+            "la": "Rosa canina",
+            "quantity": "50 gramos"
           },
           {
             "es": "Miel cruda",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "500 ml"
           }
         ],
         "instructions": "Dejá macerar cúrcuma y escaramujo en miel cruda durante 9 días en un lugar oscuro y fresco. Agitalo todos los días. Filtralo bien con un paño de lino y guardalo en un frasco de vidrio oscuro.",
@@ -1972,15 +2211,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Tomillo",
-            "la": "Thymus vulgaris"
+            "la": "Thymus vulgaris",
+            "quantity": "100 gramos"
           },
           {
             "es": "Uña de gato",
-            "la": "Uncaria tomentosa"
+            "la": "Uncaria tomentosa",
+            "quantity": "100 gramos"
           },
           {
             "es": "Agua purificada",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "1 litro"
           }
         ],
         "instructions": "Dejá macerar tomillo y uña de gato en agua purificada durante 13 días en un lugar oscuro y fresco. Agitalo todos los días. Filtralo bien con un paño de lino y guardalo en un frasco de vidrio oscuro.",
@@ -2007,15 +2249,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Ginkgo",
-            "la": "Ginkgo biloba"
+            "la": "Ginkgo biloba",
+            "quantity": "30 gramos"
           },
           {
             "es": "Milenrama",
-            "la": "Achillea millefolium"
+            "la": "Achillea millefolium",
+            "quantity": "30 gramos"
           },
           {
             "es": "Agua de manantial",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "100 gramos"
           }
         ],
         "instructions": "Derretí agua de manantial al baño maría. Agregá los extractos de ginkgo y milenrama. Revolvé constante con espátula de madera hasta que quede todo parejo y dejá enfriar en tarro de cristal.",
@@ -2031,15 +2276,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Ginkgo",
-            "la": "Ginkgo biloba"
+            "la": "Ginkgo biloba",
+            "quantity": "15 gramos"
           },
           {
             "es": "Olivo",
-            "la": "Olea europaea"
+            "la": "Olea europaea",
+            "quantity": "15 gramos"
           },
           {
             "es": "Alcohol de 60°",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "1 vaso / 250 ml"
           }
         ],
         "instructions": "Dejá macerar ginkgo y olivo en alcohol de 60° durante 15 días en un lugar oscuro y fresco. Agitalo todos los días. Filtralo bien con un paño de lino y guardalo en un frasco de vidrio oscuro.",
@@ -2055,15 +2303,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Meliloto",
-            "la": "Melilotus officinalis"
+            "la": "Melilotus officinalis",
+            "quantity": "1 cucharada sopera"
           },
           {
             "es": "Ginkgo",
-            "la": "Ginkgo biloba"
+            "la": "Ginkgo biloba",
+            "quantity": "1 cucharada sopera"
           },
           {
             "es": "Aceite de oliva virgen",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "250 ml (1 taza)"
           }
         ],
         "instructions": "Herví el aceite de oliva virgen y agregale meliloto y ginkgo. Dejalo reposar tapado durante 10 minutos. Colalo antes de usarlo.",
@@ -2079,15 +2330,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Meliloto",
-            "la": "Melilotus officinalis"
+            "la": "Melilotus officinalis",
+            "quantity": "1 cucharada sopera"
           },
           {
             "es": "Rusco",
-            "la": "Ruscus aculeatus"
+            "la": "Ruscus aculeatus",
+            "quantity": "1 cucharada sopera"
           },
           {
             "es": "Glicerina",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "250 ml (1 taza)"
           }
         ],
         "instructions": "Herví el glicerina y agregale meliloto y rusco. Dejalo reposar tapado durante 12 minutos. Colalo antes de usarlo.",
@@ -2103,15 +2357,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Rusco",
-            "la": "Ruscus aculeatus"
+            "la": "Ruscus aculeatus",
+            "quantity": "15 gramos"
           },
           {
             "es": "Espino blanco",
-            "la": "Crataegus monogyna"
+            "la": "Crataegus monogyna",
+            "quantity": "15 gramos"
           },
           {
             "es": "Aceite de oliva virgen",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "1 vaso / 250 ml"
           }
         ],
         "instructions": "Dejá macerar rusco y espino blanco en aceite de oliva virgen durante 11 días en un lugar oscuro y fresco. Agitalo todos los días. Filtralo bien con un paño de lino y guardalo en un frasco de vidrio oscuro.",
@@ -2127,15 +2384,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Ajo",
-            "la": "Allium sativum"
+            "la": "Allium sativum",
+            "quantity": "1 cucharada sopera"
           },
           {
             "es": "Vid roja",
-            "la": "Vitis vinifera"
+            "la": "Vitis vinifera",
+            "quantity": "1 cucharada sopera"
           },
           {
             "es": "Vino tinto",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "250 ml (1 taza)"
           }
         ],
         "instructions": "Herví el vino tinto y agregale ajo y vid roja. Dejalo reposar tapado durante 11 minutos. Colalo antes de usarlo.",
@@ -2151,15 +2411,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Hamamelis",
-            "la": "Hamamelis virginiana"
+            "la": "Hamamelis virginiana",
+            "quantity": "15 gramos"
           },
           {
             "es": "Rusco",
-            "la": "Ruscus aculeatus"
+            "la": "Ruscus aculeatus",
+            "quantity": "15 gramos"
           },
           {
             "es": "Agua de manantial",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "1 vaso / 250 ml"
           }
         ],
         "instructions": "Dejá macerar hamamelis y rusco en agua de manantial durante 18 días en un lugar oscuro y fresco. Agitalo todos los días. Filtralo bien con un paño de lino y guardalo en un frasco de vidrio oscuro.",
@@ -2175,15 +2438,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Hamamelis",
-            "la": "Hamamelis virginiana"
+            "la": "Hamamelis virginiana",
+            "quantity": "15 gramos"
           },
           {
             "es": "Ajo",
-            "la": "Allium sativum"
+            "la": "Allium sativum",
+            "quantity": "15 gramos"
           },
           {
             "es": "Agua de manantial",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "1 vaso / 250 ml"
           }
         ],
         "instructions": "Dejá macerar hamamelis y ajo en agua de manantial durante 8 días en un lugar oscuro y fresco. Agitalo todos los días. Filtralo bien con un paño de lino y guardalo en un frasco de vidrio oscuro.",
@@ -2199,15 +2465,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Milenrama",
-            "la": "Achillea millefolium"
+            "la": "Achillea millefolium",
+            "quantity": "15 gramos"
           },
           {
             "es": "Ginkgo",
-            "la": "Ginkgo biloba"
+            "la": "Ginkgo biloba",
+            "quantity": "15 gramos"
           },
           {
             "es": "Glicerina",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "1 vaso / 250 ml"
           }
         ],
         "instructions": "Dejá macerar milenrama y ginkgo en glicerina durante 9 días en un lugar oscuro y fresco. Agitalo todos los días. Filtralo bien con un paño de lino y guardalo en un frasco de vidrio oscuro.",
@@ -2223,15 +2492,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Ajo",
-            "la": "Allium sativum"
+            "la": "Allium sativum",
+            "quantity": "30 gramos"
           },
           {
             "es": "Hamamelis",
-            "la": "Hamamelis virginiana"
+            "la": "Hamamelis virginiana",
+            "quantity": "30 gramos"
           },
           {
             "es": "Aceite de oliva virgen",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "100 gramos"
           }
         ],
         "instructions": "Derretí aceite de oliva virgen al baño maría. Agregá los extractos de ajo y hamamelis. Revolvé constante con espátula de madera hasta que quede todo parejo y dejá enfriar en tarro de cristal.",
@@ -2247,15 +2519,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Ginkgo",
-            "la": "Ginkgo biloba"
+            "la": "Ginkgo biloba",
+            "quantity": "30 gramos"
           },
           {
             "es": "Espino blanco",
-            "la": "Crataegus monogyna"
+            "la": "Crataegus monogyna",
+            "quantity": "30 gramos"
           },
           {
             "es": "Aceite de oliva virgen",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "100 gramos"
           }
         ],
         "instructions": "Derretí aceite de oliva virgen al baño maría. Agregá los extractos de ginkgo y espino blanco. Revolvé constante con espátula de madera hasta que quede todo parejo y dejá enfriar en tarro de cristal.",
@@ -2271,15 +2546,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Ginkgo",
-            "la": "Ginkgo biloba"
+            "la": "Ginkgo biloba",
+            "quantity": "15 gramos"
           },
           {
             "es": "Milenrama",
-            "la": "Achillea millefolium"
+            "la": "Achillea millefolium",
+            "quantity": "15 gramos"
           },
           {
             "es": "Vino tinto",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "1 vaso / 250 ml"
           }
         ],
         "instructions": "Dejá macerar ginkgo y milenrama en vino tinto durante 25 días en un lugar oscuro y fresco. Agitalo todos los días. Filtralo bien con un paño de lino y guardalo en un frasco de vidrio oscuro.",
@@ -2295,15 +2573,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Meliloto",
-            "la": "Melilotus officinalis"
+            "la": "Melilotus officinalis",
+            "quantity": "30 gramos"
           },
           {
             "es": "Espino blanco",
-            "la": "Crataegus monogyna"
+            "la": "Crataegus monogyna",
+            "quantity": "30 gramos"
           },
           {
             "es": "Agua de manantial",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "100 gramos"
           }
         ],
         "instructions": "Derretí agua de manantial al baño maría. Agregá los extractos de meliloto y espino blanco. Revolvé constante con espátula de madera hasta que quede todo parejo y dejá enfriar en tarro de cristal.",
@@ -2319,15 +2600,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Rusco",
-            "la": "Ruscus aculeatus"
+            "la": "Ruscus aculeatus",
+            "quantity": "15 gramos"
           },
           {
             "es": "Meliloto",
-            "la": "Melilotus officinalis"
+            "la": "Melilotus officinalis",
+            "quantity": "15 gramos"
           },
           {
             "es": "Agua de manantial",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "1 vaso / 250 ml"
           }
         ],
         "instructions": "Dejá macerar rusco y meliloto en agua de manantial durante 25 días en un lugar oscuro y fresco. Agitalo todos los días. Filtralo bien con un paño de lino y guardalo en un frasco de vidrio oscuro.",
@@ -2343,15 +2627,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Vid roja",
-            "la": "Vitis vinifera"
+            "la": "Vitis vinifera",
+            "quantity": "1 cucharada sopera"
           },
           {
             "es": "Castaño de Indias",
-            "la": "Aesculus hippocastanum"
+            "la": "Aesculus hippocastanum",
+            "quantity": "1 cucharada sopera"
           },
           {
             "es": "Aceite de oliva virgen",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "250 ml (1 taza)"
           }
         ],
         "instructions": "Herví el aceite de oliva virgen y agregale vid roja y castaño de indias. Dejalo reposar tapado durante 12 minutos. Colalo antes de usarlo.",
@@ -2367,15 +2654,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Olivo",
-            "la": "Olea europaea"
+            "la": "Olea europaea",
+            "quantity": "15 gramos"
           },
           {
             "es": "Espino blanco",
-            "la": "Crataegus monogyna"
+            "la": "Crataegus monogyna",
+            "quantity": "15 gramos"
           },
           {
             "es": "Agua de manantial",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "1 vaso / 250 ml"
           }
         ],
         "instructions": "Dejá macerar olivo y espino blanco en agua de manantial durante 9 días en un lugar oscuro y fresco. Agitalo todos los días. Filtralo bien con un paño de lino y guardalo en un frasco de vidrio oscuro.",
@@ -2391,15 +2681,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Meliloto",
-            "la": "Melilotus officinalis"
+            "la": "Melilotus officinalis",
+            "quantity": "15 gramos"
           },
           {
             "es": "Ginkgo",
-            "la": "Ginkgo biloba"
+            "la": "Ginkgo biloba",
+            "quantity": "15 gramos"
           },
           {
             "es": "Glicerina",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "1 vaso / 250 ml"
           }
         ],
         "instructions": "Dejá macerar meliloto y ginkgo en glicerina durante 19 días en un lugar oscuro y fresco. Agitalo todos los días. Filtralo bien con un paño de lino y guardalo en un frasco de vidrio oscuro.",
@@ -2415,15 +2708,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Espino blanco",
-            "la": "Crataegus monogyna"
+            "la": "Crataegus monogyna",
+            "quantity": "15 gramos"
           },
           {
             "es": "Rusco",
-            "la": "Ruscus aculeatus"
+            "la": "Ruscus aculeatus",
+            "quantity": "15 gramos"
           },
           {
             "es": "Aceite de oliva virgen",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "1 vaso / 250 ml"
           }
         ],
         "instructions": "Dejá macerar espino blanco y rusco en aceite de oliva virgen durante 23 días en un lugar oscuro y fresco. Agitalo todos los días. Filtralo bien con un paño de lino y guardalo en un frasco de vidrio oscuro.",
@@ -2439,15 +2735,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Hamamelis",
-            "la": "Hamamelis virginiana"
+            "la": "Hamamelis virginiana",
+            "quantity": "30 gramos"
           },
           {
             "es": "Milenrama",
-            "la": "Achillea millefolium"
+            "la": "Achillea millefolium",
+            "quantity": "30 gramos"
           },
           {
             "es": "Glicerina",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "100 gramos"
           }
         ],
         "instructions": "Derretí glicerina al baño maría. Agregá los extractos de hamamelis y milenrama. Revolvé constante con espátula de madera hasta que quede todo parejo y dejá enfriar en tarro de cristal.",
@@ -2463,15 +2762,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Ginkgo",
-            "la": "Ginkgo biloba"
+            "la": "Ginkgo biloba",
+            "quantity": "15 gramos"
           },
           {
             "es": "Rusco",
-            "la": "Ruscus aculeatus"
+            "la": "Ruscus aculeatus",
+            "quantity": "15 gramos"
           },
           {
             "es": "Glicerina",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "1 vaso / 250 ml"
           }
         ],
         "instructions": "Dejá macerar ginkgo y rusco en glicerina durante 26 días en un lugar oscuro y fresco. Agitalo todos los días. Filtralo bien con un paño de lino y guardalo en un frasco de vidrio oscuro.",
@@ -2498,15 +2800,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Cola de caballo",
-            "la": "Equisetum arvense"
+            "la": "Equisetum arvense",
+            "quantity": "1 cucharada sopera"
           },
           {
             "es": "Brezo",
-            "la": "Calluna vulgaris"
+            "la": "Calluna vulgaris",
+            "quantity": "1 cucharada sopera"
           },
           {
             "es": "Glicerina vegetal",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "250 ml (1 taza)"
           }
         ],
         "instructions": "Herví el glicerina vegetal y agregale cola de caballo y brezo. Dejalo reposar tapado durante 7 minutos. Colalo antes de usarlo.",
@@ -2522,15 +2827,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Gayuba",
-            "la": "Arctostaphylos uva-ursi"
+            "la": "Arctostaphylos uva-ursi",
+            "quantity": "1 cucharada sopera"
           },
           {
             "es": "Abedul",
-            "la": "Betula pendula"
+            "la": "Betula pendula",
+            "quantity": "1 cucharada sopera"
           },
           {
             "es": "Glicerina vegetal",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "250 ml (1 taza)"
           }
         ],
         "instructions": "Herví el glicerina vegetal y agregale gayuba y abedul. Dejalo reposar tapado durante 9 minutos. Colalo antes de usarlo.",
@@ -2546,15 +2854,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Arenaria",
-            "la": "Spergularia rubra"
+            "la": "Spergularia rubra",
+            "quantity": "1 cucharada sopera"
           },
           {
             "es": "Ortiga verde",
-            "la": "Urtica dioica"
+            "la": "Urtica dioica",
+            "quantity": "1 cucharada sopera"
           },
           {
             "es": "Glicerina vegetal",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "250 ml (1 taza)"
           }
         ],
         "instructions": "Herví el glicerina vegetal y agregale arenaria y ortiga verde. Dejalo reposar tapado durante 9 minutos. Colalo antes de usarlo.",
@@ -2570,15 +2881,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Enebro",
-            "la": "Juniperus communis"
+            "la": "Juniperus communis",
+            "quantity": "15 gramos"
           },
           {
             "es": "Grama",
-            "la": "Cynodon dactylon"
+            "la": "Cynodon dactylon",
+            "quantity": "15 gramos"
           },
           {
             "es": "Vino blanco",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "1 vaso / 250 ml"
           }
         ],
         "instructions": "Dejá macerar enebro y grama en vino blanco durante 11 días en un lugar oscuro y fresco. Agitalo todos los días. Filtralo bien con un paño de lino y guardalo en un frasco de vidrio oscuro.",
@@ -2594,15 +2908,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Grama",
-            "la": "Cynodon dactylon"
+            "la": "Cynodon dactylon",
+            "quantity": "50 gramos"
           },
           {
             "es": "Diente de león",
-            "la": "Taraxacum officinale"
+            "la": "Taraxacum officinale",
+            "quantity": "50 gramos"
           },
           {
             "es": "Agua purificada",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "500 ml"
           }
         ],
         "instructions": "Dejá macerar grama y diente de león en agua purificada durante 12 días en un lugar oscuro y fresco. Agitalo todos los días. Filtralo bien con un paño de lino y guardalo en un frasco de vidrio oscuro.",
@@ -2618,15 +2935,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Abedul",
-            "la": "Betula pendula"
+            "la": "Betula pendula",
+            "quantity": "15 gramos"
           },
           {
             "es": "Diente de león",
-            "la": "Taraxacum officinale"
+            "la": "Taraxacum officinale",
+            "quantity": "15 gramos"
           },
           {
             "es": "Glicerina vegetal",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "1 vaso / 250 ml"
           }
         ],
         "instructions": "Dejá macerar abedul y diente de león en glicerina vegetal durante 12 días en un lugar oscuro y fresco. Agitalo todos los días. Filtralo bien con un paño de lino y guardalo en un frasco de vidrio oscuro.",
@@ -2642,15 +2962,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Diente de león",
-            "la": "Taraxacum officinale"
+            "la": "Taraxacum officinale",
+            "quantity": "50 gramos"
           },
           {
             "es": "Vara de oro",
-            "la": "Solidago virgaurea"
+            "la": "Solidago virgaurea",
+            "quantity": "50 gramos"
           },
           {
             "es": "Vino blanco",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "500 ml"
           }
         ],
         "instructions": "Dejá macerar diente de león y vara de oro en vino blanco durante 8 días en un lugar oscuro y fresco. Agitalo todos los días. Filtralo bien con un paño de lino y guardalo en un frasco de vidrio oscuro.",
@@ -2666,15 +2989,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Enebro",
-            "la": "Juniperus communis"
+            "la": "Juniperus communis",
+            "quantity": "1 cucharada sopera"
           },
           {
             "es": "Gayuba",
-            "la": "Arctostaphylos uva-ursi"
+            "la": "Arctostaphylos uva-ursi",
+            "quantity": "1 cucharada sopera"
           },
           {
             "es": "Glicerina vegetal",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "250 ml (1 taza)"
           }
         ],
         "instructions": "Herví el glicerina vegetal y agregale enebro y gayuba. Dejalo reposar tapado durante 14 minutos. Colalo antes de usarlo.",
@@ -2690,15 +3016,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Abedul",
-            "la": "Betula pendula"
+            "la": "Betula pendula",
+            "quantity": "1 cucharada sopera"
           },
           {
             "es": "Ortiga verde",
-            "la": "Urtica dioica"
+            "la": "Urtica dioica",
+            "quantity": "1 cucharada sopera"
           },
           {
             "es": "Vino blanco",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "250 ml (1 taza)"
           }
         ],
         "instructions": "Herví el vino blanco y agregale abedul y ortiga verde. Dejalo reposar tapado durante 14 minutos. Colalo antes de usarlo.",
@@ -2714,15 +3043,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Arenaria",
-            "la": "Spergularia rubra"
+            "la": "Spergularia rubra",
+            "quantity": "1 cucharada sopera"
           },
           {
             "es": "Brezo",
-            "la": "Calluna vulgaris"
+            "la": "Calluna vulgaris",
+            "quantity": "1 cucharada sopera"
           },
           {
             "es": "Alcohol de 50°",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "250 ml (1 taza)"
           }
         ],
         "instructions": "Herví el alcohol de 50° y agregale arenaria y brezo. Dejalo reposar tapado durante 6 minutos. Colalo antes de usarlo.",
@@ -2738,15 +3070,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Diente de león",
-            "la": "Taraxacum officinale"
+            "la": "Taraxacum officinale",
+            "quantity": "50 gramos"
           },
           {
             "es": "Abedul",
-            "la": "Betula pendula"
+            "la": "Betula pendula",
+            "quantity": "50 gramos"
           },
           {
             "es": "Vino blanco",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "500 ml"
           }
         ],
         "instructions": "Dejá macerar diente de león y abedul en vino blanco durante 8 días en un lugar oscuro y fresco. Agitalo todos los días. Filtralo bien con un paño de lino y guardalo en un frasco de vidrio oscuro.",
@@ -2762,15 +3097,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Arenaria",
-            "la": "Spergularia rubra"
+            "la": "Spergularia rubra",
+            "quantity": "1 cucharada sopera"
           },
           {
             "es": "Gayuba",
-            "la": "Arctostaphylos uva-ursi"
+            "la": "Arctostaphylos uva-ursi",
+            "quantity": "1 cucharada sopera"
           },
           {
             "es": "Alcohol de 50°",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "250 ml (1 taza)"
           }
         ],
         "instructions": "Herví el alcohol de 50° y agregale arenaria y gayuba. Dejalo reposar tapado durante 10 minutos. Colalo antes de usarlo.",
@@ -2786,15 +3124,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Cola de caballo",
-            "la": "Equisetum arvense"
+            "la": "Equisetum arvense",
+            "quantity": "15 gramos"
           },
           {
             "es": "Diente de león",
-            "la": "Taraxacum officinale"
+            "la": "Taraxacum officinale",
+            "quantity": "15 gramos"
           },
           {
             "es": "Agua purificada",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "1 vaso / 250 ml"
           }
         ],
         "instructions": "Dejá macerar cola de caballo y diente de león en agua purificada durante 14 días en un lugar oscuro y fresco. Agitalo todos los días. Filtralo bien con un paño de lino y guardalo en un frasco de vidrio oscuro.",
@@ -2810,15 +3151,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Gayuba",
-            "la": "Arctostaphylos uva-ursi"
+            "la": "Arctostaphylos uva-ursi",
+            "quantity": "15 gramos"
           },
           {
             "es": "Grama",
-            "la": "Cynodon dactylon"
+            "la": "Cynodon dactylon",
+            "quantity": "15 gramos"
           },
           {
             "es": "Alcohol de 50°",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "1 vaso / 250 ml"
           }
         ],
         "instructions": "Dejá macerar gayuba y grama en alcohol de 50° durante 15 días en un lugar oscuro y fresco. Agitalo todos los días. Filtralo bien con un paño de lino y guardalo en un frasco de vidrio oscuro.",
@@ -2834,15 +3178,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Ortiga verde",
-            "la": "Urtica dioica"
+            "la": "Urtica dioica",
+            "quantity": "15 gramos"
           },
           {
             "es": "Vara de oro",
-            "la": "Solidago virgaurea"
+            "la": "Solidago virgaurea",
+            "quantity": "15 gramos"
           },
           {
             "es": "Alcohol de 50°",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "1 vaso / 250 ml"
           }
         ],
         "instructions": "Dejá macerar ortiga verde y vara de oro en alcohol de 50° durante 8 días en un lugar oscuro y fresco. Agitalo todos los días. Filtralo bien con un paño de lino y guardalo en un frasco de vidrio oscuro.",
@@ -2858,15 +3205,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Ortiga verde",
-            "la": "Urtica dioica"
+            "la": "Urtica dioica",
+            "quantity": "1 cucharada sopera"
           },
           {
             "es": "Abedul",
-            "la": "Betula pendula"
+            "la": "Betula pendula",
+            "quantity": "1 cucharada sopera"
           },
           {
             "es": "Glicerina vegetal",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "250 ml (1 taza)"
           }
         ],
         "instructions": "Herví el glicerina vegetal y agregale ortiga verde y abedul. Dejalo reposar tapado durante 10 minutos. Colalo antes de usarlo.",
@@ -2882,15 +3232,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Cola de caballo",
-            "la": "Equisetum arvense"
+            "la": "Equisetum arvense",
+            "quantity": "15 gramos"
           },
           {
             "es": "Abedul",
-            "la": "Betula pendula"
+            "la": "Betula pendula",
+            "quantity": "15 gramos"
           },
           {
             "es": "Vino blanco",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "1 vaso / 250 ml"
           }
         ],
         "instructions": "Dejá macerar cola de caballo y abedul en vino blanco durante 26 días en un lugar oscuro y fresco. Agitalo todos los días. Filtralo bien con un paño de lino y guardalo en un frasco de vidrio oscuro.",
@@ -2906,15 +3259,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Grama",
-            "la": "Cynodon dactylon"
+            "la": "Cynodon dactylon",
+            "quantity": "50 gramos"
           },
           {
             "es": "Abedul",
-            "la": "Betula pendula"
+            "la": "Betula pendula",
+            "quantity": "50 gramos"
           },
           {
             "es": "Vino blanco",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "500 ml"
           }
         ],
         "instructions": "Dejá macerar grama y abedul en vino blanco durante 15 días en un lugar oscuro y fresco. Agitalo todos los días. Filtralo bien con un paño de lino y guardalo en un frasco de vidrio oscuro.",
@@ -2930,15 +3286,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Arenaria",
-            "la": "Spergularia rubra"
+            "la": "Spergularia rubra",
+            "quantity": "1 cucharada sopera"
           },
           {
             "es": "Abedul",
-            "la": "Betula pendula"
+            "la": "Betula pendula",
+            "quantity": "1 cucharada sopera"
           },
           {
             "es": "Glicerina vegetal",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "250 ml (1 taza)"
           }
         ],
         "instructions": "Herví el glicerina vegetal y agregale arenaria y abedul. Dejalo reposar tapado durante 9 minutos. Colalo antes de usarlo.",
@@ -2954,15 +3313,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Grama",
-            "la": "Cynodon dactylon"
+            "la": "Cynodon dactylon",
+            "quantity": "15 gramos"
           },
           {
             "es": "Cola de caballo",
-            "la": "Equisetum arvense"
+            "la": "Equisetum arvense",
+            "quantity": "15 gramos"
           },
           {
             "es": "Agua purificada",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "1 vaso / 250 ml"
           }
         ],
         "instructions": "Dejá macerar grama y cola de caballo en agua purificada durante 18 días en un lugar oscuro y fresco. Agitalo todos los días. Filtralo bien con un paño de lino y guardalo en un frasco de vidrio oscuro.",
@@ -2989,15 +3351,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Harpagofito",
-            "la": "Harpagophytum procumbens"
+            "la": "Harpagophytum procumbens",
+            "quantity": "30 gramos"
           },
           {
             "es": "Clavo",
-            "la": "Syzygium aromaticum"
+            "la": "Syzygium aromaticum",
+            "quantity": "30 gramos"
           },
           {
             "es": "Cera de abejas",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "100 gramos"
           }
         ],
         "instructions": "Derretí cera de abejas al baño maría. Agregá los extractos de harpagofito y clavo. Revolvé constante con espátula de madera hasta que quede todo parejo y dejá enfriar en tarro de cristal.",
@@ -3013,15 +3378,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Harpagofito",
-            "la": "Harpagophytum procumbens"
+            "la": "Harpagophytum procumbens",
+            "quantity": "15 gramos"
           },
           {
             "es": "Consuelda",
-            "la": "Symphytum officinale"
+            "la": "Symphytum officinale",
+            "quantity": "15 gramos"
           },
           {
             "es": "Cera de abejas",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "1 vaso / 250 ml"
           }
         ],
         "instructions": "Derretí cera de abejas al baño maría. Agregá los extractos de harpagofito y consuelda. Revolvé constante con espátula de madera hasta que quede todo parejo y dejá enfriar en tarro de cristal.",
@@ -3037,15 +3405,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Sauce blanco",
-            "la": "Salix alba"
+            "la": "Salix alba",
+            "quantity": "15 gramos"
           },
           {
             "es": "Jengibre",
-            "la": "Zingiber officinale"
+            "la": "Zingiber officinale",
+            "quantity": "15 gramos"
           },
           {
             "es": "Cera de abejas",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "1 vaso / 250 ml"
           }
         ],
         "instructions": "Derretí cera de abejas al baño maría. Agregá los extractos de sauce blanco y jengibre. Revolvé constante con espátula de madera hasta que quede todo parejo y dejá enfriar en tarro de cristal.",
@@ -3061,15 +3432,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Romero",
-            "la": "Rosmarinus officinalis"
+            "la": "Rosmarinus officinalis",
+            "quantity": "30 gramos"
           },
           {
             "es": "Harpagofito",
-            "la": "Harpagophytum procumbens"
+            "la": "Harpagophytum procumbens",
+            "quantity": "30 gramos"
           },
           {
             "es": "Agua de manantial",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "100 gramos"
           }
         ],
         "instructions": "Derretí agua de manantial al baño maría. Agregá los extractos de romero y harpagofito. Revolvé constante con espátula de madera hasta que quede todo parejo y dejá enfriar en tarro de cristal.",
@@ -3085,15 +3459,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Romero",
-            "la": "Rosmarinus officinalis"
+            "la": "Rosmarinus officinalis",
+            "quantity": "2 puñados grandes"
           },
           {
             "es": "Ulmaria",
-            "la": "Filipendula ulmaria"
+            "la": "Filipendula ulmaria",
+            "quantity": "2 puñados grandes"
           },
           {
             "es": "Manteca de karité",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "Cantidad necesaria"
           }
         ],
         "instructions": "Dejá macerar romero y ulmaria en manteca de karité durante 25 días en un lugar oscuro y fresco. Agitalo todos los días. Filtralo bien con un paño de lino y guardalo en un frasco de vidrio oscuro.",
@@ -3109,15 +3486,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Romero",
-            "la": "Rosmarinus officinalis"
+            "la": "Rosmarinus officinalis",
+            "quantity": "50 gramos"
           },
           {
             "es": "Ulmaria",
-            "la": "Filipendula ulmaria"
+            "la": "Filipendula ulmaria",
+            "quantity": "50 gramos"
           },
           {
             "es": "Alcohol de 70°",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "500 ml"
           }
         ],
         "instructions": "Dejá macerar romero y ulmaria en alcohol de 70° durante 20 días en un lugar oscuro y fresco. Agitalo todos los días. Filtralo bien con un paño de lino y guardalo en un frasco de vidrio oscuro.",
@@ -3133,15 +3513,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Boswellia",
-            "la": "Boswellia serrata"
+            "la": "Boswellia serrata",
+            "quantity": "50 gramos"
           },
           {
             "es": "Harpagofito",
-            "la": "Harpagophytum procumbens"
+            "la": "Harpagophytum procumbens",
+            "quantity": "50 gramos"
           },
           {
             "es": "Agua de manantial",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "500 ml"
           }
         ],
         "instructions": "Dejá macerar boswellia y harpagofito en agua de manantial durante 11 días en un lugar oscuro y fresco. Agitalo todos los días. Filtralo bien con un paño de lino y guardalo en un frasco de vidrio oscuro.",
@@ -3157,15 +3540,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Clavo",
-            "la": "Syzygium aromaticum"
+            "la": "Syzygium aromaticum",
+            "quantity": "50 gramos"
           },
           {
             "es": "Harpagofito",
-            "la": "Harpagophytum procumbens"
+            "la": "Harpagophytum procumbens",
+            "quantity": "50 gramos"
           },
           {
             "es": "Aceite de almendras dulces",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "500 ml"
           }
         ],
         "instructions": "Dejá macerar clavo y harpagofito en aceite de almendras dulces durante 14 días en un lugar oscuro y fresco. Agitalo todos los días. Filtralo bien con un paño de lino y guardalo en un frasco de vidrio oscuro.",
@@ -3181,15 +3567,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Jengibre",
-            "la": "Zingiber officinale"
+            "la": "Zingiber officinale",
+            "quantity": "15 gramos"
           },
           {
             "es": "Clavo",
-            "la": "Syzygium aromaticum"
+            "la": "Syzygium aromaticum",
+            "quantity": "15 gramos"
           },
           {
             "es": "Manteca de karité",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "1 vaso / 250 ml"
           }
         ],
         "instructions": "Dejá macerar jengibre y clavo en manteca de karité durante 21 días en un lugar oscuro y fresco. Agitalo todos los días. Filtralo bien con un paño de lino y guardalo en un frasco de vidrio oscuro.",
@@ -3205,15 +3594,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Clavo",
-            "la": "Syzygium aromaticum"
+            "la": "Syzygium aromaticum",
+            "quantity": "50 gramos"
           },
           {
             "es": "Árnica",
-            "la": "Arnica montana"
+            "la": "Arnica montana",
+            "quantity": "50 gramos"
           },
           {
             "es": "Manteca de karité",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "500 ml"
           }
         ],
         "instructions": "Dejá macerar clavo y árnica en manteca de karité durante 23 días en un lugar oscuro y fresco. Agitalo todos los días. Filtralo bien con un paño de lino y guardalo en un frasco de vidrio oscuro.",
@@ -3229,15 +3621,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Boswellia",
-            "la": "Boswellia serrata"
+            "la": "Boswellia serrata",
+            "quantity": "15 gramos"
           },
           {
             "es": "Consuelda",
-            "la": "Symphytum officinale"
+            "la": "Symphytum officinale",
+            "quantity": "15 gramos"
           },
           {
             "es": "Cera de abejas",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "1 vaso / 250 ml"
           }
         ],
         "instructions": "Dejá macerar boswellia y consuelda en cera de abejas durante 14 días en un lugar oscuro y fresco. Agitalo todos los días. Filtralo bien con un paño de lino y guardalo en un frasco de vidrio oscuro.",
@@ -3253,15 +3648,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Romero",
-            "la": "Rosmarinus officinalis"
+            "la": "Rosmarinus officinalis",
+            "quantity": "15 gramos"
           },
           {
             "es": "Jengibre",
-            "la": "Zingiber officinale"
+            "la": "Zingiber officinale",
+            "quantity": "15 gramos"
           },
           {
             "es": "Alcohol de 70°",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "1 vaso / 250 ml"
           }
         ],
         "instructions": "Derretí alcohol de 70° al baño maría. Agregá los extractos de romero y jengibre. Revolvé constante con espátula de madera hasta que quede todo parejo y dejá enfriar en tarro de cristal.",
@@ -3277,15 +3675,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Boswellia",
-            "la": "Boswellia serrata"
+            "la": "Boswellia serrata",
+            "quantity": "15 gramos"
           },
           {
             "es": "Árnica",
-            "la": "Arnica montana"
+            "la": "Arnica montana",
+            "quantity": "15 gramos"
           },
           {
             "es": "Alcohol de 70°",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "1 vaso / 250 ml"
           }
         ],
         "instructions": "Dejá macerar boswellia y árnica en alcohol de 70° durante 9 días en un lugar oscuro y fresco. Agitalo todos los días. Filtralo bien con un paño de lino y guardalo en un frasco de vidrio oscuro.",
@@ -3301,15 +3702,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Jengibre",
-            "la": "Zingiber officinale"
+            "la": "Zingiber officinale",
+            "quantity": "15 gramos"
           },
           {
             "es": "Árnica",
-            "la": "Arnica montana"
+            "la": "Arnica montana",
+            "quantity": "15 gramos"
           },
           {
             "es": "Aceite de almendras dulces",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "1 vaso / 250 ml"
           }
         ],
         "instructions": "Derretí aceite de almendras dulces al baño maría. Agregá los extractos de jengibre y árnica. Revolvé constante con espátula de madera hasta que quede todo parejo y dejá enfriar en tarro de cristal.",
@@ -3325,15 +3729,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Árnica",
-            "la": "Arnica montana"
+            "la": "Arnica montana",
+            "quantity": "15 gramos"
           },
           {
             "es": "Sauce blanco",
-            "la": "Salix alba"
+            "la": "Salix alba",
+            "quantity": "15 gramos"
           },
           {
             "es": "Alcohol de 70°",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "1 vaso / 250 ml"
           }
         ],
         "instructions": "Derretí alcohol de 70° al baño maría. Agregá los extractos de árnica y sauce blanco. Revolvé constante con espátula de madera hasta que quede todo parejo y dejá enfriar en tarro de cristal.",
@@ -3349,15 +3756,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Árnica",
-            "la": "Arnica montana"
+            "la": "Arnica montana",
+            "quantity": "2 puñados grandes"
           },
           {
             "es": "Harpagofito",
-            "la": "Harpagophytum procumbens"
+            "la": "Harpagophytum procumbens",
+            "quantity": "2 puñados grandes"
           },
           {
             "es": "Manteca de karité",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "Cantidad necesaria"
           }
         ],
         "instructions": "Dejá macerar árnica y harpagofito en manteca de karité durante 11 días en un lugar oscuro y fresco. Agitalo todos los días. Filtralo bien con un paño de lino y guardalo en un frasco de vidrio oscuro.",
@@ -3373,15 +3783,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Jengibre",
-            "la": "Zingiber officinale"
+            "la": "Zingiber officinale",
+            "quantity": "15 gramos"
           },
           {
             "es": "Harpagofito",
-            "la": "Harpagophytum procumbens"
+            "la": "Harpagophytum procumbens",
+            "quantity": "15 gramos"
           },
           {
             "es": "Agua de manantial",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "1 vaso / 250 ml"
           }
         ],
         "instructions": "Dejá macerar jengibre y harpagofito en agua de manantial durante 14 días en un lugar oscuro y fresco. Agitalo todos los días. Filtralo bien con un paño de lino y guardalo en un frasco de vidrio oscuro.",
@@ -3397,15 +3810,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Consuelda",
-            "la": "Symphytum officinale"
+            "la": "Symphytum officinale",
+            "quantity": "15 gramos"
           },
           {
             "es": "Romero",
-            "la": "Rosmarinus officinalis"
+            "la": "Rosmarinus officinalis",
+            "quantity": "15 gramos"
           },
           {
             "es": "Cera de abejas",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "1 vaso / 250 ml"
           }
         ],
         "instructions": "Dejá macerar consuelda y romero en cera de abejas durante 22 días en un lugar oscuro y fresco. Agitalo todos los días. Filtralo bien con un paño de lino y guardalo en un frasco de vidrio oscuro.",
@@ -3421,15 +3837,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Clavo",
-            "la": "Syzygium aromaticum"
+            "la": "Syzygium aromaticum",
+            "quantity": "15 gramos"
           },
           {
             "es": "Cúrcuma",
-            "la": "Curcuma longa"
+            "la": "Curcuma longa",
+            "quantity": "15 gramos"
           },
           {
             "es": "Cera de abejas",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "1 vaso / 250 ml"
           }
         ],
         "instructions": "Dejá macerar clavo y cúrcuma en cera de abejas durante 20 días en un lugar oscuro y fresco. Agitalo todos los días. Filtralo bien con un paño de lino y guardalo en un frasco de vidrio oscuro.",
@@ -3445,15 +3864,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Árnica",
-            "la": "Arnica montana"
+            "la": "Arnica montana",
+            "quantity": "30 gramos"
           },
           {
             "es": "Cúrcuma",
-            "la": "Curcuma longa"
+            "la": "Curcuma longa",
+            "quantity": "30 gramos"
           },
           {
             "es": "Alcohol de 70°",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "100 gramos"
           }
         ],
         "instructions": "Derretí alcohol de 70° al baño maría. Agregá los extractos de árnica y cúrcuma. Revolvé constante con espátula de madera hasta que quede todo parejo y dejá enfriar en tarro de cristal.",
@@ -3480,15 +3902,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Manzanilla",
-            "la": "Matricaria chamomilla"
+            "la": "Matricaria chamomilla",
+            "quantity": "15 gramos"
           },
           {
             "es": "Caléndula",
-            "la": "Calendula officinalis"
+            "la": "Calendula officinalis",
+            "quantity": "15 gramos"
           },
           {
             "es": "Glicerina",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "1 vaso / 250 ml"
           }
         ],
         "instructions": "Dejá macerar manzanilla y caléndula en glicerina durante 16 días en un lugar oscuro y fresco. Agitalo todos los días. Filtralo bien con un paño de lino y guardalo en un frasco de vidrio oscuro.",
@@ -3504,15 +3929,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Caléndula",
-            "la": "Calendula officinalis"
+            "la": "Calendula officinalis",
+            "quantity": "15 gramos"
           },
           {
             "es": "Frambueso",
-            "la": "Rubus idaeus"
+            "la": "Rubus idaeus",
+            "quantity": "15 gramos"
           },
           {
             "es": "Aceite de onagra",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "1 vaso / 250 ml"
           }
         ],
         "instructions": "Dejá macerar caléndula y frambueso en aceite de onagra durante 11 días en un lugar oscuro y fresco. Agitalo todos los días. Filtralo bien con un paño de lino y guardalo en un frasco de vidrio oscuro.",
@@ -3528,15 +3956,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Frambueso",
-            "la": "Rubus idaeus"
+            "la": "Rubus idaeus",
+            "quantity": "15 gramos"
           },
           {
             "es": "Manzanilla",
-            "la": "Matricaria chamomilla"
+            "la": "Matricaria chamomilla",
+            "quantity": "15 gramos"
           },
           {
             "es": "Aceite de onagra",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "1 vaso / 250 ml"
           }
         ],
         "instructions": "Dejá macerar frambueso y manzanilla en aceite de onagra durante 8 días en un lugar oscuro y fresco. Agitalo todos los días. Filtralo bien con un paño de lino y guardalo en un frasco de vidrio oscuro.",
@@ -3552,15 +3983,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Milenrama",
-            "la": "Achillea millefolium"
+            "la": "Achillea millefolium",
+            "quantity": "50 gramos"
           },
           {
             "es": "Artemisa",
-            "la": "Artemisia vulgaris"
+            "la": "Artemisia vulgaris",
+            "quantity": "50 gramos"
           },
           {
             "es": "Glicerina",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "500 ml"
           }
         ],
         "instructions": "Dejá macerar milenrama y artemisa en glicerina durante 23 días en un lugar oscuro y fresco. Agitalo todos los días. Filtralo bien con un paño de lino y guardalo en un frasco de vidrio oscuro.",
@@ -3576,15 +4010,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Manzanilla",
-            "la": "Matricaria chamomilla"
+            "la": "Matricaria chamomilla",
+            "quantity": "15 gramos"
           },
           {
             "es": "Caléndula",
-            "la": "Calendula officinalis"
+            "la": "Calendula officinalis",
+            "quantity": "15 gramos"
           },
           {
             "es": "Agua purificada",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "1 vaso / 250 ml"
           }
         ],
         "instructions": "Dejá macerar manzanilla y caléndula en agua purificada durante 9 días en un lugar oscuro y fresco. Agitalo todos los días. Filtralo bien con un paño de lino y guardalo en un frasco de vidrio oscuro.",
@@ -3600,15 +4037,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Frambueso",
-            "la": "Rubus idaeus"
+            "la": "Rubus idaeus",
+            "quantity": "15 gramos"
           },
           {
             "es": "Sauzgatillo",
-            "la": "Vitex agnus-castus"
+            "la": "Vitex agnus-castus",
+            "quantity": "15 gramos"
           },
           {
             "es": "Aceite de onagra",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "1 vaso / 250 ml"
           }
         ],
         "instructions": "Dejá macerar frambueso y sauzgatillo en aceite de onagra durante 18 días en un lugar oscuro y fresco. Agitalo todos los días. Filtralo bien con un paño de lino y guardalo en un frasco de vidrio oscuro.",
@@ -3624,15 +4064,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Cimicífuga",
-            "la": "Actaea racemosa"
+            "la": "Actaea racemosa",
+            "quantity": "15 gramos"
           },
           {
             "es": "Dong Quai",
-            "la": "Angelica sinensis"
+            "la": "Angelica sinensis",
+            "quantity": "15 gramos"
           },
           {
             "es": "Agua purificada",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "1 vaso / 250 ml"
           }
         ],
         "instructions": "Dejá macerar cimicífuga y dong quai en agua purificada durante 10 días en un lugar oscuro y fresco. Agitalo todos los días. Filtralo bien con un paño de lino y guardalo en un frasco de vidrio oscuro.",
@@ -3648,15 +4091,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Sauzgatillo",
-            "la": "Vitex agnus-castus"
+            "la": "Vitex agnus-castus",
+            "quantity": "15 gramos"
           },
           {
             "es": "Manzanilla",
-            "la": "Matricaria chamomilla"
+            "la": "Matricaria chamomilla",
+            "quantity": "15 gramos"
           },
           {
             "es": "Alcohol de 60°",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "1 vaso / 250 ml"
           }
         ],
         "instructions": "Dejá macerar sauzgatillo y manzanilla en alcohol de 60° durante 21 días en un lugar oscuro y fresco. Agitalo todos los días. Filtralo bien con un paño de lino y guardalo en un frasco de vidrio oscuro.",
@@ -3672,15 +4118,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Artemisa",
-            "la": "Artemisia vulgaris"
+            "la": "Artemisia vulgaris",
+            "quantity": "15 gramos"
           },
           {
             "es": "Dong Quai",
-            "la": "Angelica sinensis"
+            "la": "Angelica sinensis",
+            "quantity": "15 gramos"
           },
           {
             "es": "Glicerina",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "1 vaso / 250 ml"
           }
         ],
         "instructions": "Dejá macerar artemisa y dong quai en glicerina durante 25 días en un lugar oscuro y fresco. Agitalo todos los días. Filtralo bien con un paño de lino y guardalo en un frasco de vidrio oscuro.",
@@ -3696,15 +4145,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Dong Quai",
-            "la": "Angelica sinensis"
+            "la": "Angelica sinensis",
+            "quantity": "15 gramos"
           },
           {
             "es": "Bolsa de pastor",
-            "la": "Capsella bursa-pastoris"
+            "la": "Capsella bursa-pastoris",
+            "quantity": "15 gramos"
           },
           {
             "es": "Miel cruda",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "1 vaso / 250 ml"
           }
         ],
         "instructions": "Dejá macerar dong quai y bolsa de pastor en miel cruda durante 16 días en un lugar oscuro y fresco. Agitalo todos los días. Filtralo bien con un paño de lino y guardalo en un frasco de vidrio oscuro.",
@@ -3720,15 +4172,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Artemisa",
-            "la": "Artemisia vulgaris"
+            "la": "Artemisia vulgaris",
+            "quantity": "1 cucharada sopera"
           },
           {
             "es": "Milenrama",
-            "la": "Achillea millefolium"
+            "la": "Achillea millefolium",
+            "quantity": "1 cucharada sopera"
           },
           {
             "es": "Agua purificada",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "250 ml (1 taza)"
           }
         ],
         "instructions": "Herví el agua purificada y agregale artemisa y milenrama. Dejalo reposar tapado durante 7 minutos. Colalo antes de usarlo.",
@@ -3744,15 +4199,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Artemisa",
-            "la": "Artemisia vulgaris"
+            "la": "Artemisia vulgaris",
+            "quantity": "15 gramos"
           },
           {
             "es": "Milenrama",
-            "la": "Achillea millefolium"
+            "la": "Achillea millefolium",
+            "quantity": "15 gramos"
           },
           {
             "es": "Alcohol de 60°",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "1 vaso / 250 ml"
           }
         ],
         "instructions": "Dejá macerar artemisa y milenrama en alcohol de 60° durante 23 días en un lugar oscuro y fresco. Agitalo todos los días. Filtralo bien con un paño de lino y guardalo en un frasco de vidrio oscuro.",
@@ -3768,15 +4226,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Milenrama",
-            "la": "Achillea millefolium"
+            "la": "Achillea millefolium",
+            "quantity": "15 gramos"
           },
           {
             "es": "Caléndula",
-            "la": "Calendula officinalis"
+            "la": "Calendula officinalis",
+            "quantity": "15 gramos"
           },
           {
             "es": "Alcohol de 60°",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "1 vaso / 250 ml"
           }
         ],
         "instructions": "Dejá macerar milenrama y caléndula en alcohol de 60° durante 8 días en un lugar oscuro y fresco. Agitalo todos los días. Filtralo bien con un paño de lino y guardalo en un frasco de vidrio oscuro.",
@@ -3792,15 +4253,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Manzanilla",
-            "la": "Matricaria chamomilla"
+            "la": "Matricaria chamomilla",
+            "quantity": "15 gramos"
           },
           {
             "es": "Bolsa de pastor",
-            "la": "Capsella bursa-pastoris"
+            "la": "Capsella bursa-pastoris",
+            "quantity": "15 gramos"
           },
           {
             "es": "Agua purificada",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "1 vaso / 250 ml"
           }
         ],
         "instructions": "Dejá macerar manzanilla y bolsa de pastor en agua purificada durante 12 días en un lugar oscuro y fresco. Agitalo todos los días. Filtralo bien con un paño de lino y guardalo en un frasco de vidrio oscuro.",
@@ -3816,15 +4280,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Milenrama",
-            "la": "Achillea millefolium"
+            "la": "Achillea millefolium",
+            "quantity": "50 gramos"
           },
           {
             "es": "Cimicífuga",
-            "la": "Actaea racemosa"
+            "la": "Actaea racemosa",
+            "quantity": "50 gramos"
           },
           {
             "es": "Glicerina",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "500 ml"
           }
         ],
         "instructions": "Dejá macerar milenrama y cimicífuga en glicerina durante 23 días en un lugar oscuro y fresco. Agitalo todos los días. Filtralo bien con un paño de lino y guardalo en un frasco de vidrio oscuro.",
@@ -3840,15 +4307,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Dong Quai",
-            "la": "Angelica sinensis"
+            "la": "Angelica sinensis",
+            "quantity": "15 gramos"
           },
           {
             "es": "Frambueso",
-            "la": "Rubus idaeus"
+            "la": "Rubus idaeus",
+            "quantity": "15 gramos"
           },
           {
             "es": "Miel cruda",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "1 vaso / 250 ml"
           }
         ],
         "instructions": "Dejá macerar dong quai y frambueso en miel cruda durante 9 días en un lugar oscuro y fresco. Agitalo todos los días. Filtralo bien con un paño de lino y guardalo en un frasco de vidrio oscuro.",
@@ -3864,15 +4334,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Bolsa de pastor",
-            "la": "Capsella bursa-pastoris"
+            "la": "Capsella bursa-pastoris",
+            "quantity": "15 gramos"
           },
           {
             "es": "Dong Quai",
-            "la": "Angelica sinensis"
+            "la": "Angelica sinensis",
+            "quantity": "15 gramos"
           },
           {
             "es": "Aceite de onagra",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "1 vaso / 250 ml"
           }
         ],
         "instructions": "Dejá macerar bolsa de pastor y dong quai en aceite de onagra durante 25 días en un lugar oscuro y fresco. Agitalo todos los días. Filtralo bien con un paño de lino y guardalo en un frasco de vidrio oscuro.",
@@ -3888,15 +4361,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Bolsa de pastor",
-            "la": "Capsella bursa-pastoris"
+            "la": "Capsella bursa-pastoris",
+            "quantity": "15 gramos"
           },
           {
             "es": "Milenrama",
-            "la": "Achillea millefolium"
+            "la": "Achillea millefolium",
+            "quantity": "15 gramos"
           },
           {
             "es": "Miel cruda",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "1 vaso / 250 ml"
           }
         ],
         "instructions": "Dejá macerar bolsa de pastor y milenrama en miel cruda durante 7 días en un lugar oscuro y fresco. Agitalo todos los días. Filtralo bien con un paño de lino y guardalo en un frasco de vidrio oscuro.",
@@ -3912,15 +4388,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Cimicífuga",
-            "la": "Actaea racemosa"
+            "la": "Actaea racemosa",
+            "quantity": "50 gramos"
           },
           {
             "es": "Manzanilla",
-            "la": "Matricaria chamomilla"
+            "la": "Matricaria chamomilla",
+            "quantity": "50 gramos"
           },
           {
             "es": "Alcohol de 60°",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "500 ml"
           }
         ],
         "instructions": "Dejá macerar cimicífuga y manzanilla en alcohol de 60° durante 7 días en un lugar oscuro y fresco. Agitalo todos los días. Filtralo bien con un paño de lino y guardalo en un frasco de vidrio oscuro.",
@@ -3936,15 +4415,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Bolsa de pastor",
-            "la": "Capsella bursa-pastoris"
+            "la": "Capsella bursa-pastoris",
+            "quantity": "15 gramos"
           },
           {
             "es": "Manzanilla",
-            "la": "Matricaria chamomilla"
+            "la": "Matricaria chamomilla",
+            "quantity": "15 gramos"
           },
           {
             "es": "Miel cruda",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "1 vaso / 250 ml"
           }
         ],
         "instructions": "Dejá macerar bolsa de pastor y manzanilla en miel cruda durante 18 días en un lugar oscuro y fresco. Agitalo todos los días. Filtralo bien con un paño de lino y guardalo en un frasco de vidrio oscuro.",
@@ -3971,15 +4453,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Árbol de té",
-            "la": "Melaleuca alternifolia"
+            "la": "Melaleuca alternifolia",
+            "quantity": "15 gramos"
           },
           {
             "es": "Avena",
-            "la": "Avena sativa"
+            "la": "Avena sativa",
+            "quantity": "15 gramos"
           },
           {
             "es": "Aceite de coco prensado en frío",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "1 vaso / 250 ml"
           }
         ],
         "instructions": "Dejá macerar árbol de té y avena en aceite de coco prensado en frío durante 16 días en un lugar oscuro y fresco. Agitalo todos los días. Filtralo bien con un paño de lino y guardalo en un frasco de vidrio oscuro.",
@@ -3995,15 +4480,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Centella asiática",
-            "la": "Centella asiatica"
+            "la": "Centella asiatica",
+            "quantity": "15 gramos"
           },
           {
             "es": "Avena",
-            "la": "Avena sativa"
+            "la": "Avena sativa",
+            "quantity": "15 gramos"
           },
           {
             "es": "Aceite de coco prensado en frío",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "1 vaso / 250 ml"
           }
         ],
         "instructions": "Derretí aceite de coco prensado en frío al baño maría. Agregá los extractos de centella asiática y avena. Revolvé constante con espátula de madera hasta que quede todo parejo y dejá enfriar en tarro de cristal.",
@@ -4019,15 +4507,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Manzanilla",
-            "la": "Matricaria chamomilla"
+            "la": "Matricaria chamomilla",
+            "quantity": "2 puñados grandes"
           },
           {
             "es": "Centella asiática",
-            "la": "Centella asiatica"
+            "la": "Centella asiatica",
+            "quantity": "2 puñados grandes"
           },
           {
             "es": "Aceite de coco prensado en frío",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "Cantidad necesaria"
           }
         ],
         "instructions": "Dejá macerar manzanilla y centella asiática en aceite de coco prensado en frío durante 23 días en un lugar oscuro y fresco. Agitalo todos los días. Filtralo bien con un paño de lino y guardalo en un frasco de vidrio oscuro.",
@@ -4043,15 +4534,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Tepezcohuite",
-            "la": "Mimosa tenuiflora"
+            "la": "Mimosa tenuiflora",
+            "quantity": "15 gramos"
           },
           {
             "es": "Manzanilla",
-            "la": "Matricaria chamomilla"
+            "la": "Matricaria chamomilla",
+            "quantity": "15 gramos"
           },
           {
             "es": "Agua de rosas",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "1 vaso / 250 ml"
           }
         ],
         "instructions": "Derretí agua de rosas al baño maría. Agregá los extractos de tepezcohuite y manzanilla. Revolvé constante con espátula de madera hasta que quede todo parejo y dejá enfriar en tarro de cristal.",
@@ -4067,15 +4561,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Rosa mosqueta",
-            "la": "Rosa rubiginosa"
+            "la": "Rosa rubiginosa",
+            "quantity": "15 gramos"
           },
           {
             "es": "Manzanilla",
-            "la": "Matricaria chamomilla"
+            "la": "Matricaria chamomilla",
+            "quantity": "15 gramos"
           },
           {
             "es": "Cera de abejas pura",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "1 vaso / 250 ml"
           }
         ],
         "instructions": "Dejá macerar rosa mosqueta y manzanilla en cera de abejas pura durante 20 días en un lugar oscuro y fresco. Agitalo todos los días. Filtralo bien con un paño de lino y guardalo en un frasco de vidrio oscuro.",
@@ -4091,15 +4588,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Tepezcohuite",
-            "la": "Mimosa tenuiflora"
+            "la": "Mimosa tenuiflora",
+            "quantity": "15 gramos"
           },
           {
             "es": "Aloe vera",
-            "la": "Aloe barbadensis"
+            "la": "Aloe barbadensis",
+            "quantity": "15 gramos"
           },
           {
             "es": "Aceite de coco prensado en frío",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "1 vaso / 250 ml"
           }
         ],
         "instructions": "Dejá macerar tepezcohuite y aloe vera en aceite de coco prensado en frío durante 23 días en un lugar oscuro y fresco. Agitalo todos los días. Filtralo bien con un paño de lino y guardalo en un frasco de vidrio oscuro.",
@@ -4115,15 +4615,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Tepezcohuite",
-            "la": "Mimosa tenuiflora"
+            "la": "Mimosa tenuiflora",
+            "quantity": "15 gramos"
           },
           {
             "es": "Rosa mosqueta",
-            "la": "Rosa rubiginosa"
+            "la": "Rosa rubiginosa",
+            "quantity": "15 gramos"
           },
           {
             "es": "Manteca de cacao",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "1 vaso / 250 ml"
           }
         ],
         "instructions": "Derretí manteca de cacao al baño maría. Agregá los extractos de tepezcohuite y rosa mosqueta. Revolvé constante con espátula de madera hasta que quede todo parejo y dejá enfriar en tarro de cristal.",
@@ -4139,15 +4642,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Bardana",
-            "la": "Arctium lappa"
+            "la": "Arctium lappa",
+            "quantity": "15 gramos"
           },
           {
             "es": "Caléndula",
-            "la": "Calendula officinalis"
+            "la": "Calendula officinalis",
+            "quantity": "15 gramos"
           },
           {
             "es": "Cera de abejas pura",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "1 vaso / 250 ml"
           }
         ],
         "instructions": "Derretí cera de abejas pura al baño maría. Agregá los extractos de bardana y caléndula. Revolvé constante con espátula de madera hasta que quede todo parejo y dejá enfriar en tarro de cristal.",
@@ -4163,15 +4669,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Manzanilla",
-            "la": "Matricaria chamomilla"
+            "la": "Matricaria chamomilla",
+            "quantity": "15 gramos"
           },
           {
             "es": "Centella asiática",
-            "la": "Centella asiatica"
+            "la": "Centella asiatica",
+            "quantity": "15 gramos"
           },
           {
             "es": "Aceite de jojoba",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "1 vaso / 250 ml"
           }
         ],
         "instructions": "Derretí aceite de jojoba al baño maría. Agregá los extractos de manzanilla y centella asiática. Revolvé constante con espátula de madera hasta que quede todo parejo y dejá enfriar en tarro de cristal.",
@@ -4187,15 +4696,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Bardana",
-            "la": "Arctium lappa"
+            "la": "Arctium lappa",
+            "quantity": "15 gramos"
           },
           {
             "es": "Aloe vera",
-            "la": "Aloe barbadensis"
+            "la": "Aloe barbadensis",
+            "quantity": "15 gramos"
           },
           {
             "es": "Aceite de coco prensado en frío",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "1 vaso / 250 ml"
           }
         ],
         "instructions": "Dejá macerar bardana y aloe vera en aceite de coco prensado en frío durante 14 días en un lugar oscuro y fresco. Agitalo todos los días. Filtralo bien con un paño de lino y guardalo en un frasco de vidrio oscuro.",
@@ -4211,15 +4723,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Árbol de té",
-            "la": "Melaleuca alternifolia"
+            "la": "Melaleuca alternifolia",
+            "quantity": "15 gramos"
           },
           {
             "es": "Lavanda",
-            "la": "Lavandula angustifolia"
+            "la": "Lavandula angustifolia",
+            "quantity": "15 gramos"
           },
           {
             "es": "Agua de rosas",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "1 vaso / 250 ml"
           }
         ],
         "instructions": "Derretí agua de rosas al baño maría. Agregá los extractos de árbol de té y lavanda. Revolvé constante con espátula de madera hasta que quede todo parejo y dejá enfriar en tarro de cristal.",
@@ -4235,15 +4750,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Bardana",
-            "la": "Arctium lappa"
+            "la": "Arctium lappa",
+            "quantity": "15 gramos"
           },
           {
             "es": "Avena",
-            "la": "Avena sativa"
+            "la": "Avena sativa",
+            "quantity": "15 gramos"
           },
           {
             "es": "Aceite de jojoba",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "1 vaso / 250 ml"
           }
         ],
         "instructions": "Derretí aceite de jojoba al baño maría. Agregá los extractos de bardana y avena. Revolvé constante con espátula de madera hasta que quede todo parejo y dejá enfriar en tarro de cristal.",
@@ -4259,15 +4777,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Aloe vera",
-            "la": "Aloe barbadensis"
+            "la": "Aloe barbadensis",
+            "quantity": "2 puñados grandes"
           },
           {
             "es": "Caléndula",
-            "la": "Calendula officinalis"
+            "la": "Calendula officinalis",
+            "quantity": "2 puñados grandes"
           },
           {
             "es": "Aceite de coco prensado en frío",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "Cantidad necesaria"
           }
         ],
         "instructions": "Dejá macerar aloe vera y caléndula en aceite de coco prensado en frío durante 24 días en un lugar oscuro y fresco. Agitalo todos los días. Filtralo bien con un paño de lino y guardalo en un frasco de vidrio oscuro.",
@@ -4283,15 +4804,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Aloe vera",
-            "la": "Aloe barbadensis"
+            "la": "Aloe barbadensis",
+            "quantity": "30 gramos"
           },
           {
             "es": "Avena",
-            "la": "Avena sativa"
+            "la": "Avena sativa",
+            "quantity": "30 gramos"
           },
           {
             "es": "Manteca de cacao",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "100 gramos"
           }
         ],
         "instructions": "Derretí manteca de cacao al baño maría. Agregá los extractos de aloe vera y avena. Revolvé constante con espátula de madera hasta que quede todo parejo y dejá enfriar en tarro de cristal.",
@@ -4307,15 +4831,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Centella asiática",
-            "la": "Centella asiatica"
+            "la": "Centella asiatica",
+            "quantity": "15 gramos"
           },
           {
             "es": "Bardana",
-            "la": "Arctium lappa"
+            "la": "Arctium lappa",
+            "quantity": "15 gramos"
           },
           {
             "es": "Aceite de coco prensado en frío",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "1 vaso / 250 ml"
           }
         ],
         "instructions": "Dejá macerar centella asiática y bardana en aceite de coco prensado en frío durante 23 días en un lugar oscuro y fresco. Agitalo todos los días. Filtralo bien con un paño de lino y guardalo en un frasco de vidrio oscuro.",
@@ -4331,15 +4858,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Bardana",
-            "la": "Arctium lappa"
+            "la": "Arctium lappa",
+            "quantity": "15 gramos"
           },
           {
             "es": "Rosa mosqueta",
-            "la": "Rosa rubiginosa"
+            "la": "Rosa rubiginosa",
+            "quantity": "15 gramos"
           },
           {
             "es": "Manteca de cacao",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "1 vaso / 250 ml"
           }
         ],
         "instructions": "Derretí manteca de cacao al baño maría. Agregá los extractos de bardana y rosa mosqueta. Revolvé constante con espátula de madera hasta que quede todo parejo y dejá enfriar en tarro de cristal.",
@@ -4355,15 +4885,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Manzanilla",
-            "la": "Matricaria chamomilla"
+            "la": "Matricaria chamomilla",
+            "quantity": "15 gramos"
           },
           {
             "es": "Aloe vera",
-            "la": "Aloe barbadensis"
+            "la": "Aloe barbadensis",
+            "quantity": "15 gramos"
           },
           {
             "es": "Aceite de coco prensado en frío",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "1 vaso / 250 ml"
           }
         ],
         "instructions": "Derretí aceite de coco prensado en frío al baño maría. Agregá los extractos de manzanilla y aloe vera. Revolvé constante con espátula de madera hasta que quede todo parejo y dejá enfriar en tarro de cristal.",
@@ -4379,15 +4912,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Caléndula",
-            "la": "Calendula officinalis"
+            "la": "Calendula officinalis",
+            "quantity": "15 gramos"
           },
           {
             "es": "Rosa mosqueta",
-            "la": "Rosa rubiginosa"
+            "la": "Rosa rubiginosa",
+            "quantity": "15 gramos"
           },
           {
             "es": "Aceite de jojoba",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "1 vaso / 250 ml"
           }
         ],
         "instructions": "Dejá macerar caléndula y rosa mosqueta en aceite de jojoba durante 23 días en un lugar oscuro y fresco. Agitalo todos los días. Filtralo bien con un paño de lino y guardalo en un frasco de vidrio oscuro.",
@@ -4403,15 +4939,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Manzanilla",
-            "la": "Matricaria chamomilla"
+            "la": "Matricaria chamomilla",
+            "quantity": "2 puñados grandes"
           },
           {
             "es": "Aloe vera",
-            "la": "Aloe barbadensis"
+            "la": "Aloe barbadensis",
+            "quantity": "2 puñados grandes"
           },
           {
             "es": "Manteca de cacao",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "Cantidad necesaria"
           }
         ],
         "instructions": "Dejá macerar manzanilla y aloe vera en manteca de cacao durante 10 días en un lugar oscuro y fresco. Agitalo todos los días. Filtralo bien con un paño de lino y guardalo en un frasco de vidrio oscuro.",
@@ -4427,15 +4966,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Avena",
-            "la": "Avena sativa"
+            "la": "Avena sativa",
+            "quantity": "2 puñados grandes"
           },
           {
             "es": "Rosa mosqueta",
-            "la": "Rosa rubiginosa"
+            "la": "Rosa rubiginosa",
+            "quantity": "2 puñados grandes"
           },
           {
             "es": "Aceite de jojoba",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "Cantidad necesaria"
           }
         ],
         "instructions": "Dejá macerar avena y rosa mosqueta en aceite de jojoba durante 17 días en un lugar oscuro y fresco. Agitalo todos los días. Filtralo bien con un paño de lino y guardalo en un frasco de vidrio oscuro.",
@@ -4462,15 +5004,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Carbón vegetal",
-            "la": "Carbo activatus"
+            "la": "Carbo activatus",
+            "quantity": "15 gramos"
           },
           {
             "es": "Llantén",
-            "la": "Plantago major"
+            "la": "Plantago major",
+            "quantity": "15 gramos"
           },
           {
             "es": "Cera de abejas",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "1 vaso / 250 ml"
           }
         ],
         "instructions": "Dejá macerar carbón vegetal y llantén en cera de abejas durante 19 días en un lugar oscuro y fresco. Agitalo todos los días. Filtralo bien con un paño de lino y guardalo en un frasco de vidrio oscuro.",
@@ -4486,15 +5031,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Sangre de drago",
-            "la": "Croton lechleri"
+            "la": "Croton lechleri",
+            "quantity": "15 gramos"
           },
           {
             "es": "Carbón vegetal",
-            "la": "Carbo activatus"
+            "la": "Carbo activatus",
+            "quantity": "15 gramos"
           },
           {
             "es": "Agua destilada",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "1 vaso / 250 ml"
           }
         ],
         "instructions": "Dejá macerar sangre de drago y carbón vegetal en agua destilada durante 15 días en un lugar oscuro y fresco. Agitalo todos los días. Filtralo bien con un paño de lino y guardalo en un frasco de vidrio oscuro.",
@@ -4510,15 +5058,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Propóleo",
-            "la": "Propolis"
+            "la": "Propolis",
+            "quantity": "15 gramos"
           },
           {
             "es": "Menta",
-            "la": "Mentha x piperita"
+            "la": "Mentha x piperita",
+            "quantity": "15 gramos"
           },
           {
             "es": "Aceite de oliva",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "1 vaso / 250 ml"
           }
         ],
         "instructions": "Dejá macerar propóleo y menta en aceite de oliva durante 13 días en un lugar oscuro y fresco. Agitalo todos los días. Filtralo bien con un paño de lino y guardalo en un frasco de vidrio oscuro.",
@@ -4534,15 +5085,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Sangre de drago",
-            "la": "Croton lechleri"
+            "la": "Croton lechleri",
+            "quantity": "50 gramos"
           },
           {
             "es": "Menta",
-            "la": "Mentha x piperita"
+            "la": "Mentha x piperita",
+            "quantity": "50 gramos"
           },
           {
             "es": "Glicerina",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "500 ml"
           }
         ],
         "instructions": "Dejá macerar sangre de drago y menta en glicerina durante 7 días en un lugar oscuro y fresco. Agitalo todos los días. Filtralo bien con un paño de lino y guardalo en un frasco de vidrio oscuro.",
@@ -4558,15 +5112,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Consuelda",
-            "la": "Symphytum officinale"
+            "la": "Symphytum officinale",
+            "quantity": "15 gramos"
           },
           {
             "es": "Hamamelis",
-            "la": "Hamamelis virginiana"
+            "la": "Hamamelis virginiana",
+            "quantity": "15 gramos"
           },
           {
             "es": "Agua destilada",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "1 vaso / 250 ml"
           }
         ],
         "instructions": "Dejá macerar consuelda y hamamelis en agua destilada durante 18 días en un lugar oscuro y fresco. Agitalo todos los días. Filtralo bien con un paño de lino y guardalo en un frasco de vidrio oscuro.",
@@ -4582,15 +5139,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Árnica",
-            "la": "Arnica montana"
+            "la": "Arnica montana",
+            "quantity": "15 gramos"
           },
           {
             "es": "Consuelda",
-            "la": "Symphytum officinale"
+            "la": "Symphytum officinale",
+            "quantity": "15 gramos"
           },
           {
             "es": "Aceite de oliva",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "1 vaso / 250 ml"
           }
         ],
         "instructions": "Dejá macerar árnica y consuelda en aceite de oliva durante 13 días en un lugar oscuro y fresco. Agitalo todos los días. Filtralo bien con un paño de lino y guardalo en un frasco de vidrio oscuro.",
@@ -4606,15 +5166,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Árnica",
-            "la": "Arnica montana"
+            "la": "Arnica montana",
+            "quantity": "50 gramos"
           },
           {
             "es": "Hamamelis",
-            "la": "Hamamelis virginiana"
+            "la": "Hamamelis virginiana",
+            "quantity": "50 gramos"
           },
           {
             "es": "Aceite de oliva",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "500 ml"
           }
         ],
         "instructions": "Dejá macerar árnica y hamamelis en aceite de oliva durante 26 días en un lugar oscuro y fresco. Agitalo todos los días. Filtralo bien con un paño de lino y guardalo en un frasco de vidrio oscuro.",
@@ -4630,15 +5193,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Arcilla verde",
-            "la": "Illite"
+            "la": "Illite",
+            "quantity": "2 puñados grandes"
           },
           {
             "es": "Consuelda",
-            "la": "Symphytum officinale"
+            "la": "Symphytum officinale",
+            "quantity": "2 puñados grandes"
           },
           {
             "es": "Glicerina",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "Cantidad necesaria"
           }
         ],
         "instructions": "Dejá macerar arcilla verde y consuelda en glicerina durante 20 días en un lugar oscuro y fresco. Agitalo todos los días. Filtralo bien con un paño de lino y guardalo en un frasco de vidrio oscuro.",
@@ -4654,15 +5220,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Hamamelis",
-            "la": "Hamamelis virginiana"
+            "la": "Hamamelis virginiana",
+            "quantity": "15 gramos"
           },
           {
             "es": "Carbón vegetal",
-            "la": "Carbo activatus"
+            "la": "Carbo activatus",
+            "quantity": "15 gramos"
           },
           {
             "es": "Glicerina",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "1 vaso / 250 ml"
           }
         ],
         "instructions": "Dejá macerar hamamelis y carbón vegetal en glicerina durante 14 días en un lugar oscuro y fresco. Agitalo todos los días. Filtralo bien con un paño de lino y guardalo en un frasco de vidrio oscuro.",
@@ -4678,15 +5247,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Hamamelis",
-            "la": "Hamamelis virginiana"
+            "la": "Hamamelis virginiana",
+            "quantity": "15 gramos"
           },
           {
             "es": "Clavo",
-            "la": "Syzygium aromaticum"
+            "la": "Syzygium aromaticum",
+            "quantity": "15 gramos"
           },
           {
             "es": "Alcohol de 96°",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "1 vaso / 250 ml"
           }
         ],
         "instructions": "Dejá macerar hamamelis y clavo en alcohol de 96° durante 21 días en un lugar oscuro y fresco. Agitalo todos los días. Filtralo bien con un paño de lino y guardalo en un frasco de vidrio oscuro.",
@@ -4702,15 +5274,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Clavo",
-            "la": "Syzygium aromaticum"
+            "la": "Syzygium aromaticum",
+            "quantity": "15 gramos"
           },
           {
             "es": "Arcilla verde",
-            "la": "Illite"
+            "la": "Illite",
+            "quantity": "15 gramos"
           },
           {
             "es": "Glicerina",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "1 vaso / 250 ml"
           }
         ],
         "instructions": "Derretí glicerina al baño maría. Agregá los extractos de clavo y arcilla verde. Revolvé constante con espátula de madera hasta que quede todo parejo y dejá enfriar en tarro de cristal.",
@@ -4726,15 +5301,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Sangre de drago",
-            "la": "Croton lechleri"
+            "la": "Croton lechleri",
+            "quantity": "15 gramos"
           },
           {
             "es": "Árnica",
-            "la": "Arnica montana"
+            "la": "Arnica montana",
+            "quantity": "15 gramos"
           },
           {
             "es": "Agua destilada",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "1 vaso / 250 ml"
           }
         ],
         "instructions": "Dejá macerar sangre de drago y árnica en agua destilada durante 23 días en un lugar oscuro y fresco. Agitalo todos los días. Filtralo bien con un paño de lino y guardalo en un frasco de vidrio oscuro.",
@@ -4750,15 +5328,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Clavo",
-            "la": "Syzygium aromaticum"
+            "la": "Syzygium aromaticum",
+            "quantity": "50 gramos"
           },
           {
             "es": "Árnica",
-            "la": "Arnica montana"
+            "la": "Arnica montana",
+            "quantity": "50 gramos"
           },
           {
             "es": "Cera de abejas",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "500 ml"
           }
         ],
         "instructions": "Dejá macerar clavo y árnica en cera de abejas durante 19 días en un lugar oscuro y fresco. Agitalo todos los días. Filtralo bien con un paño de lino y guardalo en un frasco de vidrio oscuro.",
@@ -4774,15 +5355,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Sangre de drago",
-            "la": "Croton lechleri"
+            "la": "Croton lechleri",
+            "quantity": "15 gramos"
           },
           {
             "es": "Carbón vegetal",
-            "la": "Carbo activatus"
+            "la": "Carbo activatus",
+            "quantity": "15 gramos"
           },
           {
             "es": "Alcohol de 96°",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "1 vaso / 250 ml"
           }
         ],
         "instructions": "Dejá macerar sangre de drago y carbón vegetal en alcohol de 96° durante 8 días en un lugar oscuro y fresco. Agitalo todos los días. Filtralo bien con un paño de lino y guardalo en un frasco de vidrio oscuro.",
@@ -4798,15 +5382,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Clavo",
-            "la": "Syzygium aromaticum"
+            "la": "Syzygium aromaticum",
+            "quantity": "50 gramos"
           },
           {
             "es": "Sangre de drago",
-            "la": "Croton lechleri"
+            "la": "Croton lechleri",
+            "quantity": "50 gramos"
           },
           {
             "es": "Glicerina",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "500 ml"
           }
         ],
         "instructions": "Dejá macerar clavo y sangre de drago en glicerina durante 16 días en un lugar oscuro y fresco. Agitalo todos los días. Filtralo bien con un paño de lino y guardalo en un frasco de vidrio oscuro.",
@@ -4822,15 +5409,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Arcilla verde",
-            "la": "Illite"
+            "la": "Illite",
+            "quantity": "50 gramos"
           },
           {
             "es": "Propóleo",
-            "la": "Propolis"
+            "la": "Propolis",
+            "quantity": "50 gramos"
           },
           {
             "es": "Agua destilada",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "500 ml"
           }
         ],
         "instructions": "Dejá macerar arcilla verde y propóleo en agua destilada durante 9 días en un lugar oscuro y fresco. Agitalo todos los días. Filtralo bien con un paño de lino y guardalo en un frasco de vidrio oscuro.",
@@ -4846,15 +5436,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Llantén",
-            "la": "Plantago major"
+            "la": "Plantago major",
+            "quantity": "15 gramos"
           },
           {
             "es": "Menta",
-            "la": "Mentha x piperita"
+            "la": "Mentha x piperita",
+            "quantity": "15 gramos"
           },
           {
             "es": "Aceite de oliva",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "1 vaso / 250 ml"
           }
         ],
         "instructions": "Dejá macerar llantén y menta en aceite de oliva durante 11 días en un lugar oscuro y fresco. Agitalo todos los días. Filtralo bien con un paño de lino y guardalo en un frasco de vidrio oscuro.",
@@ -4870,15 +5463,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Menta",
-            "la": "Mentha x piperita"
+            "la": "Mentha x piperita",
+            "quantity": "2 puñados grandes"
           },
           {
             "es": "Carbón vegetal",
-            "la": "Carbo activatus"
+            "la": "Carbo activatus",
+            "quantity": "2 puñados grandes"
           },
           {
             "es": "Glicerina",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "Cantidad necesaria"
           }
         ],
         "instructions": "Dejá macerar menta y carbón vegetal en glicerina durante 22 días en un lugar oscuro y fresco. Agitalo todos los días. Filtralo bien con un paño de lino y guardalo en un frasco de vidrio oscuro.",
@@ -4894,15 +5490,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Menta",
-            "la": "Mentha x piperita"
+            "la": "Mentha x piperita",
+            "quantity": "15 gramos"
           },
           {
             "es": "Llantén",
-            "la": "Plantago major"
+            "la": "Plantago major",
+            "quantity": "15 gramos"
           },
           {
             "es": "Alcohol de 96°",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "1 vaso / 250 ml"
           }
         ],
         "instructions": "Dejá macerar menta y llantén en alcohol de 96° durante 10 días en un lugar oscuro y fresco. Agitalo todos los días. Filtralo bien con un paño de lino y guardalo en un frasco de vidrio oscuro.",
@@ -4918,15 +5517,18 @@ export const categories: Category[] = [
         "ingredients": [
           {
             "es": "Árnica",
-            "la": "Arnica montana"
+            "la": "Arnica montana",
+            "quantity": "2 puñados grandes"
           },
           {
             "es": "Consuelda",
-            "la": "Symphytum officinale"
+            "la": "Symphytum officinale",
+            "quantity": "2 puñados grandes"
           },
           {
             "es": "Aceite de oliva",
-            "la": "Base excipiente"
+            "la": "Base excipiente",
+            "quantity": "Cantidad necesaria"
           }
         ],
         "instructions": "Dejá macerar árnica y consuelda en aceite de oliva durante 14 días en un lugar oscuro y fresco. Agitalo todos los días. Filtralo bien con un paño de lino y guardalo en un frasco de vidrio oscuro.",

@@ -323,9 +323,16 @@ export function RecipeModal({ recipe, onClose, rating, onRate, isFavorite, onTog
                          <ul className="space-y-3 md:space-y-4">
                             {recipe.ingredients.map((ing, i) => (
                                 <li key={i} className="flex flex-col border-b border-[#8a6a4b]/20 pb-3">
-                                   <div className="flex items-baseline gap-2">
-                                     <span className="font-headline font-bold text-[#2a1308] text-[18px] md:text-xl">{ing.es}</span>
-                                     <span className="font-accent italic text-[#8a6a4b] text-[13px] md:text-sm">/ {ing.la}</span>
+                                   <div className="flex items-baseline justify-between gap-2">
+                                     <div className="flex items-baseline gap-2">
+                                       <span className="font-headline font-bold text-[#2a1308] text-[18px] md:text-xl">{ing.es}</span>
+                                       <span className="font-accent italic text-[#8a6a4b] text-[13px] md:text-sm">/ {ing.la}</span>
+                                     </div>
+                                     {ing.quantity && (
+                                       <span className="font-body text-[#4a2e15] font-medium text-[14px] md:text-base text-right">
+                                         {ing.quantity}
+                                       </span>
+                                     )}
                                    </div>
                                 </li>
                             ))}
