@@ -243,52 +243,52 @@ export function GuruAI({ onSelectRecipe }: { onSelectRecipe?: (recipe: Recipe) =
 
   if (!hasGuruAccess) {
     return (
-      <div className="max-w-4xl w-full h-full overflow-y-auto mx-auto px-4 py-12 md:py-24 text-center">
-        <Sparkles className="w-16 h-16 text-primary mx-auto mb-6 drop-shadow-[0_0_15px_rgba(214,199,175,0.3)]" />
-        <h2 className="font-headline text-4xl md:text-5xl text-primary mb-4 text-shadow-glow">
+      <div className="max-w-4xl w-full flex-1 min-h-0 overflow-y-auto mx-auto px-4 py-2 md:py-16 text-center flex flex-col justify-center">
+        <Sparkles className="w-8 h-8 md:w-16 md:h-16 text-primary mx-auto mb-2 md:mb-6 drop-shadow-[0_0_15px_rgba(214,199,175,0.3)] shrink-0" />
+        <h2 className="font-headline text-2xl md:text-5xl text-primary mb-2 md:mb-4 text-shadow-glow shrink-0">
           Consultorio Natural
         </h2>
-        <p className="text-xl text-secondary mb-8 max-w-2xl mx-auto leading-relaxed">
-          Un espacio privado para resolver todas tus dudas sobre plantas medicinales, recetas de la abuela y cuidados naturales. Tu paquete de acceso te abre las puertas al Consultorio Botánico y además a la <strong>Tribu</strong>: nuestra comunidad activa de medicina natural donde encontrarás a otros usuarios.
+        <p className="text-xs md:text-xl text-secondary mb-3 md:mb-8 font-medium max-w-2xl mx-auto leading-relaxed shrink-0">
+          Un espacio privado para resolver dudas sobre plantas medicinales. Accede al Consultorio Botánico y a la <strong>Tribu</strong>.
         </p>
         
-        <div className="glass-panel ghost-border p-8 rounded-2xl max-w-lg mx-auto transform hover:scale-[1.02] transition-transform duration-300">
-          <div className="flex items-center justify-center w-12 h-12 bg-primary/20 rounded-full mx-auto mb-4 border border-primary/30 shadow-[0_0_10px_rgba(214,199,175,0.2)]">
-            <Lock className="w-6 h-6 text-primary" />
+        <div className="glass-panel ghost-border p-3 md:p-8 rounded-2xl max-w-lg mx-auto w-full transform hover:scale-[1.02] transition-transform duration-300 shrink-0">
+          <div className="flex items-center justify-center w-8 h-8 md:w-12 h-12 bg-primary/20 rounded-full mx-auto mb-2 md:mb-4 border border-primary/30 shadow-[0_0_10px_rgba(214,199,175,0.2)]">
+            <Lock className="w-4 h-4 md:w-6 h-6 text-primary" />
           </div>
-          <h3 className="text-2xl font-bold text-secondary mb-2">Acceso Ilimitado a Consultas</h3>
-          <p className="text-tertiary mb-6">
-            Realiza todas las consultas que necesites en cualquier momento. Pagas una sola vez y lo usas para siempre, sin límites.
+          <h3 className="text-base md:text-2xl font-bold text-secondary mb-1 md:mb-2">Acceso Ilimitado</h3>
+          <p className="text-[11px] md:text-base text-tertiary mb-3 md:mb-6 leading-tight md:leading-normal">
+            Realiza todas las consultas que necesites en cualquier momento. Pagas una sola vez y lo usas para siempre.
           </p>
-          <div className="text-3xl font-bold text-accent drop-shadow-sm mb-6">
-             $24.990 <span className="text-sm font-normal text-tertiary">ARS</span>
+          <div className="text-xl md:text-3xl font-bold text-accent drop-shadow-sm mb-3 md:mb-6">
+             $24.990 <span className="text-[10px] md:text-sm font-normal text-tertiary">ARS</span>
           </div>
           <button 
             onClick={purchaseGuruAccess}
-            className="w-full bg-gradient-to-r from-[#d6c7af] to-[#c2b092] text-[#2c241b] hover:from-[#c2b092] hover:to-[#a99473] font-bold py-4 px-6 rounded-xl transition-all shadow-lg hover:shadow-xl text-lg flex items-center justify-center gap-2 mb-4"
+            className="w-full bg-gradient-to-r from-[#d6c7af] to-[#c2b092] text-[#2c241b] hover:from-[#c2b092] hover:to-[#a99473] font-bold py-2 md:py-4 px-4 md:px-6 rounded-xl transition-all shadow-lg hover:shadow-xl text-xs md:text-lg flex items-center justify-center gap-2 mb-3 md:mb-4"
           >
-            <BookOpen className="w-5 h-5" /> Desbloquear Sabiduría Ancestral
+            <BookOpen className="w-3 h-3 md:w-5 h-5" /> Desbloquear Sabiduría
           </button>
           
-          <div className="pt-4 border-t border-white/5">
-             <p className="text-sm text-tertiary mb-3">¿Ya pagaste con MercadoPago u otro medio? Ingresa tu código:</p>
+          <div className="pt-2 md:pt-4 border-t border-white/5">
+             <p className="text-[10px] md:text-xs text-tertiary mb-1 md:mb-2 text-left">¿Ya pagaste con MercadoPago? Ingresa tu código:</p>
              <div className="flex gap-2">
                 <input 
                   type="text" 
                   value={unlockCode}
                   onChange={e => setUnlockCode(e.target.value)}
                   placeholder="GURU-XXXX"
-                  className="flex-1 bg-[#3d3326]/50 border border-[#d6c7af]/20 rounded-xl px-4 py-2 text-secondary placeholder-tertiary focus:outline-none focus:border-primary/50 transition-colors uppercase"
+                  className="flex-1 min-w-0 bg-[#3d3326]/50 border border-[#d6c7af]/20 rounded-xl px-2 py-1 md:px-4 md:py-2 text-xs md:text-sm text-secondary placeholder-tertiary focus:outline-none focus:border-primary/50 transition-colors uppercase"
                 />
                 <button 
                   onClick={handleUnlockCode}
                   disabled={isUnlocking || !unlockCode.trim()}
-                  className="bg-primary/20 hover:bg-primary/30 text-primary font-bold py-2 px-4 rounded-xl transition-colors shrink-0 disabled:opacity-50"
+                  className="bg-primary/20 hover:bg-primary/30 text-primary font-bold py-1 px-3 md:py-2 md:px-4 rounded-xl transition-colors shrink-0 disabled:opacity-50 text-[11px] md:text-base"
                 >
                   {isUnlocking ? '...' : 'Activar'}
                 </button>
              </div>
-             {unlockError && <p className="text-red-400 text-sm mt-2">{unlockError}</p>}
+             {unlockError && <p className="text-red-400 text-xs mt-1 md:mt-2">{unlockError}</p>}
           </div>
         </div>
       </div>

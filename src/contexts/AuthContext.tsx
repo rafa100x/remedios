@@ -282,62 +282,40 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const simulatePurchase = async (bookId: string) => {
     if (!user) return;
     try {
-        const res = await fetch('/api/create-preference', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ 
-                bookId: bookId, 
-                title: "Libro Premium", 
-                price: "9990",
-                userId: user.uid
-            })
+        const intentRef = doc(collection(db, 'purchaseIntents'));
+        await setDoc(intentRef, {
+            userId: user.uid,
+            email: user.email,
+            bookId: bookId,
+            status: 'pending',
+            createdAt: serverTimestamp()
         });
         
-        if (!res.ok) {
-           const errorData = await res.json().catch(() => ({}));
-           throw new Error(errorData.error || 'Network response was not ok');
-        }
-        
-        const data = await res.json();
-        if (data.init_point) {
-            window.location.href = data.init_point;
-        } else {
-            throw new Error("No se pudo generar el link de pago.");
-        }
+        alert("Hemos registrado tu intención de compra. Serás redirigido a Mercado Pago para abonar.");
+        window.location.href = 'https://mpago.la/2axbeHK';
     } catch (e: any) {
       console.error('Error in purchase:', e);
-      alert("Error al iniciar la compra: " + e.message + ". Verifica que tu Token de Mercado Pago esté configurado en el panel lateral.");
+      alert("Error al iniciar la compra: " + e.message);
     }
   };
 
   const purchaseGuruAccess = async () => {
     if (!user) return;
     try {
-        const res = await fetch('/api/create-preference', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ 
-                bookId: "guru", 
-                title: "Gurú Ancestral", 
-                price: "24990",
-                userId: user.uid
-            })
+        const intentRef = doc(collection(db, 'purchaseIntents'));
+        await setDoc(intentRef, {
+            userId: user.uid,
+            email: user.email,
+            bookId: 'guru',
+            status: 'pending',
+            createdAt: serverTimestamp()
         });
         
-        if (!res.ok) {
-           const errorData = await res.json().catch(() => ({}));
-           throw new Error(errorData.error || 'Network response was not ok');
-        }
-        
-        const data = await res.json();
-        if (data.init_point) {
-            window.location.href = data.init_point;
-        } else {
-            throw new Error("No se pudo generar el link de pago.");
-        }
+        alert("Hemos registrado tu intención de compra. Serás redirigido a Mercado Pago para abonar.");
+        window.location.href = 'https://mpago.la/2axbeHK';
     } catch (e: any) {
       console.error('Error purchasing Guru:', e);
-      alert("Error al iniciar la compra: " + e.message + ". Verifica que tu Token de Mercado Pago esté configurado en el panel lateral.");
+      alert("Error al iniciar la compra: " + e.message);
     }
   };
 
