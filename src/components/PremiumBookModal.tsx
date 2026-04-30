@@ -47,7 +47,7 @@ export function PaymentModal({ book, onClose, onRead }: PaymentModalProps) {
                     
                     <button 
                         onClick={onClose}
-                        className="absolute top-4 right-4 z-20 text-[#8a6a4b] hover:text-[#5c3716] transition-colors bg-[#f4ead0]/80 rounded-full p-1"
+                        className="absolute top-[calc(env(safe-area-inset-top,0px)+16px)] right-4 z-20 text-[#8a6a4b] hover:text-[#5c3716] transition-colors bg-[#f4ead0]/80 rounded-full p-1"
                     >
                         <X className="w-6 h-6" />
                     </button>

@@ -77,7 +77,7 @@ export function TutorialModal({ onClose }: TutorialModalProps) {
 
         <button 
           onClick={onClose}
-          className="absolute top-4 right-4 text-[#8a6a4b] hover:text-[#d4af37] transition-colors"
+          className="absolute top-[calc(env(safe-area-inset-top,0px)+16px)] right-4 text-[#8a6a4b] hover:text-[#d4af37] transition-colors"
         >
           <X className="w-5 h-5" />
         </button>

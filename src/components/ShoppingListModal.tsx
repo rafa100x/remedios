@@ -163,7 +163,7 @@ export function ShoppingListModal({ onClose, recipes, onClear }: ShoppingListMod
           className="relative w-full h-[100dvh] md:h-auto md:max-h-[92vh] max-w-2xl shadow-2xl md:rounded-3xl overflow-hidden bg-[#d8ceaa] flex flex-col"
         >
           {/* Top Actions */}
-          <div className="absolute top-4 right-4 md:top-6 md:right-6 z-50 flex items-center justify-end gap-3 w-full pointer-events-none">
+          <div className="absolute top-[calc(env(safe-area-inset-top,0px)+16px)] right-4 md:top-6 md:right-6 z-50 flex items-center justify-end gap-3 w-full pointer-events-none">
              {recipes.length > 0 && (
                  <>
                     {onClear && (

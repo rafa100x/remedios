@@ -56,7 +56,7 @@ export function DownloadsModal({ onClose }: DownloadsModalProps) {
              {selectedPdf && (
                <button 
                  onClick={() => setSelectedPdf(null)}
-                 className="absolute top-4 left-4 z-20 px-3 py-2 rounded-lg bg-black/20 flex items-center gap-2 hover:bg-black/40 transition-colors"
+                 className="absolute top-[calc(env(safe-area-inset-top,0px)+16px)] left-4 z-20 px-3 py-2 rounded-lg bg-black/20 flex items-center gap-2 hover:bg-black/40 transition-colors"
                >
                  <ArrowLeft className="w-5 h-5 text-[#d4af37]" />
                  <span className="hidden sm:inline font-bold">Volver</span>
@@ -65,7 +65,7 @@ export function DownloadsModal({ onClose }: DownloadsModalProps) {
 
              <button 
                onClick={onClose}
-               className="absolute top-4 right-4 z-20 w-10 h-10 rounded-full bg-black/20 flex items-center justify-center hover:bg-black/40 transition-colors"
+               className="absolute top-[calc(env(safe-area-inset-top,0px)+16px)] right-4 z-20 w-10 h-10 rounded-full bg-black/20 flex items-center justify-center hover:bg-black/40 transition-colors"
              >
                <X className="w-6 h-6 text-[#d4af37]" />
              </button>

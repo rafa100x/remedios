@@ -170,7 +170,7 @@ export function RecipeModal({ recipe, onClose, rating, onRate, isFavorite, onTog
           className="relative w-full h-full md:h-[92vh] max-w-6xl shadow-2xl md:rounded-lg overflow-hidden bg-[#fdfaf2] flex flex-col"
         >
           {/* Top Actions - Floating on top of the scrollable content */}
-          <div className="absolute top-4 right-4 md:top-8 md:right-8 z-50 flex items-center gap-2 md:gap-3">
+          <div className="absolute top-[calc(env(safe-area-inset-top,0px)+16px)] right-4 md:top-8 md:right-8 z-50 flex items-center gap-2 md:gap-3">
              <button
                 onClick={handleShareWhatsApp}
                 className="bg-[#25D366]/90 backdrop-blur aspect-square border border-[#25D366]/30 text-white hover:bg-[#128C7E] w-10 h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center transition-all shadow-md"
