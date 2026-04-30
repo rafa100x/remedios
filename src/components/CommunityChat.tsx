@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { collection, query, orderBy, limit, onSnapshot, addDoc, serverTimestamp } from 'firebase/firestore';
 import { db } from '../lib/firebase';
@@ -28,6 +28,46 @@ export function CommunityChat() {
   const [replyingTo, setReplyingTo] = useState<ChatMessage | null>(null);
   const [isGeneratingResponse, setIsGeneratingResponse] = useState<string | null>(null);
   const endRef = useRef<HTMLDivElement>(null);
+
+  const [mentionSearch, setMentionSearch] = useState<string | null>(null);
+
+  const activeUsers = useMemo(() => {
+    const active = new Set<string>();
+    const minutesAgo = new Date(Date.now() - 15 * 60 * 1000);
+    
+    messages.forEach(msg => {
+      if (msg.createdAt?.toDate) {
+        if (msg.createdAt.toDate() > minutesAgo) {
+          active.add(msg.uid);
+        }
+      } else if (msg.createdAt) {
+        active.add(msg.uid);
+      }
+    });
+    return active;
+  }, [messages]);
+
+  const uniqueUsers = useMemo(() => {
+    const map = new Map<string, string>();
+    messages.forEach(msg => {
+      if (msg.userName) map.set(msg.userName, msg.uid);
+    });
+    return Array.from(map.keys());
+  }, [messages]);
+
+  const filteredUsers = mentionSearch !== null 
+    ? uniqueUsers.filter(u => u.toLowerCase().replace(/\s+/g, '').startsWith(mentionSearch))
+    : [];
+
+  const renderMessageText = (text: string) => {
+    const parts = text.split(/(@\S+)/g);
+    return parts.map((part, i) => {
+       if (part.startsWith('@')) {
+         return <span key={i} className="text-[#556b3e] font-bold bg-[#556b3e]/10 px-1 rounded-sm">{part}</span>;
+       }
+       return <React.Fragment key={i}>{part}</React.Fragment>;
+    });
+  };
 
   const generateSimulatedResponse = async (msgToReply: ChatMessage) => {
     if (!isAdmin || !user) return;
@@ -123,6 +163,7 @@ Responde directo al punto en 1 o 2 líneas como mucho (tipo mensaje de móvil).
       });
       setNewMessage('');
       setReplyingTo(null);
+      setMentionSearch(null);
     } catch (err: any) {
       console.error("Failed to send message", err);
       alert("Error al enviar mensaje: " + (err.message || String(err)));
@@ -154,12 +195,18 @@ Responde directo al punto en 1 o 2 líneas como mucho (tipo mensaje de móvil).
         {messages.map((msg, idx) => {
           const isMe = msg.uid === user?.uid;
           const showName = !isMe && (idx === 0 || messages[idx - 1].uid !== msg.uid);
+          const isOnline = activeUsers.has(msg.uid);
           
           return (
              <div key={msg.id || idx} className={`flex gap-2 ${isMe ? 'flex-row-reverse' : 'flex-row'} items-end`}>
                {!isMe && (
-                 <div className="w-8 h-8 rounded-full overflow-hidden shrink-0 border border-[#d6c7af] bg-[#f8f6f0] flex items-center justify-center font-bold text-[#8a3c1f] shadow-sm text-sm">
+                 <div className="w-8 h-8 rounded-full overflow-visible shrink-0 border border-[#d6c7af] bg-[#f8f6f0] flex items-center justify-center font-bold text-[#8a3c1f] shadow-sm text-sm relative">
                     {msg.userName ? msg.userName.charAt(0).toUpperCase() : '?'}
+                    {isOnline && (
+                      <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-500 rounded-full border-2 border-[#fcfbf9]" title="En línea">
+                         <div className="w-full h-full bg-green-400 rounded-full animate-ping opacity-75"></div>
+                      </div>
+                    )}
                  </div>
                )}
                <div className={`flex flex-col ${isMe ? 'items-end' : 'items-start'} max-w-[85%] md:max-w-[70%]`}>
@@ -177,7 +224,7 @@ Responde directo al punto en 1 o 2 líneas como mucho (tipo mensaje de móvil).
                        <span className="text-xs line-clamp-2 text-[#201004]/70 italic">{msg.replyToText}</span>
                      </div>
                    )}
-                   <p className="whitespace-pre-wrap leading-relaxed">{msg.text}</p>
+                   <p className="whitespace-pre-wrap leading-relaxed">{renderMessageText(msg.text)}</p>
                    
                    {/* TIME AND ACTIONS */}
                    <div className="flex items-center justify-end gap-2 mt-1">
@@ -217,6 +264,34 @@ Responde directo al punto en 1 o 2 líneas como mucho (tipo mensaje de móvil).
       {/* INPUT AREA */}
       <div className="shrink-0 bg-[#f8f6f0] border-t border-[#e5dfbe] p-2 md:p-3 relative z-20">
          <AnimatePresence>
+           {mentionSearch !== null && filteredUsers.length > 0 && (
+             <motion.div 
+               initial={{ opacity: 0, y: 10 }}
+               animate={{ opacity: 1, y: 0 }}
+               exit={{ opacity: 0, y: 10 }}
+               className="absolute bottom-full left-0 mb-2 w-full max-w-sm ml-2 md:ml-4 bg-white border border-[#e5dfbe] shadow-[0_4px_20px_rgba(0,0,0,0.1)] rounded-xl overflow-hidden z-30"
+             >
+               {filteredUsers.slice(0, 5).map(u => (
+                 <button
+                   key={u}
+                   onClick={() => {
+                     const lastAt = newMessage.lastIndexOf('@');
+                     const userMention = u.replace(/\s+/g, '');
+                     const newText = newMessage.substring(0, lastAt) + '@' + userMention + ' ';
+                     setNewMessage(newText);
+                     setMentionSearch(null);
+                     document.getElementById('tribuMsgInput')?.focus();
+                   }}
+                   className="w-full text-left px-4 py-2 hover:bg-[#f8f6f0] text-sm text-[#201004] font-medium border-b border-[#f8f6f0] last:border-0"
+                 >
+                   {u}
+                 </button>
+               ))}
+             </motion.div>
+           )}
+         </AnimatePresence>
+
+         <AnimatePresence>
            {replyingTo && (
              <motion.div 
                initial={{ opacity: 0, y: 10, height: 0 }}
@@ -254,7 +329,16 @@ Responde directo al punto en 1 o 2 líneas como mucho (tipo mensaje de móvil).
                  className="w-full bg-transparent text-[#201004] px-4 py-3 md:py-3.5 focus:outline-none resize-none max-h-32 placeholder:text-[#8a6a4b]/60 font-medium text-sm md:text-base leading-tight"
                  placeholder="Escribe un mensaje a la tribu..."
                  value={newMessage}
-                 onChange={(e) => setNewMessage(e.target.value)}
+                 onChange={(e) => {
+                    const val = e.target.value;
+                    setNewMessage(val);
+                    const match = val.match(/@(\S*)$/);
+                    if (match) {
+                        setMentionSearch(match[1].toLowerCase());
+                    } else {
+                        setMentionSearch(null);
+                    }
+                 }}
                  onKeyDown={(e) => {
                     if (e.key === 'Enter' && !e.shiftKey) {
                         e.preventDefault();

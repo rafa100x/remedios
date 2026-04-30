@@ -21,6 +21,7 @@ import { AdminDashboard } from './components/AdminDashboard';
 import { GuruAI } from './components/GuruAI';
 import { CommunityChat } from './components/CommunityChat';
 import { TutorialModal } from './components/TutorialModal';
+import { InstallPrompt } from './components/InstallPrompt';
 
 export default function App() {
   const { user } = useAuth();
@@ -326,6 +327,8 @@ export default function App() {
       {showTutorial && (
         <TutorialModal onClose={handleCloseTutorial} />
       )}
+
+      <InstallPrompt />
     </div>
   );
 }
