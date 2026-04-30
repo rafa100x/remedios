@@ -1,5 +1,7 @@
-import { motion } from 'motion/react';
+import { motion, AnimatePresence } from 'motion/react';
 import { Recipe } from '../data/recipes';
+import { useState, useEffect, useRef } from 'react';
+import { Leaf } from 'lucide-react';
 
 interface RecipeListProps {
   recipes: Recipe[];
@@ -8,7 +10,82 @@ interface RecipeListProps {
   toggleFavorite: (id: number) => void;
 }
 
+function RecipeImage({ src, alt, fallbackSrc, onImageLoaded, isPriority }: { src: string, alt: string, fallbackSrc: string, onImageLoaded?: () => void, isPriority: boolean }) {
+  const [hasLoaded, setHasLoaded] = useState(false);
+  const imgRef = useRef<HTMLImageElement>(null);
+  const notifiedRef = useRef(false);
+
+  useEffect(() => {
+    if (imgRef.current && imgRef.current.complete) {
+      if (!hasLoaded) {
+        setHasLoaded(true);
+      }
+      if (!notifiedRef.current) {
+        notifiedRef.current = true;
+        if (onImageLoaded) onImageLoaded();
+      }
+    }
+  }, [src]);
+
+  return (
+    <img 
+      ref={imgRef}
+      loading={isPriority ? "eager" : "lazy"}
+      src={src} 
+      alt={alt} 
+      className={`w-[95%] h-[95%] object-contain drop-shadow-xl transition-all duration-500 group-hover:scale-105 relative z-10 ${hasLoaded ? 'opacity-100' : 'opacity-0'}`}
+      onLoad={() => {
+        if (!hasLoaded) {
+          setHasLoaded(true);
+        }
+        if (!notifiedRef.current) {
+          notifiedRef.current = true;
+          if (onImageLoaded) onImageLoaded();
+        }
+      }}
+      onError={(e) => {
+        if ((e.target as HTMLImageElement).src !== fallbackSrc) {
+           (e.target as HTMLImageElement).src = fallbackSrc;
+        }
+        if (!hasLoaded) {
+          setHasLoaded(true);
+        }
+        if (!notifiedRef.current) {
+          notifiedRef.current = true;
+          if (onImageLoaded) onImageLoaded();
+        }
+      }}
+    />
+  );
+}
+
 export function RecipeList({ recipes, onSelectRecipe, favorites, toggleFavorite }: RecipeListProps) {
+  const [isPreparing, setIsPreparing] = useState(true);
+  const [loadedCount, setLoadedCount] = useState(0);
+
+  const waitThreshold = recipes.length;
+  const recipesKey = recipes.map(r => r.id).join('-');
+
+  useEffect(() => {
+    if (recipes.length === 0) {
+      setIsPreparing(false);
+      return;
+    }
+    
+    setIsPreparing(true);
+    setLoadedCount(0);
+
+    // If it takes more than 5 seconds, fallback
+    const timer = setTimeout(() => setIsPreparing(false), 5000);
+    return () => clearTimeout(timer);
+  }, [recipesKey]);
+
+  useEffect(() => {
+    if (waitThreshold > 0 && loadedCount >= waitThreshold) {
+      setIsPreparing(false);
+    }
+  }, [loadedCount, waitThreshold]);
+
   const getShortPurpose = (purpose: string) => {
     const lower = purpose.toLowerCase();
     if (lower.includes('tos') || lower.includes('mucosidad') || lower.includes('respiratoria') || lower.includes('nasal') || lower.includes('infecc') || lower.includes('garganta') || lower.includes('bronqui')) return 'Vías Respiratorias';
@@ -25,20 +102,41 @@ export function RecipeList({ recipes, onSelectRecipe, favorites, toggleFavorite 
   };
 
   return (
-    <div className="relative pt-8 pb-24">
+    <div className="relative pt-8 pb-24 min-h-[400px]">
+      <AnimatePresence>
+        {isPreparing && (
+          <motion.div 
+            initial={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.5 }}
+            className="absolute inset-0 z-50 flex flex-col items-center justify-center bg-[#f8f6f0]/90 backdrop-blur-sm rounded-xl border border-[#d6c7af]"
+          >
+            <div className="flex flex-col items-center">
+              <Leaf className="w-16 h-16 text-[#8a3c1f] opacity-80 animate-pulse mb-6 drop-shadow-sm" />
+              <div className="flex items-center gap-2 text-[#8a3c1f] font-accent italic text-2xl tracking-wider">
+                <div className="w-5 h-5 border-2 border-[#8a3c1f] border-t-transparent rounded-full animate-spin"></div>
+                Preparando tus remedios...
+              </div>
+              <p className="text-[#8a3c1f] font-body text-sm mt-3 opacity-70 tracking-wide">Mezclando hierbas y extractos</p>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* Shelf background pattern */}
       <div className="absolute inset-0 bg-[#e5dfbe] rounded-xl shadow-[inset_0_10px_40px_rgba(138,60,31,0.1)] border border-[#d6c7af] pointer-events-none overflow-hidden z-0">
         <div className="absolute top-0 w-full h-10 bg-gradient-to-b from-[#d6c7af] to-transparent bg-[url('https://www.transparenttextures.com/patterns/wood-pattern.png')] opacity-60"></div>
         <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/wood-pattern.png')] opacity-30 mix-blend-overlay"></div>
       </div>
 
-      <div className="relative z-10 flex flex-wrap justify-center gap-x-4 gap-y-16 px-4 py-12 pb-24">
+      <div className={`relative z-10 flex flex-wrap justify-center gap-x-4 gap-y-16 px-4 py-12 pb-24 transition-opacity duration-500 ${isPreparing ? 'opacity-0' : 'opacity-100'}`}>
         {recipes.length > 0 ? (
           recipes.map((recipe, index) => {
             const isFav = favorites.includes(recipe.id);
+            const isPriority = true;
             return (
               <motion.div
-                key={recipe.id}
+                key={`${recipe.id}-${recipesKey}`}
                 initial={{ opacity: 0, scale: 0.9, y: 20 }}
                 animate={{ opacity: 1, scale: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: index * 0.03 }}
@@ -50,14 +148,12 @@ export function RecipeList({ recipes, onSelectRecipe, favorites, toggleFavorite 
                   
                   {/* Photo Area with dark background matching the jars */}
                   <div className="relative w-full aspect-[4/5] overflow-hidden rounded-sm bg-[#0a0502] flex items-center justify-center">
-                    <img 
-                      loading="lazy"
-                      src={`https://firebasestorage.googleapis.com/v0/b/remedios-ancestrasel.firebasestorage.app/o/frascos%2Fbotica-frasco-${recipe.id.toString().padStart(3, '0')}.${recipe.id >= 1001 ? 'jpg' : 'png'}?alt=media`} 
-                      alt={recipe.title} 
-                      className="w-[95%] h-[95%] object-contain drop-shadow-xl transition-all duration-500 group-hover:scale-105"
-                      onError={(e) => {
-                        (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1615554867919-482245b73e3a?q=80&w=400&auto=format&fit=crop';
-                      }}
+                    <RecipeImage 
+                      src={`https://firebasestorage.googleapis.com/v0/b/remedios-ancestrasel.firebasestorage.app/o/frascos%2Fbotica-frasco-${recipe.id.toString().padStart(3, '0')}.${recipe.id >= 1001 ? 'jpg' : 'png'}?alt=media`}
+                      alt={recipe.title}
+                      fallbackSrc="https://images.unsplash.com/photo-1615554867919-482245b73e3a?q=80&w=400&auto=format&fit=crop"
+                      isPriority={isPriority}
+                      onImageLoaded={isPriority ? () => setLoadedCount(prev => prev + 1) : undefined}
                     />
                   </div>
 

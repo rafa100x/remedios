@@ -14,6 +14,31 @@ interface RecipeModalProps {
   onToggleShopping?: () => void;
 }
 
+function ImageLoader({ src, alt, className, fallbackSrc, renderLoader }: { src: string, alt: string, className: string, fallbackSrc: string, renderLoader?: boolean }) {
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  return (
+    <>
+      {!isLoaded && renderLoader && (
+        <div className="absolute inset-0 flex items-center justify-center z-0">
+          <div className="w-6 h-6 md:w-8 md:h-8 border-2 border-[#8a3c1f] border-t-transparent rounded-full animate-spin"></div>
+        </div>
+      )}
+      <img 
+        loading="lazy"
+        src={src} 
+        alt={alt} 
+        className={`${className} ${isLoaded ? 'opacity-100' : 'opacity-0'} transition-opacity duration-500`}
+        onLoad={() => setIsLoaded(true)}
+        onError={(e) => {
+          (e.target as HTMLImageElement).src = fallbackSrc;
+          setIsLoaded(true);
+        }}
+      />
+    </>
+  );
+}
+
 const BOTICARIO_FACTS = [
   "Las antiguas curanderas recolectaban las raíces florales en fase lunar creciente para potenciar todos sus principios activos naturales.",
   "En las boticas del siglo XIX, este tipo de extractos maduraban en sótanos sumamente oscuros para preservar intacta su virtud curativa.",
@@ -190,14 +215,12 @@ export function RecipeModal({ recipe, onClose, rating, onRate, isFavorite, onTog
                        {/* Left side: The Jar */}
                        <div className="shrink-0 flex items-center justify-center pl-2 md:pl-4">
                           <div className="w-32 md:w-40 lg:w-48 aspect-[4/5] bg-[#0a0502] rounded-sm p-3 shadow-xl border border-[#d6c7af] flex items-center justify-center relative transform -rotate-1 z-10">
-                             <img 
-                                loading="lazy"
-                                src={`https://firebasestorage.googleapis.com/v0/b/remedios-ancestrasel.firebasestorage.app/o/frascos%2Fbotica-frasco-${recipe.id.toString().padStart(3, '0')}.${recipe.id >= 1001 ? 'jpg' : 'png'}?alt=media`} 
+                             <ImageLoader 
+                                src={`https://firebasestorage.googleapis.com/v0/b/remedios-ancestrasel.firebasestorage.app/o/frascos%2Fbotica-frasco-${recipe.id.toString().padStart(3, '0')}.${recipe.id >= 1001 ? 'jpg' : 'png'}?alt=media`}
                                 alt={`Frasco de ${recipe.title}`}
-                                className="w-full h-full object-contain drop-shadow-md"
-                                onError={(e) => {
-                                  (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1615554867919-482245b73e3a?q=80&w=400&auto=format&fit=crop';
-                                }}
+                                className="w-full h-full object-contain drop-shadow-md relative z-10"
+                                fallbackSrc="https://images.unsplash.com/photo-1615554867919-482245b73e3a?q=80&w=400&auto=format&fit=crop"
+                                renderLoader={true}
                              />
                           </div>
                        </div>
@@ -332,16 +355,14 @@ export function RecipeModal({ recipe, onClose, rating, onRate, isFavorite, onTog
                          </h3>
 
                          {/* Botanical Photo */}
-                         <div className="w-full h-40 md:h-56 mb-6 md:mb-8 rounded-sm overflow-hidden border border-[#d6c7af] shadow-md relative">
+                         <div className="w-full h-40 md:h-56 mb-6 md:mb-8 rounded-sm overflow-hidden border border-[#d6c7af] shadow-md relative bg-[#e9deb8]">
                              <div className="absolute inset-0 bg-black/10 mix-blend-multiply z-10 pointer-events-none"></div>
-                             <img 
-                                loading="lazy"
-                                src={(!recipe.imageUrl || recipe.imageUrl.includes('picsum.photos') || recipe.imageUrl.includes('unsplash.com')) ? `https://firebasestorage.googleapis.com/v0/b/remedios-ancestrasel.firebasestorage.app/o/recetas%2Fbotica-receta-${recipe.id.toString().padStart(3, '0')}.jpg?alt=media` : recipe.imageUrl} 
+                             <ImageLoader 
+                                src={(!recipe.imageUrl || recipe.imageUrl.includes('picsum.photos') || recipe.imageUrl.includes('unsplash.com')) ? `https://firebasestorage.googleapis.com/v0/b/remedios-ancestrasel.firebasestorage.app/o/recetas%2Fbotica-receta-${recipe.id.toString().padStart(3, '0')}.jpg?alt=media` : recipe.imageUrl}
                                 alt={`Ilustración botánica de ${recipe.title}`}
-                                className="w-full h-full object-cover filter sepia-[.2]"
-                                onError={(e) => {
-                                  (e.target as HTMLImageElement).src = `https://images.unsplash.com/photo-1615554867919-482245b73e3a?q=80&w=1200&auto=format&fit=crop`;
-                                }}
+                                className="w-full h-full object-cover filter sepia-[.2] relative z-0"
+                                fallbackSrc="https://images.unsplash.com/photo-1615554867919-482245b73e3a?q=80&w=1200&auto=format&fit=crop"
+                                renderLoader={true}
                              />
                          </div>
 
