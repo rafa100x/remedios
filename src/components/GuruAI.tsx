@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
-import { Leaf, Send, Lock, Sparkles, BookOpen, Trash2 } from 'lucide-react';
+import { Leaf, Send, Lock, Sparkles, BookOpen, Trash2, Users } from 'lucide-react';
 import { GoogleGenAI } from '@google/genai';
 import Markdown from 'react-markdown';
 import { trackEvent } from '../lib/analytics';
@@ -306,57 +306,69 @@ export function GuruAI({ onSelectRecipe }: { onSelectRecipe?: (recipe: Recipe) =
   }
 
   return (
-    <div className="w-full max-w-4xl mx-auto px-2 md:px-4 py-2 md:py-4 flex flex-col flex-1 min-h-0">
-      <div className="flex bg-black/40 rounded-xl p-1 mb-2 md:mb-4 shrink-0 w-max mx-auto border border-primary/20 shadow-md">
-        <button
-           className={`px-3 md:px-6 py-2 rounded-lg font-bold transition-all text-xs md:text-base ${
-             activeTab === 'chat' 
-               ? 'bg-primary text-black shadow-[0_0_10px_rgba(214,199,175,0.3)]' 
-               : 'text-primary/70 hover:text-primary hover:bg-white/5'
-           }`}
-           onClick={() => setActiveTab('chat')}
-        >
-          Guía Natural
-        </button>
-        <button
-           className={`px-3 md:px-6 py-2 rounded-lg font-bold transition-all text-xs md:text-base ${
-             activeTab === 'community' 
-               ? 'bg-primary text-black shadow-[0_0_10px_rgba(214,199,175,0.3)]' 
-               : 'text-primary/70 hover:text-primary hover:bg-white/5'
-           }`}
-           onClick={() => setActiveTab('community')}
-        >
-          Tribu (Comunidad)
-        </button>
+    <div className="w-full max-w-4xl mx-auto px-2 md:px-4 py-2 md:py-4 flex flex-col flex-1 min-h-0 gap-2 md:gap-4">
+      {/* COMPACT UNIFIED HEADER */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between bg-white border border-[#e5dfbe] shadow-sm rounded-xl p-2 md:p-3 shrink-0 gap-3">
+         {/* LEFT APP IDENTIFIER */}
+         <div className="flex items-center gap-3 px-1">
+             <div className="relative shrink-0">
+               <div className="bg-[#f8f6f0] p-2 md:p-2.5 rounded-full border border-[#d6c7af]">
+                 {activeTab === 'chat' ? <Sparkles className="w-5 h-5 md:w-6 md:h-6 text-[#556b3e]" /> : <Users className="w-5 h-5 md:w-6 md:h-6 text-[#8a3c1f]" />}
+               </div>
+               {activeTab === 'chat' && <div className="absolute bottom-0 right-0 w-3 h-3 bg-[#4ade80] border-2 border-white rounded-full"></div>}
+             </div>
+             <div className="flex flex-col">
+               <h2 className="font-headline font-black text-lg md:text-xl text-[#556b3e] leading-none uppercase tracking-tight">
+                 {activeTab === 'chat' ? 'Gurú Botánico' : 'Tribu Botánica'}
+               </h2>
+               <span className="text-[10px] md:text-xs text-[#8a6a4b] font-bold mt-0.5">
+                 {activeTab === 'chat' ? 'En línea' : 'Uniendo raíces'}
+               </span>
+             </div>
+         </div>
+
+         {/* RIGHT TABS AND ACTIONS */}
+         <div className="flex items-center select-none bg-[#f8f6f0] p-1 rounded-lg border border-[#e5dfbe] w-full sm:w-auto justify-between sm:justify-start">
+            <div className="flex items-center gap-1 flex-1 sm:flex-initial">
+              <button
+                 className={`flex-1 sm:flex-initial px-3 py-1.5 md:py-2 rounded-md font-bold transition-all text-xs md:text-sm ${
+                   activeTab === 'chat' 
+                     ? 'bg-white text-[#556b3e] shadow-sm border border-[#d6c7af]' 
+                     : 'text-[#8a6a4b] hover:text-[#556b3e] border border-transparent'
+                 }`}
+                 onClick={() => setActiveTab('chat')}
+              >
+                Consultorio
+              </button>
+              <button
+                 className={`flex-1 sm:flex-initial px-3 py-1.5 md:py-2 rounded-md font-bold transition-all text-xs md:text-sm ${
+                   activeTab === 'community' 
+                     ? 'bg-white text-[#8a3c1f] shadow-sm border border-[#d6c7af]' 
+                     : 'text-[#8a6a4b] hover:text-[#8a3c1f] border border-transparent'
+                 }`}
+                 onClick={() => setActiveTab('community')}
+              >
+                Tribu
+              </button>
+            </div>
+            
+            {activeTab === 'chat' && (
+               <button
+                 onClick={() => setHiddenMessageCount(messages.length)}
+                 title="Limpiar pantalla"
+                 className="ml-2 p-1.5 text-[#8a6a4b] hover:text-[#8a3c1f] transition-colors rounded-md hover:bg-white border border-transparent hover:border-[#d6c7af]"
+               >
+                 <Trash2 className="w-4 h-4 md:w-5 md:h-5" />
+               </button>
+            )}
+         </div>
       </div>
 
       {activeTab === 'community' ? (
         <CommunityChat />
       ) : (
-        <>
-          <div className="flex items-center gap-4 mb-6 shrink-0">
-            <div className="relative">
-              <div className="bg-white p-3 rounded-full border border-[#d6c7af] shadow-sm">
-                <Sparkles className="w-8 h-8 text-[#556b3e]" />
-              </div>
-              <div className="absolute bottom-0 right-0 w-4 h-4 bg-green-500 border-2 border-white rounded-full shadow-sm"></div>
-            </div>
-            <div className="flex flex-col">
-              <h2 className="font-headline font-black text-3xl md:text-4xl text-[#556b3e] leading-none uppercase tracking-tight">
-                Gurú Botánico
-              </h2>
-              <span className="text-sm text-[#4ade80] font-bold mt-1">En línea</span>
-            </div>
-            <button
-              onClick={() => setHiddenMessageCount(messages.length)}
-              title="Limpiar pantalla"
-              className="ml-auto p-2 text-[#8a6a4b] hover:text-[#8a3c1f] transition-colors hover:bg-white rounded-full border border-transparent hover:border-[#e5dfbe]"
-            >
-              <Trash2 className="w-5 h-5" />
-            </button>
-          </div>
-
-          <div className="flex-1 overflow-y-auto bg-white border border-[#e5dfbe] shadow-[0_4px_15px_rgba(0,0,0,0.05)] rounded-xl p-4 md:p-6 mb-4 space-y-4">
+        <div className="flex flex-col flex-1 min-h-0">
+          <div className="flex-1 overflow-y-auto bg-white border border-[#e5dfbe] shadow-[0_4px_15px_rgba(0,0,0,0.05)] rounded-xl p-4 md:p-6 mb-2 md:mb-4 space-y-4">
             {messages.slice(hiddenMessageCount).length === 0 && (
               <div className="flex justify-start">
                 <div className="max-w-[85%] rounded-2xl p-4 bg-[#f8f6f0] text-[#201004] border border-[#d6c7af] shadow-sm rounded-bl-sm">
@@ -421,24 +433,33 @@ export function GuruAI({ onSelectRecipe }: { onSelectRecipe?: (recipe: Recipe) =
           </div>
 
           <div className="shrink-0 relative">
-             <input
-               type="text"
-               value={input}
-               onChange={(e) => setInput(e.target.value)}
-               onKeyDown={(e) => e.key === 'Enter' && handleSend()}
-               placeholder="Escribe un mensaje al gurú..."
-               className="w-full bg-white border border-[#d6c7af] rounded-full px-4 sm:px-6 py-3 sm:py-4 pr-14 text-[#201004] font-medium text-sm sm:text-base placeholder:text-[#8a6a4b]/60 focus:outline-none focus:border-[#556b3e] focus:ring-2 focus:ring-[#556b3e]/20 transition-all shadow-sm"
-               disabled={isLoading}
-             />
-             <button
-               onClick={handleSend}
-               disabled={!input.trim() || isLoading}
-               className="absolute right-2 top-1/2 -translate-y-1/2 w-10 h-10 md:w-12 md:h-12 bg-[#8a3c1f] hover:bg-[#723219] text-white rounded-full flex items-center justify-center transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-sm"
-             >
-               <Send className="w-5 h-5 ml-1" />
-             </button>
+               <input
+                 type="text"
+                 name="guruMsgInput"
+                 id="guruMsgInput"
+                 autoComplete="chrome-off"
+                 autoCorrect="off"
+                 spellCheck="true"
+                 data-1p-ignore="true"
+                 data-lpignore="true"
+                 data-bwignore="true"
+                 value={input}
+                 onChange={(e) => setInput(e.target.value)}
+                 onKeyDown={(e) => e.key === 'Enter' && handleSend()}
+                 placeholder="Escribe un mensaje al gurú..."
+                 className="w-full bg-white border border-[#d6c7af] rounded-full px-4 sm:px-6 py-3 sm:py-4 pr-14 text-[#201004] font-medium text-sm sm:text-base placeholder:text-[#8a6a4b]/60 focus:outline-none focus:border-[#556b3e] focus:ring-2 focus:ring-[#556b3e]/20 transition-all shadow-sm"
+                 disabled={isLoading}
+               />
+               <button
+                 type="button"
+                 onClick={handleSend}
+                 disabled={!input.trim() || isLoading}
+                 className="absolute right-2 top-1/2 -translate-y-1/2 w-10 h-10 md:w-12 md:h-12 bg-[#8a3c1f] hover:bg-[#723219] text-white rounded-full flex items-center justify-center transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-sm"
+               >
+                 <Send className="w-5 h-5 ml-1" />
+               </button>
           </div>
-        </>
+        </div>
       )}
     </div>
   );

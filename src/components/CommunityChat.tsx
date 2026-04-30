@@ -195,7 +195,7 @@ Responde directo al punto en 1 o 2 líneas como mucho (tipo mensaje de móvil).
                      >
                        <CornerDownRight className="w-3.5 h-3.5" />
                      </button>
-                     {isAdmin && !isMe && (
+                     {isAdmin && (
                        <button
                          onClick={() => generateSimulatedResponse(msg)}
                          disabled={isGeneratingResponse === msg.id}
@@ -239,14 +239,17 @@ Responde directo al punto en 1 o 2 líneas como mucho (tipo mensaje de móvil).
            )}
          </AnimatePresence>
 
-         <form onSubmit={handleSend} className="max-w-4xl mx-auto flex gap-2 items-end" autoComplete="off">
+         <div className="max-w-4xl mx-auto flex gap-2 items-end">
             <div className="flex-1 bg-white border border-[#d6c7af] rounded-2xl md:rounded-3xl shadow-sm focus-within:border-[#556b3e] focus-within:ring-2 focus-within:ring-[#556b3e]/20 transition-all flex min-h-[44px] md:min-h-[50px] overflow-hidden">
                <textarea 
-                 name="tribu-message-entry"
-                 id="tribu-message-entry"
-                 autoComplete="off"
-                 autoCorrect="on"
+                 name="tribuMsgInput"
+                 id="tribuMsgInput"
+                 autoComplete="chrome-off"
+                 autoCorrect="off"
                  spellCheck="true"
+                 data-1p-ignore="true"
+                 data-lpignore="true"
+                 data-bwignore="true"
                  enterKeyHint="send"
                  className="w-full bg-transparent text-[#201004] px-4 py-3 md:py-3.5 focus:outline-none resize-none max-h-32 placeholder:text-[#8a6a4b]/60 font-medium text-sm md:text-base leading-tight"
                  placeholder="Escribe un mensaje a la tribu..."
@@ -255,7 +258,7 @@ Responde directo al punto en 1 o 2 líneas como mucho (tipo mensaje de móvil).
                  onKeyDown={(e) => {
                     if (e.key === 'Enter' && !e.shiftKey) {
                         e.preventDefault();
-                        if (newMessage.trim()) handleSend(e);
+                        if (newMessage.trim()) handleSend();
                     }
                  }}
                  rows={1}
@@ -264,13 +267,14 @@ Responde directo al punto en 1 o 2 líneas como mucho (tipo mensaje de móvil).
                />
             </div>
             <button 
-              type="submit"
+              type="button"
+              onClick={() => handleSend()}
               disabled={!newMessage.trim()}
               className="w-11 h-11 md:w-12 md:h-12 bg-[#8a3c1f] text-white hover:bg-[#6e2e15] rounded-full flex items-center justify-center transition-all disabled:opacity-50 disabled:bg-[#d6c7af] shrink-0 shadow-sm"
             >
               <Send className="w-5 h-5 ml-1" />
             </button>
-         </form>
+         </div>
       </div>
     </div>
   );
