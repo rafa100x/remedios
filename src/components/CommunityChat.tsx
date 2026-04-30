@@ -187,10 +187,10 @@ Responde directo al punto en 1 o 2 líneas como mucho (tipo mensaje de móvil).
                       </span>
                    </div>
 
-                   <div className={`absolute top-1/2 -translate-y-1/2 ${isMe ? '-left-12' : '-right-12'} flex gap-1 items-center z-10 transition-opacity opacity-0 md:group-hover:opacity-100 ${isMe && 'flex-row-reverse'}`}>
+                   <div className={`absolute -bottom-3 ${isMe ? 'left-2 md:-left-12' : 'right-2 md:-right-12'} flex gap-1 items-center z-10 transition-opacity opacity-100 md:opacity-0 md:group-hover:opacity-100 ${isMe && 'flex-row-reverse'}`}>
                      <button
                        onClick={() => setReplyingTo(msg)}
-                       className="p-2 bg-white text-[#8a6a4b] rounded-full shadow-md border border-[#e5dfbe] hover:bg-[#e5dfbe] hover:text-[#8a3c1f] transition-colors"
+                       className="p-1.5 md:p-2 bg-white text-[#8a6a4b] rounded-full shadow-md border border-[#e5dfbe] hover:bg-[#e5dfbe] hover:text-[#8a3c1f] transition-colors"
                        title="Responder"
                      >
                        <CornerDownRight className="w-3.5 h-3.5" />
@@ -199,7 +199,7 @@ Responde directo al punto en 1 o 2 líneas como mucho (tipo mensaje de móvil).
                        <button
                          onClick={() => generateSimulatedResponse(msg)}
                          disabled={isGeneratingResponse === msg.id}
-                         className="p-2 bg-white text-[#556b3e] rounded-full shadow-md border border-[#e5dfbe] hover:bg-[#e5dfbe] hover:text-black transition-colors disabled:opacity-50"
+                         className="p-1.5 md:p-2 bg-white text-[#556b3e] rounded-full shadow-md border border-[#e5dfbe] hover:bg-[#e5dfbe] hover:text-black transition-colors disabled:opacity-50"
                          title="Simular respuesta (IA)"
                        >
                          <Bot className={`w-3.5 h-3.5 ${isGeneratingResponse === msg.id ? 'animate-pulse text-[#8a3c1f]' : ''}`} />
@@ -239,9 +239,15 @@ Responde directo al punto en 1 o 2 líneas como mucho (tipo mensaje de móvil).
            )}
          </AnimatePresence>
 
-         <form onSubmit={handleSend} className="max-w-4xl mx-auto flex gap-2 items-end">
+         <form onSubmit={handleSend} className="max-w-4xl mx-auto flex gap-2 items-end" autoComplete="off">
             <div className="flex-1 bg-white border border-[#d6c7af] rounded-2xl md:rounded-3xl shadow-sm focus-within:border-[#556b3e] focus-within:ring-2 focus-within:ring-[#556b3e]/20 transition-all flex min-h-[44px] md:min-h-[50px] overflow-hidden">
                <textarea 
+                 name="tribu-message-entry"
+                 id="tribu-message-entry"
+                 autoComplete="off"
+                 autoCorrect="on"
+                 spellCheck="true"
+                 enterKeyHint="send"
                  className="w-full bg-transparent text-[#201004] px-4 py-3 md:py-3.5 focus:outline-none resize-none max-h-32 placeholder:text-[#8a6a4b]/60 font-medium text-sm md:text-base leading-tight"
                  placeholder="Escribe un mensaje a la tribu..."
                  value={newMessage}
