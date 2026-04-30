@@ -214,6 +214,7 @@ export function GuruAI({ onSelectRecipe }: { onSelectRecipe?: (recipe: Recipe) =
     if (!unlockCode.trim() || !user) return;
     setIsUnlocking(true);
     setUnlockError('');
+    trackEvent('guru_code_submit', { code: unlockCode });
     try {
       const code = unlockCode.trim().toUpperCase();
       const res = await fetch('/api/unlock-code', {
@@ -226,12 +227,15 @@ export function GuruAI({ onSelectRecipe }: { onSelectRecipe?: (recipe: Recipe) =
       
       if (!res.ok) {
         setUnlockError(data.error || 'Error al validar el código.');
+        trackEvent('guru_code_error', { error: data.error || 'Error al validar el código.' });
       } else {
         setUnlockCode('');
+        trackEvent('guru_code_success', { code });
       }
     } catch (e: any) {
       console.error('Error in handleUnlockCode:', e);
       setUnlockError(`Error al activar el código: ${e.message || 'Desconocido'}`);
+      trackEvent('guru_code_error', { error: e.message || 'Desconocido' });
     } finally {
       setIsUnlocking(false);
     }
@@ -264,7 +268,10 @@ export function GuruAI({ onSelectRecipe }: { onSelectRecipe?: (recipe: Recipe) =
              $24.990 <span className="text-[10px] md:text-sm font-normal text-tertiary">ARS</span>
           </div>
           <button 
-            onClick={purchaseGuruAccess}
+            onClick={() => {
+              trackEvent('guru_unlock_clicked');
+              purchaseGuruAccess();
+            }}
             className="w-full bg-gradient-to-r from-[#d6c7af] to-[#c2b092] text-[#2c241b] hover:from-[#c2b092] hover:to-[#a99473] font-bold py-2 md:py-4 px-4 md:px-6 rounded-xl transition-all shadow-lg hover:shadow-xl text-xs md:text-lg flex items-center justify-center gap-2 mb-3 md:mb-4"
           >
             <BookOpen className="w-3 h-3 md:w-5 h-5" /> Desbloquear Sabiduría

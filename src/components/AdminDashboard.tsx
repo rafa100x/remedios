@@ -756,7 +756,7 @@ REGLAS MUY IMPORTANTES:
                                       return t >= sessionStart && t <= sessionEnd;
                                   });
                                   
-                                  const relevantEvents = ['read_book', 'search', 'add_favorite', 'remove_favorite', 'share_whatsapp', 'download_recipe', 'add_to_shopping_list', 'remove_from_shopping_list', 'rate_recipe'];
+                                  const relevantEvents = ['read_book', 'search', 'add_favorite', 'remove_favorite', 'share_whatsapp', 'download_recipe', 'add_to_shopping_list', 'remove_from_shopping_list', 'rate_recipe', 'guru_unlock_clicked', 'guru_code_submit', 'guru_code_success', 'guru_code_error'];
                                   const uniqueViews = Array.from(new Set(sessionEvents
                                       .filter(e => e.eventName.startsWith('view_') || relevantEvents.includes(e.eventName))
                                       .map(e => {
@@ -770,6 +770,10 @@ REGLAS MUY IMPORTANTES:
                                         if (e.eventName === 'add_to_shopping_list') return `Añadió a lista de compras: ${name}`;
                                         if (e.eventName === 'remove_from_shopping_list') return `Quitó de lista de compras: ${name}`;
                                         if (e.eventName === 'rate_recipe') return `Calificó (${e.params?.value}★): ${name}`;
+                                        if (e.eventName === 'guru_unlock_clicked') return `Intentó comprar desbloqueo (Gurú)`;
+                                        if (e.eventName === 'guru_code_submit') return `Ingresó código (Gurú): ${e.params?.code}`;
+                                        if (e.eventName === 'guru_code_success') return `Código validado con éxito (Gurú)`;
+                                        if (e.eventName === 'guru_code_error') return `Error en código (Gurú): ${e.params?.error}`;
                                         if (e.eventName === 'view_library') return 'Sección: Biblioteca';
                                         if (e.eventName === 'view_guru') return 'Sección: Gurú AI';
                                         if (e.eventName === 'view_community') return 'Sección: Comunidad';

@@ -46,13 +46,58 @@ export default function App() {
     
     const q = normalize(searchQuery);
 
-    return allRecipes.filter(r =>
-      normalize(r.title).includes(q) ||
-      normalize(r.purpose).includes(q) ||
-      (r.instructions && normalize(r.instructions).includes(q)) ||
-      (r.notes && normalize(r.notes).includes(q)) ||
-      r.ingredients.some(i => normalize(i.es).includes(q) || normalize(i.la).includes(q))
-    );
+    const synonyms: Record<string, string[]> = {
+      'higado': ['hepatico', 'bilis', 'boldo', 'cardo', 'alcachofa', 'depurativo'],
+      'colon': ['intestino', 'digestion', 'inflamacion', 'estreñimiento', 'gases'],
+      'gastritis': ['estomago', 'ardor', 'digestivo', 'mucosa', 'ulcer', 'reflujo', 'acidez'],
+      'acidez': ['estomago', 'ardor', 'digestivo', 'reflujo', 'gastritis'],
+      'estomacal': ['estomago', 'ardor', 'digestivo', 'reflujo', 'gastritis'],
+      'diente': ['bucal', 'encias', 'clavo', 'dolor'],
+      'boca': ['bucal', 'encias', 'llagas', 'enjuague'],
+      'muela': ['diente', 'bucal', 'clavo', 'dolor', 'analgesico'],
+      'desinflamar': ['inflamacion', 'antiinflamatorio', 'hinchazon'],
+      'asma': ['respiratorio', 'pulmones', 'tos', 'bronquios', 'expectorante', 'eucalipto'],
+      'rodilla': ['articulaciones', 'muscular', 'artrosis', 'artritis', 'reumatismo', 'huesos'],
+      'grasa': ['colesterol', 'metabolismo', 'adelgazar', 'peso', 'trigliceridos', 'lipidos'],
+      'sex': ['energia', 'vigor', 'libido', 'afrodisiaco', 'hormonal', 'vitalidad', 'maca'],
+      'potenciador': ['energia', 'vigor', 'libido', 'afrodisiaco', 'hormonal', 'vitalidad'],
+      'sexual': ['energia', 'vigor', 'libido', 'afrodisiaco', 'hormonal', 'vitalidad'],
+      'precoz': ['energia', 'vigor', 'libido', 'afrodisiaco', 'vitalidad'],
+      'contractura': ['muscular', 'musculo', 'tension', 'relajante', 'calambre'],
+      'menopausia': ['hormonas', 'sofocos', 'fitoestrogenos', 'menstrual', 'salvia'],
+      'uremia': ['riñones', 'diuretico', 'gota', 'depurativo', 'orina', 'urico'],
+      'urico': ['riñones', 'diuretico', 'gota', 'depurativo', 'orina', 'uremia'],
+    };
+
+    const searchTerms = q.split(/\s+/).filter(Boolean);
+    let expandedTerms: string[] = [q, ...searchTerms];
+    
+    for (const term of searchTerms) {
+      for (const [key, related] of Object.entries(synonyms)) {
+        if (term.includes(key) || key.includes(term)) {
+          expandedTerms.push(...related);
+        }
+      }
+    }
+    
+    // Remove duplicates
+    expandedTerms = Array.from(new Set(expandedTerms));
+
+    return allRecipes.filter(r => {
+      const recipeText = [
+        normalize(r.title),
+        normalize(r.purpose),
+        r.instructions ? normalize(r.instructions) : '',
+        r.notes ? normalize(r.notes) : '',
+        ...r.ingredients.map(i => normalize(i.es) + ' ' + normalize(i.la))
+      ].join(' ');
+
+      return expandedTerms.some(term => {
+        // use word boundary if it's a short word or to be safe
+        const regex = new RegExp(`\\b${term}\\b`, 'i');
+        return regex.test(recipeText) || recipeText.includes(term); // fallback if boundary doesn't work well
+      });
+    });
   }, [searchQuery, allRecipes]);
 
   const favoriteRecipes = useMemo(() => {
