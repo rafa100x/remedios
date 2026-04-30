@@ -20,6 +20,7 @@ import { ProfileView } from './components/ProfileView';
 import { AdminDashboard } from './components/AdminDashboard';
 import { GuruAI } from './components/GuruAI';
 import { CommunityChat } from './components/CommunityChat';
+import { TutorialModal } from './components/TutorialModal';
 
 export default function App() {
   const { user } = useAuth();
@@ -32,6 +33,22 @@ export default function App() {
   const [showShoppingList, setShowShoppingList] = useState(false);
   const [showInfo, setShowInfo] = useState(false);
   const [showDownloads, setShowDownloads] = useState(false);
+  const [showTutorial, setShowTutorial] = useState(false);
+
+  useEffect(() => {
+    if (user) {
+      const hasSeenTutorial = localStorage.getItem('hasSeenTutorial');
+      if (!hasSeenTutorial) {
+        setShowTutorial(true);
+      }
+    }
+  }, [user]);
+
+  const handleCloseTutorial = () => {
+    localStorage.setItem('hasSeenTutorial', 'true');
+    setShowTutorial(false);
+    trackEvent('completed_tutorial');
+  };
 
   const { favorites, toggleFavorite, shoppingList, toggleShoppingList, ratings, rateRecipe } = useUserData();
 
@@ -297,11 +314,15 @@ export default function App() {
       )}
 
       {showInfo && (
-        <InfoModal onClose={() => setShowInfo(false)} />
+        <InfoModal onClose={() => setShowInfo(false)} onShowTutorial={() => setShowTutorial(true)} />
       )}
 
       {showDownloads && (
         <DownloadsModal onClose={() => setShowDownloads(false)} />
+      )}
+
+      {showTutorial && (
+        <TutorialModal onClose={handleCloseTutorial} />
       )}
     </div>
   );

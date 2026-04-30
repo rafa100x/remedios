@@ -1,10 +1,11 @@
-import { X, Search, Bookmark, ShoppingBag, LibraryBig, Home } from 'lucide-react';
+import { X, Search, Bookmark, ShoppingBag, LibraryBig, Home, PlayCircle } from 'lucide-react';
 
 interface InfoModalProps {
   onClose: () => void;
+  onShowTutorial?: () => void;
 }
 
-export function InfoModal({ onClose }: InfoModalProps) {
+export function InfoModal({ onClose, onShowTutorial }: InfoModalProps) {
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-6 bg-black/80 backdrop-blur-sm">
       <div className="bg-[#fdfaf2] w-full max-w-2xl max-h-[90vh] rounded-2xl shadow-2xl flex flex-col overflow-hidden relative border border-[#d6c7af]">
@@ -30,6 +31,14 @@ export function InfoModal({ onClose }: InfoModalProps) {
                El Grimorio es una colección de recetas botánicas y remedios naturales. 
                Puedes buscar recetas por enfermedad (ej: tos), ingrediente (ej: miel) o navegar por nuestras categorías.
              </p>
+             {onShowTutorial && (
+               <button 
+                 onClick={() => { onClose(); onShowTutorial(); }}
+                 className="mt-2 w-full flex items-center justify-center gap-2 bg-[#1a0f08] text-[#d4af37] hover:text-[#e4c042] font-bold py-3 px-6 rounded-xl transition-all border border-[#d4af37]"
+               >
+                 <PlayCircle className="w-5 h-5" /> Iniciar tour guiado
+               </button>
+             )}
            </section>
 
            <section className="space-y-4">
