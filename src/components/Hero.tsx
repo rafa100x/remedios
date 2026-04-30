@@ -8,6 +8,8 @@ export function Hero({ onNavigateToLibrary }: { onNavigateToLibrary?: () => void
       {/* Background: Portada original */}
       <div className="absolute inset-0 z-0 bg-[#2b1f18]">
          <img 
+           fetchPriority="high" 
+           loading="eager"
            src="https://cdn.shopify.com/s/files/1/0988/7904/5945/files/mockup-producto-principal_d05515f3-5c0a-4718-8b0a-bc2d0054df44.jpg?v=1775521634" 
            alt="" 
            className="w-full h-full object-cover opacity-30 mix-blend-luminosity sepia-[.2] contrast-125 blur-[2px]"
@@ -46,13 +48,13 @@ export function Hero({ onNavigateToLibrary }: { onNavigateToLibrary?: () => void
             {/* Ilustraciones Botánicas Decorativas (Romero, Ajo, Jenjibre, Orégano) */}
             <div className="absolute inset-0 opacity-[0.12] pointer-events-none mix-blend-multiply z-0">
                {/* Romero (Top Left) */}
-               <img src="https://upload.wikimedia.org/wikipedia/commons/e/ec/Rosmarinus_officinalis_-_K%C3%B6hler%E2%80%93s_Medizinal-Pflanzen-123.jpg" alt="Romero" className="absolute -top-10 -left-10 w-32 h-32 sm:w-48 sm:h-48 object-cover rounded-full rotate-45 grayscale contrast-125" />
+               <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/Rosmarinus_officinalis_-_K%C3%B6hler%E2%80%93s_Medizinal-Pflanzen-123.jpg/320px-Rosmarinus_officinalis_-_K%C3%B6hler%E2%80%93s_Medizinal-Pflanzen-123.jpg" loading="lazy" alt="Romero" className="absolute -top-10 -left-10 w-32 h-32 sm:w-48 sm:h-48 object-cover rounded-full rotate-45 grayscale contrast-125" />
                {/* Ajo (Top Right) */}
-               <img src="https://upload.wikimedia.org/wikipedia/commons/4/4e/Allium_sativum_-_K%C3%B6hler%E2%80%93s_Medizinal-Pflanzen-008.jpg" alt="Ajo" className="absolute -top-12 -right-8 w-28 h-28 sm:w-40 sm:h-40 object-cover rounded-full -rotate-12 grayscale contrast-125" />
+               <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Allium_sativum_-_K%C3%B6hler%E2%80%93s_Medizinal-Pflanzen-008.jpg/320px-Allium_sativum_-_K%C3%B6hler%E2%80%93s_Medizinal-Pflanzen-008.jpg" loading="lazy" alt="Ajo" className="absolute -top-12 -right-8 w-28 h-28 sm:w-40 sm:h-40 object-cover rounded-full -rotate-12 grayscale contrast-125" />
                {/* Jenjibre (Bottom Left) */}
-               <img src="https://upload.wikimedia.org/wikipedia/commons/4/4c/Zingiber_officinale_-_K%C3%B6hler%E2%80%93s_Medizinal-Pflanzen-283.jpg" alt="Jenjibre" className="absolute -bottom-8 -left-10 w-32 h-32 sm:w-44 sm:h-44 object-cover rounded-full rotate-[120deg] grayscale contrast-125" />
+               <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4c/Zingiber_officinale_-_K%C3%B6hler%E2%80%93s_Medizinal-Pflanzen-283.jpg/320px-Zingiber_officinale_-_K%C3%B6hler%E2%80%93s_Medizinal-Pflanzen-283.jpg" loading="lazy" alt="Jenjibre" className="absolute -bottom-8 -left-10 w-32 h-32 sm:w-44 sm:h-44 object-cover rounded-full rotate-[120deg] grayscale contrast-125" />
                {/* Orégano/Hierbas (Bottom Right) */}
-               <img src="https://upload.wikimedia.org/wikipedia/commons/8/82/Mentha_x_piperita_-_K%C3%B6hler%E2%80%93s_Medizinal-Pflanzen-093.jpg" alt="Mentha/Orégano" className="absolute -bottom-10 -right-12 w-32 h-32 sm:w-48 sm:h-48 object-cover rounded-full -rotate-45 grayscale contrast-125" />
+               <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/Mentha_x_piperita_-_K%C3%B6hler%E2%80%93s_Medizinal-Pflanzen-093.jpg/320px-Mentha_x_piperita_-_K%C3%B6hler%E2%80%93s_Medizinal-Pflanzen-093.jpg" loading="lazy" alt="Mentha/Orégano" className="absolute -bottom-10 -right-12 w-32 h-32 sm:w-48 sm:h-48 object-cover rounded-full -rotate-45 grayscale contrast-125" />
             </div>
 
             {/* Marco interno estilo vintage */}

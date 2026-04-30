@@ -61,6 +61,7 @@ export function PaymentModal({ book, onClose, onRead }: PaymentModalProps) {
                             </div>
                         )}
                         <img 
+                            loading="lazy"
                             src={book.coverUrl} 
                             alt={book.title} 
                             className={`w-full h-full object-cover transition-all duration-700 ${!book.badge ? 'mix-blend-luminosity' : ''} ${isUnlocked ? 'opacity-100 sepia-0' : 'opacity-80 saturate-50'}`} 

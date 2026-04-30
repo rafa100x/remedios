@@ -118,7 +118,7 @@ export function Library({ onSelectBook, onShowDownloads }: LibraryProps) {
 
                                 {/* Book Cover Image */}
                                 <div className={`absolute inset-0 ${isUnlocked ? 'bg-[#5c2a16]' : 'bg-[#2a1308]'}`}>
-                                    <img src={book.coverUrl} alt={book.title} className={`w-full h-full object-cover transition-all duration-300 ${isUnlocked ? 'opacity-100' : 'opacity-80 saturate-50'}`} />
+                                    <img src={book.coverUrl} alt={book.title} loading="lazy" className={`w-full h-full object-cover transition-all duration-300 ${isUnlocked ? 'opacity-100' : 'opacity-80 saturate-50'}`} />
                                     <div className={`absolute inset-0 bg-gradient-to-t ${isUnlocked ? 'from-[#3a1a0f] via-transparent to-transparent' : 'from-[#1a0f08] via-transparent to-transparent'}`}></div>
                                     <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/leather.png')] opacity-20 mix-blend-overlay"></div>
                                 </div>

@@ -54,6 +54,7 @@ export function RecipeList({ recipes, onSelectRecipe, favorites, toggleFavorite 
                   {/* The Image */}
                   <div className="absolute inset-x-0 bottom-[60px] top-0 flex items-center justify-center">
                     <img 
+                      loading="lazy"
                       src={`https://firebasestorage.googleapis.com/v0/b/remedios-ancestrasel.firebasestorage.app/o/frascos%2Fbotica-frasco-${recipe.id.toString().padStart(3, '0')}.${recipe.id >= 1001 ? 'jpg' : 'png'}?alt=media`} 
                       alt={recipe.title} 
                       className={`w-full max-h-full object-contain opacity-90 drop-shadow-2xl transition-all duration-300 group-hover:opacity-100 group-hover:drop-shadow-[0_15px_15px_rgba(255,255,255,0.1)] ${recipe.id >= 1001 ? 'mix-blend-screen' : ''}`}

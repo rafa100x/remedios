@@ -179,6 +179,7 @@ export function RecipeModal({ recipe, onClose, rating, onRate, isFavorite, onTog
                 {/* 1. Header Image Area */}
                 <div className="w-full h-[30vh] sm:h-[40vh] md:h-[50vh] bg-[#f4ead0] border-b-4 border-[#8a3c1f] shrink-0">
                   <img 
+                    loading="lazy"
                     src={(!recipe.imageUrl || recipe.imageUrl.includes('picsum.photos') || recipe.imageUrl.includes('unsplash.com')) ? `https://firebasestorage.googleapis.com/v0/b/remedios-ancestrasel.firebasestorage.app/o/recetas%2Fbotica-receta-${recipe.id.toString().padStart(3, '0')}.jpg?alt=media` : recipe.imageUrl} 
                     className="w-full h-full object-cover object-center"
                     alt={`Ilustración de la receta ${recipe.title}`}
