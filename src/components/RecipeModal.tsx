@@ -1,6 +1,7 @@
 import { motion, AnimatePresence } from 'motion/react';
 import { Recipe } from '../data/recipes';
 import { useEffect, useState } from 'react';
+import { trackEvent } from '../lib/analytics';
 
 interface RecipeModalProps {
   recipe: Recipe;
@@ -56,11 +57,14 @@ export function RecipeModal({ recipe, onClose, rating, onRate, isFavorite, onTog
       text += `*${getSourcing()}*\n\n`;
       text += `Compartido desde El Grimorio 🌿`;
       
+      trackEvent('share_whatsapp', { event_category: 'engagement', event_label: recipe.title });
+      
       const url = `https://wa.me/?text=${encodeURIComponent(text)}`;
       window.open(url, '_blank');
    };
 
   const handlePrintPDF = () => {
+     trackEvent('download_recipe', { event_category: 'engagement', event_label: recipe.title });
      const win = window.open('', '', 'width=900,height=700');
      if (!win) return;
      win.document.write(`

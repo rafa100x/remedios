@@ -566,9 +566,9 @@ REGLAS MUY IMPORTANTES:
           {searchEvents.length === 0 ? (
              <p className="text-secondary italic text-sm">Realiza una búsqueda para verla registrada aquí.</p>
           ) : (
-             <div className="overflow-x-auto">
+             <div className="overflow-x-auto max-h-[500px] overflow-y-auto">
                <table className="w-full text-left border-collapse min-w-full">
-                  <thead>
+                  <thead className="sticky top-0 bg-[#2b1f18] z-10 shadow-sm">
                     <tr className="border-b border-[#d6c7af]/20 text-tertiary/70 text-sm">
                       <th className="py-3 px-4 font-medium">Término</th>
                       <th className="py-3 px-4 font-medium">Usuario</th>
@@ -576,7 +576,7 @@ REGLAS MUY IMPORTANTES:
                     </tr>
                   </thead>
                   <tbody className="text-sm text-tertiary">
-                    {searchEvents.slice(0, 10).map((event) => (
+                    {searchEvents.map((event) => (
                       <tr key={event.id} className="border-b border-[#d6c7af]/10 hover:bg-[#d6c7af]/5 transition-colors">
                         <td className="py-3 px-4 font-medium text-secondary">
                           "{event.params?.search_term || 'N/A'}"
@@ -745,19 +745,67 @@ REGLAS MUY IMPORTANTES:
                             ) : user.sessions.length === 0 ? (
                               <p className="text-sm text-tertiary">No hay sesiones registradas.</p>
                             ) : (
-                              <ul className="space-y-2 text-sm">
-                                {user.sessions.map(session => (
-                                  <li key={session.id} className="flex justify-between items-center bg-white/5 p-2 rounded">
-                                    <span className="text-primary font-medium">
-                                      {formatDate(session.startedAt)}
-                                    </span>
-                                    <span className="text-secondary">
-                                      {session.durationMinutes !== undefined 
-                                        ? `${session.durationMinutes} minutos` 
-                                        : (session.endedAt ? 'Cerrada' : 'En curso')}
-                                    </span>
+                              <ul className="space-y-3 text-sm">
+                                {user.sessions.map(session => {
+                                  const sessionStart = getTimeMillis(session.startedAt);
+                                  const sessionEnd = session.endedAt ? (getTimeMillis(session.endedAt) + 60000) : Date.now();
+                                  
+                                  const sessionEvents = analyticsEvents.filter(e => {
+                                      if (e.userId !== user.id) return false;
+                                      const t = getTimeMillis(e.timestamp);
+                                      return t >= sessionStart && t <= sessionEnd;
+                                  });
+                                  
+                                  const relevantEvents = ['read_book', 'search', 'add_favorite', 'remove_favorite', 'share_whatsapp', 'download_recipe', 'add_to_shopping_list', 'remove_from_shopping_list', 'rate_recipe'];
+                                  const uniqueViews = Array.from(new Set(sessionEvents
+                                      .filter(e => e.eventName.startsWith('view_') || relevantEvents.includes(e.eventName))
+                                      .map(e => {
+                                        const name = e.params?.event_label || e.params?.bookTitle || e.params?.title || e.params?.recipe_name || 'Item';
+                                        if (e.eventName === 'search') return `Búsqueda: "${e.params?.search_term || ''}"`;
+                                        if (e.eventName === 'read_book' || e.eventName === 'view_recipe') return `Vió: ${name}`;
+                                        if (e.eventName === 'add_favorite') return `Guardó: ${name}`;
+                                        if (e.eventName === 'remove_favorite') return `Quitó de guardados: ${name}`;
+                                        if (e.eventName === 'share_whatsapp') return `Compartió por WhatsApp: ${name}`;
+                                        if (e.eventName === 'download_recipe') return `Descargó: ${name}`;
+                                        if (e.eventName === 'add_to_shopping_list') return `Añadió a lista de compras: ${name}`;
+                                        if (e.eventName === 'remove_from_shopping_list') return `Quitó de lista de compras: ${name}`;
+                                        if (e.eventName === 'rate_recipe') return `Calificó (${e.params?.value}★): ${name}`;
+                                        if (e.eventName === 'view_library') return 'Sección: Biblioteca';
+                                        if (e.eventName === 'view_guru') return 'Sección: Gurú AI';
+                                        if (e.eventName === 'view_community') return 'Sección: Comunidad';
+                                        return null;
+                                      })
+                                      .filter(Boolean)
+                                  ));
+
+                                  return (
+                                  <li key={session.id} className="flex flex-col bg-white/5 p-3 rounded shadow-sm border border-white/5">
+                                    <div className="flex justify-between items-center mb-1">
+                                      <span className="text-primary font-medium">
+                                        {formatDate(session.startedAt)}
+                                      </span>
+                                      <span className="text-secondary font-semibold">
+                                        {session.durationMinutes !== undefined 
+                                          ? `${session.durationMinutes} minutos` 
+                                          : (session.endedAt ? 'Cerrada' : 'En curso')}
+                                      </span>
+                                    </div>
+                                    
+                                    {uniqueViews.length > 0 ? (
+                                      <div className="text-tertiary text-xs mt-2 border-t border-white/10 pt-2">
+                                        <div className="text-[#a99473] mb-1 font-medium">Actividad registrada:</div>
+                                        <ul className="list-disc list-inside space-y-0.5 ml-1">
+                                          {uniqueViews.map((view, idx) => (
+                                            <li key={idx} className="text-tertiary/90">{view}</li>
+                                          ))}
+                                        </ul>
+                                      </div>
+                                    ) : (
+                                      <div className="text-tertiary/40 text-[11px] mt-2 border-t border-white/5 pt-2 italic">Solo navegación (sin interacciones específicas).</div>
+                                    )}
                                   </li>
-                                ))}
+                                  );
+                                })}
                               </ul>
                             )}
                           </td>
