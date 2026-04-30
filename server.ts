@@ -162,7 +162,7 @@ async function startServer() {
       }
     } catch (e: any) {
       console.error(e);
-      return res.status(500).json({ error: "Error interno al procesar el código" });
+      return res.status(500).json({ error: "Error interno al procesar el código: " + (e.message || String(e)) });
     }
   });
 

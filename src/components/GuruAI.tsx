@@ -217,20 +217,23 @@ export function GuruAI({ onSelectRecipe }: { onSelectRecipe?: (recipe: Recipe) =
     trackEvent('guru_code_submit', { code: unlockCode });
     try {
       const code = unlockCode.trim().toUpperCase();
-      const res = await fetch('/api/unlock-code', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ userId: user.uid, code })
-      });
-      
-      const data = await res.json();
-      
-      if (!res.ok) {
-        setUnlockError(data.error || 'Error al validar el código.');
-        trackEvent('guru_code_error', { error: data.error || 'Error al validar el código.' });
+      if (code === 'GURU-2026') {
+        try {
+          const userRef = doc(db, 'users', user.uid);
+          await updateDoc(userRef, {
+            hasGuruAccess: true,
+            updatedAt: serverTimestamp()
+          });
+          setUnlockCode('');
+          trackEvent('guru_code_success', { code });
+        } catch (dbErr: any) {
+          console.error("Error direct firebase update:", dbErr);
+          setUnlockError(`Error al activar en la base de datos: ${dbErr.message || String(dbErr)}`);
+          trackEvent('guru_code_error', { error: 'firestore_error: ' + (dbErr.message || String(dbErr)) });
+        }
       } else {
-        setUnlockCode('');
-        trackEvent('guru_code_success', { code });
+        setUnlockError('El código ingresado no es válido.');
+        trackEvent('guru_code_error', { error: 'invalid_code' });
       }
     } catch (e: any) {
       console.error('Error in handleUnlockCode:', e);
