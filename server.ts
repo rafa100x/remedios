@@ -147,7 +147,7 @@ async function startServer() {
       if (!userId || !code) return res.status(400).json({ error: "Missing parameters" });
       
       const cleanCode = code.trim().toUpperCase();
-      if (cleanCode === 'GURU-MAGICO' || cleanCode === 'GURU-2026') {
+      if (cleanCode === 'GURU-2026') {
          if (firebaseApp) {
              await getFirestore().collection('users').doc(userId).update({
                  hasGuruAccess: true,
