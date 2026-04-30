@@ -31,7 +31,7 @@ export function Header({ searchQuery, setSearchQuery, onShowFavorites, onShowSho
         Desktop: Full nav
         Mobile: Logo, Search, and User Profile 
       */}
-      <header className="fixed top-0 left-0 right-0 z-40 bg-[#fdfaf2] shadow-sm border-b border-[#d6c7af] px-4 md:px-8 flex flex-col sm:flex-row items-center justify-between transition-all pt-safe" style={{ paddingBottom: '0.5rem' }}>
+      <header className="fixed top-0 left-0 right-0 z-40 bg-[#fdfaf2] shadow-sm border-b border-[#d6c7af] px-4 md:px-8 flex flex-col sm:flex-row items-center justify-between transition-all pt-safe" style={{ paddingBottom: '0.5rem', paddingTop: 'max(env(safe-area-inset-top), 15px)' }}>
         
         {/* Top Row (Mobile & Desktop) */}
         <div className="w-full sm:w-auto flex items-center justify-between py-2 sm:py-0 sm:h-20">
@@ -180,7 +180,7 @@ export function Header({ searchQuery, setSearchQuery, onShowFavorites, onShowSho
         MOBILE BOTTOM NAVIGATION BAR 
         Highly accessible, large text, fixed to bottom.
       */}
-      <div className="sm:hidden fixed bottom-0 left-0 right-0 z-50 bg-[#1a0f08] border-t border-[#8a6a4b]/30 min-h-[70px] pb-safe pt-2 px-2 flex justify-around items-start shadow-[0_-10px_30px_rgba(0,0,0,0.3)]">
+      <div className="sm:hidden fixed bottom-0 left-0 right-0 z-50 bg-[#1a0f08] border-t border-[#8a6a4b]/30 min-h-[70px] pb-safe pt-2 px-2 flex justify-around items-start shadow-[0_-4px_20px_rgba(0,0,0,0.15)]">
           
           <button onClick={onHome} className={`flex flex-col items-center p-2 min-w-[60px] ${!isFavoritesView && !isLibraryView && !searchQuery ? 'text-[#d4af37]' : 'text-[#f4ead0]/60'}`}>
              <Home className="w-6 h-6 mb-1" />

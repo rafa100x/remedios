@@ -192,7 +192,7 @@ export default function App() {
   const isChatView = view === 'guru';
 
   return (
-    <div className={`flex flex-col bg-surface text-tertiary font-body relative selection:bg-primary-container selection:text-primary ${isChatView ? 'h-[100dvh] overflow-hidden' : 'min-h-[100dvh] overflow-x-hidden pb-24 sm:pb-0'}`} style={{ paddingTop: isChatView ? 'calc(70px + env(safe-area-inset-top))' : 'calc(120px + env(safe-area-inset-top))', paddingBottom: isChatView ? 'env(safe-area-inset-bottom)' : undefined }}>
+    <div className={`flex flex-col bg-surface text-tertiary font-body relative selection:bg-primary-container selection:text-primary ${isChatView ? 'h-[100dvh] overflow-hidden' : 'min-h-[100dvh] overflow-x-hidden pb-[calc(70px+env(safe-area-inset-bottom))] sm:pb-0'}`} style={{ paddingTop: isChatView ? 'calc(73px + env(safe-area-inset-top))' : 'calc(110px + env(safe-area-inset-top))' }}>
       <div className="bg-grain absolute inset-0 pointer-events-none z-50"></div>
       
       <Header

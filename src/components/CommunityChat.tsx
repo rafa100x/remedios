@@ -171,22 +171,9 @@ Responde directo al punto en 1 o 2 líneas como mucho (tipo mensaje de móvil).
   };
 
   return (
-    <div className="flex flex-col flex-1 min-h-0 bg-white border border-[#e5dfbe] shadow-[0_4px_15px_rgba(0,0,0,0.05)] rounded-xl overflow-hidden relative">
-      {/* HEADER */}
-      <div className="bg-[#f8f6f0] border-b border-[#e5dfbe] px-4 py-3 flex items-center justify-between shrink-0">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-[#e5dfbe] rounded-full flex items-center justify-center p-2 shadow-sm border border-[#d6c7af]">
-             <Users className="w-full h-full text-[#8a3c1f]" />
-          </div>
-          <div className="flex flex-col">
-            <h2 className="font-headline font-black text-lg md:text-xl text-[#556b3e] leading-none uppercase tracking-tight">Tribu Botánica</h2>
-            <span className="text-[11px] md:text-xs text-[#8a6a4b] font-bold">Uniendo raíces</span>
-          </div>
-        </div>
-      </div>
-
+    <div className="flex flex-col flex-1 min-h-0 overflow-hidden relative">
       {/* MESSAGES */}
-      <div className="flex-1 overflow-y-auto p-3 md:p-6 space-y-4 bg-[#fcfbf9] relative" style={{ backgroundImage: 'radial-gradient(#e5dfbe 1px, transparent 0)', backgroundSize: '24px 24px' }}>
+      <div className="flex-1 overflow-y-auto p-3 md:p-6 space-y-4 bg-[#fcfbf9] relative border border-[#e5dfbe] shadow-[0_4px_15px_rgba(0,0,0,0.05)] rounded-xl md:mb-4 mb-2" style={{ backgroundImage: 'radial-gradient(#e5dfbe 1px, transparent 0)', backgroundSize: '24px 24px' }}>
         {messages.length === 0 && (
           <div className="text-center text-[#8a6a4b] mt-10 italic text-sm md:text-base font-bold bg-[#f8f6f0]/80 p-4 rounded-xl border border-[#e5dfbe] mx-auto max-w-sm">
             El círculo está en silencio. Sé el primero en hablar...
