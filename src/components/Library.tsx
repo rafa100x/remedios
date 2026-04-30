@@ -11,9 +11,20 @@ interface PremiumBook {
     coverUrl: string;
     paymentLink?: string; // Add optional direct payment link
     badge?: string;
+    isMainAppContent?: boolean;
 }
 
 export const PREMIUM_BOOKS: PremiumBook[] = [
+    {
+        id: 'principal',
+        title: 'Los 200 Remedios Naturales Olvidados',
+        subtitle: 'La Guía Completa de la Abuela',
+        description: 'La guía principal con la que iniciaste tu viaje. Cientos de remedios categorizados, listos para descubrir y preparar en casa.',
+        price: 'Gratis',
+        coverUrl: 'https://cdn.shopify.com/s/files/1/0988/7904/5945/files/mockup-producto-principal_d05515f3-5c0a-4718-8b0a-bc2d0054df44.jpg?v=1775521634',
+        badge: 'En uso',
+        isMainAppContent: true
+    },
     {
         id: 'presion',
         title: 'Protocolo Natural para la Presión',
@@ -59,16 +70,20 @@ export const PREMIUM_BOOKS: PremiumBook[] = [
 interface LibraryProps {
     onSelectBook: (book: PremiumBook) => void;
     onShowDownloads: () => void;
+    onShowMainAppContent: () => void;
 }
 
-export function Library({ onSelectBook, onShowDownloads }: LibraryProps) {
+export function Library({ onSelectBook, onShowDownloads, onShowMainAppContent }: LibraryProps) {
     const { purchasedBooks } = useAuth();
 
     return (
-        <div className="relative pt-8 pb-24 min-h-[80vh]">
-            <div className="text-center mb-12">
-                <h2 className="font-headline text-4xl md:text-5xl text-primary mb-4">La Biblioteca Secreta</h2>
-                <p className="font-body text-tertiary/80 italic max-w-2xl mx-auto px-4">
+        <div className="relative pt-8 pb-24 min-h-[80vh] bg-[#f8f6f0]">
+            {/* Background Texture */}
+            <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cream-paper.png')] opacity-60 mix-blend-multiply pointer-events-none z-0"></div>
+            
+            <div className="relative z-10 text-center mb-12">
+                <h2 className="font-headline font-black text-4xl md:text-5xl text-[#556b3e] mb-4 uppercase tracking-tight drop-shadow-sm">La Biblioteca</h2>
+                <p className="font-body text-[#8a3c1f] italic max-w-2xl mx-auto px-4 font-medium">
                     Volúmenes de conocimiento herbal avanzado. Aquí podrás adquirir y desbloquear nuevos recetarios para expandir tu práctica botánica.
                 </p>
                 
@@ -84,21 +99,21 @@ export function Library({ onSelectBook, onShowDownloads }: LibraryProps) {
             </div>
 
             {/* Shelf background pattern */}
-            <div className="absolute inset-x-0 bottom-0 top-[350px] md:top-[300px] bg-[#3a2215] rounded-xl shadow-[inset_0_10px_40px_rgba(30,15,5,0.9)] border-t border-[#ffffff15] pointer-events-none overflow-hidden -z-10 mx-2 md:mx-8">
-                <div className="absolute top-0 w-full h-10 bg-gradient-to-b from-[#5c3716] to-transparent bg-[url('https://www.transparenttextures.com/patterns/wood-pattern.png')] mix-blend-overlay opacity-60"></div>
+            <div className="absolute inset-x-0 bottom-0 top-[350px] md:top-[300px] bg-[#e5dfbe] rounded-xl shadow-[inset_0_10px_40px_rgba(138,60,31,0.1)] border-t border-[#d6c7af] pointer-events-none overflow-hidden z-0 mx-2 md:mx-8">
+                <div className="absolute top-0 w-full h-10 bg-gradient-to-b from-[#d6c7af] to-transparent bg-[url('https://www.transparenttextures.com/patterns/wood-pattern.png')] opacity-60"></div>
                 <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/wood-pattern.png')] opacity-30 mix-blend-overlay"></div>
             </div>
 
             <div className="relative z-10 flex flex-wrap justify-center gap-x-8 gap-y-16 px-4 py-8 max-w-6xl mx-auto">
                 {PREMIUM_BOOKS.map((book, index) => {
-                    const isUnlocked = purchasedBooks.includes(book.id);
+                    const isUnlocked = book.isMainAppContent || purchasedBooks.includes(book.id);
                     return (
                         <motion.div
                             key={book.id}
                             initial={{ opacity: 0, scale: 0.9, y: 20 }}
                             animate={{ opacity: 1, scale: 1, y: 0 }}
                             transition={{ duration: 0.5, delay: index * 0.1 }}
-                            onClick={() => onSelectBook(book)}
+                            onClick={() => book.isMainAppContent ? onShowMainAppContent() : onSelectBook(book)}
                             className="relative group cursor-pointer w-[200px] sm:w-[240px] flex flex-col items-center"
                         >
                             {/* Drop shadow on shelf */}

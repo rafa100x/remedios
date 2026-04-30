@@ -180,81 +180,86 @@ export function RecipeModal({ recipe, onClose, rating, onRate, isFavorite, onTog
              <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cream-paper.png')] opacity-30 pointer-events-none mix-blend-multiply"></div>
              
              <div className="relative z-10 flex flex-col w-full min-h-full">
-                {/* 1. Header Image Area */}
-                <div className="w-full h-[30vh] sm:h-[40vh] md:h-[50vh] bg-[#f4ead0] border-b-4 border-[#8a3c1f] shrink-0">
-                  <img 
-                    loading="lazy"
-                    src={(!recipe.imageUrl || recipe.imageUrl.includes('picsum.photos') || recipe.imageUrl.includes('unsplash.com')) ? `https://firebasestorage.googleapis.com/v0/b/remedios-ancestrasel.firebasestorage.app/o/recetas%2Fbotica-receta-${recipe.id.toString().padStart(3, '0')}.jpg?alt=media` : recipe.imageUrl} 
-                    className="w-full h-full object-cover object-center"
-                    alt={`Ilustración de la receta ${recipe.title}`}
-                    onError={(e) => {
-                      (e.target as HTMLImageElement).src = `https://images.unsplash.com/photo-1615554867919-482245b73e3a?q=80&w=1200&auto=format&fit=crop`;
-                    }}
-                  />
-                </div>
+                {/* 1. Clear Title & Action Container with the Jar */}
+                <div className="w-full bg-[#fdfaf2] border-b border-[#d6c7af] px-5 py-8 sm:px-8 md:px-12 shadow-sm shrink-0 relative overflow-hidden">
+                   {/* Top decorative bar */}
+                   <div className="absolute inset-x-0 top-0 h-2 bg-[#8a3c1f]"></div>
 
-                {/* 2. Extremely Clear Title & Action Container */}
-                <div className="w-full bg-[#fdfaf2] border-b border-[#d6c7af] px-5 py-6 sm:px-8 md:px-12 shadow-md shrink-0">
-                   <div className="max-w-5xl mx-auto flex flex-col md:flex-row md:items-end justify-between gap-6">
+                   <div className="max-w-5xl mx-auto flex flex-col md:flex-row items-center md:items-stretch justify-between gap-8 md:gap-12 relative z-10">
                        
-                       <div className="flex-1">
-                          <span className="inline-block font-accent italic text-[#8a3c1f] text-lg mb-1 tracking-widest border border-[#8a3c1f]/20 px-3 py-1 rounded-full bg-[#8a3c1f]/5">
+                       {/* Left side: The Jar */}
+                       <div className="shrink-0 flex items-center justify-center pl-2 md:pl-4">
+                          <div className="w-32 md:w-40 lg:w-48 aspect-[4/5] bg-[#0a0502] rounded-sm p-3 shadow-xl border border-[#d6c7af] flex items-center justify-center relative transform -rotate-1 z-10">
+                             <img 
+                                loading="lazy"
+                                src={`https://firebasestorage.googleapis.com/v0/b/remedios-ancestrasel.firebasestorage.app/o/frascos%2Fbotica-frasco-${recipe.id.toString().padStart(3, '0')}.${recipe.id >= 1001 ? 'jpg' : 'png'}?alt=media`} 
+                                alt={`Frasco de ${recipe.title}`}
+                                className="w-full h-full object-contain drop-shadow-md"
+                                onError={(e) => {
+                                  (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1615554867919-482245b73e3a?q=80&w=400&auto=format&fit=crop';
+                                }}
+                             />
+                          </div>
+                       </div>
+
+                       {/* Right side: Titles & Actions */}
+                       <div className="flex-1 flex flex-col justify-center text-center md:text-left w-full">
+                          <span className="inline-block font-accent italic font-bold tracking-widest text-[#8a3c1f] text-sm md:text-base mb-2">
                             RECETA NO. {recipe.id.toString().padStart(3, '0')}
                           </span>
-                          <h1 className="font-headline text-4xl sm:text-5xl md:text-6xl font-bold text-[#201004] leading-tight mb-4">
+                          <h1 className="font-headline text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-[#201004] leading-tight mb-4 uppercase tracking-tight drop-shadow-sm">
                             {recipe.title}
                           </h1>
                           
                           {/* Simplified Rating */}
-                          <div className="flex items-center gap-3">
-                             <span className="font-bold text-[#5a3a22] uppercase tracking-wider text-sm">Eficacia Probada:</span>
+                          <div className="flex items-center justify-center md:justify-start gap-3 mb-6">
+                             <span className="font-bold text-[#8a6a4b] uppercase tracking-wider text-xs md:text-sm">Eficacia Probada:</span>
                              <div className="flex bg-white px-3 py-1.5 rounded-full border border-[#d6c7af] shadow-sm">
                                  {[1, 2, 3, 4, 5].map((star) => (
                                    <button
                                      key={star}
                                      onClick={() => onRate(star)}
-                                     className={`transition-colors ${star <= rating ? 'text-[#e6b800]' : 'text-[#d6c7af] hover:text-[#e6b800]'}`}
+                                     className={`transition-colors ${star <= rating ? 'text-[#8a3c1f] hover:text-[#5a2a15]' : 'text-[#e5dfbe] hover:text-[#8a3c1f]'}`}
                                    >
-                                     <svg className="w-6 h-6 fill-current" viewBox="0 0 24 24">
+                                     <svg className="w-5 h-5 md:w-6 md:h-6 fill-current" viewBox="0 0 24 24">
                                        <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
                                      </svg>
                                    </button>
                                  ))}
                              </div>
                           </div>
+
+                          {/* Huge, Clearly Labelled Actions */}
+                          <div className="flex flex-col sm:flex-row items-center md:items-start justify-center md:justify-start gap-3 w-full">
+                             <button 
+                               onClick={onToggleShopping}
+                               className={`w-full sm:w-auto flex flex-row items-center justify-center gap-2 px-4 py-3 sm:px-5 sm:py-3.5 rounded-xl font-bold text-sm sm:text-base transition-all shadow-md ${
+                                 isShopping 
+                                   ? 'bg-[#556b3e] text-white border-2 border-[#485b34]' 
+                                   : 'bg-white text-[#556b3e] border-2 border-[#e5dfbe] hover:border-[#556b3e] hover:bg-[#556b3e]/5'
+                               }`}
+                             >
+                                <svg className="w-5 h-5 sm:w-6 sm:h-6" fill={isShopping ? "currentColor" : "none"} viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                                </svg>
+                                {isShopping ? 'En Insumos ✓' : 'Añadir a Insumos'}
+                             </button>
+
+                             <button 
+                               onClick={onToggleFavorite}
+                               className={`w-full sm:w-auto flex flex-row items-center justify-center gap-2 px-4 py-3 sm:px-5 sm:py-3.5 rounded-xl font-bold text-sm sm:text-base transition-all shadow-md ${
+                                 isFavorite 
+                                   ? 'bg-[#8a3c1f] text-white border-2 border-[#723219]' 
+                                   : 'bg-white text-[#8a3c1f] border-2 border-[#e5dfbe] hover:border-[#8a3c1f] hover:bg-[#8a3c1f]/5'
+                               }`}
+                             >
+                                <svg className="w-5 h-5 sm:w-6 sm:h-6" fill={isFavorite ? "currentColor" : "none"} viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
+                                </svg>
+                                {isFavorite ? 'Guardada ✓' : 'Guardar Receta'}
+                             </button>
+                          </div>
                        </div>
-
-                       {/* Huge, Clearly Labelled Actions for mobile & desktop */}
-                       <div className="flex flex-col sm:flex-row gap-2 md:w-auto mt-2 md:mt-0">
-                          <button 
-                            onClick={onToggleShopping}
-                            className={`flex flex-row items-center justify-center gap-2 px-4 py-2 sm:px-5 sm:py-3 rounded-lg font-bold text-sm sm:text-base border-2 transition-colors shadow-sm ${
-                              isShopping 
-                                ? 'bg-[#556b3e] text-[#fdfaf2] border-[#556b3e]' 
-                                : 'bg-white text-[#556b3e] border-[#556b3e] hover:bg-[#556b3e]/10'
-                            }`}
-                          >
-                             <svg className="w-5 h-5 sm:w-6 sm:h-6" fill={isShopping ? "currentColor" : "none"} viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                                 <path strokeLinecap="round" strokeLinejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
-                             </svg>
-                             {isShopping ? 'En Insumos ✓' : 'Añadir a Insumos'}
-                          </button>
-
-                          <button 
-                            onClick={onToggleFavorite}
-                            className={`flex flex-row items-center justify-center gap-2 px-4 py-2 sm:px-5 sm:py-3 rounded-lg font-bold text-sm sm:text-base border-2 transition-colors shadow-sm ${
-                              isFavorite 
-                                ? 'bg-[#311c0f] text-[#d4af37] border-[#311c0f]' 
-                                : 'bg-white text-[#8a3c1f] border-[#8a3c1f] hover:bg-[#8a3c1f]/10'
-                            }`}
-                          >
-                             <svg className="w-5 h-5 sm:w-6 sm:h-6" fill={isFavorite ? "currentColor" : "none"} viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                                 <path strokeLinecap="round" strokeLinejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
-                             </svg>
-                             {isFavorite ? 'Recomendada ✓' : 'Guardar Receta'}
-                          </button>
-                       </div>
-
                    </div>
                    
                    {/* Categorías/Tags de la receta */}
@@ -325,6 +330,21 @@ export function RecipeModal({ recipe, onClose, rating, onRate, isFavorite, onTog
                              <div className="w-6 h-[1px] bg-[#8a6a4b]/50"></div>
                              LOS BOTÁNICOS
                          </h3>
+
+                         {/* Botanical Photo */}
+                         <div className="w-full h-40 md:h-56 mb-6 md:mb-8 rounded-sm overflow-hidden border border-[#d6c7af] shadow-md relative">
+                             <div className="absolute inset-0 bg-black/10 mix-blend-multiply z-10 pointer-events-none"></div>
+                             <img 
+                                loading="lazy"
+                                src={(!recipe.imageUrl || recipe.imageUrl.includes('picsum.photos') || recipe.imageUrl.includes('unsplash.com')) ? `https://firebasestorage.googleapis.com/v0/b/remedios-ancestrasel.firebasestorage.app/o/recetas%2Fbotica-receta-${recipe.id.toString().padStart(3, '0')}.jpg?alt=media` : recipe.imageUrl} 
+                                alt={`Ilustración botánica de ${recipe.title}`}
+                                className="w-full h-full object-cover filter sepia-[.2]"
+                                onError={(e) => {
+                                  (e.target as HTMLImageElement).src = `https://images.unsplash.com/photo-1615554867919-482245b73e3a?q=80&w=1200&auto=format&fit=crop`;
+                                }}
+                             />
+                         </div>
+
                          <ul className="space-y-3 md:space-y-4">
                             {recipe.ingredients.map((ing, i) => (
                                 <li key={i} className="flex flex-col border-b border-[#8a6a4b]/20 pb-3">

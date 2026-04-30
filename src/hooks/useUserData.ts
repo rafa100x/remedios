@@ -36,7 +36,11 @@ export function useUserData() {
     setShoppingList(prev => prev.includes(id) ? prev.filter(f => f !== id) : [...prev, id]);
   };
 
-  return { favorites, toggleFavorite, shoppingList, toggleShoppingList, ratings, rateRecipe };
+  const clearShoppingList = () => {
+    setShoppingList([]);
+  };
+
+  return { favorites, toggleFavorite, shoppingList, toggleShoppingList, clearShoppingList, ratings, rateRecipe };
 
   function rateRecipe (id: number, rating: number)  {
     setRatings(prev => ({ ...prev, [id]: rating }));

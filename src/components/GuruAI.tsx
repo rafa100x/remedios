@@ -247,55 +247,55 @@ export function GuruAI({ onSelectRecipe }: { onSelectRecipe?: (recipe: Recipe) =
 
   if (!hasGuruAccess) {
     return (
-      <div className="max-w-4xl w-full flex-1 min-h-0 overflow-y-auto mx-auto px-4 py-2 md:py-16 text-center flex flex-col justify-center">
-        <Sparkles className="w-8 h-8 md:w-16 md:h-16 text-primary mx-auto mb-2 md:mb-6 drop-shadow-[0_0_15px_rgba(214,199,175,0.3)] shrink-0" />
-        <h2 className="font-headline text-2xl md:text-5xl text-primary mb-2 md:mb-4 text-shadow-glow shrink-0">
+      <div className="max-w-4xl w-full flex-1 min-h-0 overflow-y-auto mx-auto px-4 py-8 md:py-16 text-center flex flex-col justify-center">
+        <Sparkles className="w-8 h-8 md:w-16 md:h-16 text-[#556b3e] mx-auto mb-2 md:mb-6 shrink-0" />
+        <h2 className="font-headline font-black text-2xl md:text-5xl text-[#556b3e] mb-2 md:mb-4 uppercase tracking-tight drop-shadow-sm shrink-0">
           Consultorio Natural
         </h2>
-        <p className="text-xs md:text-xl text-secondary mb-3 md:mb-8 font-medium max-w-2xl mx-auto leading-relaxed shrink-0">
+        <p className="text-xs md:text-xl text-[#8a6a4b] font-accent italic mb-3 md:mb-8 max-w-2xl mx-auto leading-relaxed shrink-0">
           Un espacio privado para resolver dudas sobre plantas medicinales. Accede al Consultorio Botánico y a la <strong>Tribu</strong>.
         </p>
         
-        <div className="glass-panel ghost-border p-3 md:p-8 rounded-2xl max-w-lg mx-auto w-full transform hover:scale-[1.02] transition-transform duration-300 shrink-0">
-          <div className="flex items-center justify-center w-8 h-8 md:w-12 h-12 bg-primary/20 rounded-full mx-auto mb-2 md:mb-4 border border-primary/30 shadow-[0_0_10px_rgba(214,199,175,0.2)]">
-            <Lock className="w-4 h-4 md:w-6 h-6 text-primary" />
+        <div className="bg-white border border-[#e5dfbe] shadow-[0_8px_30px_rgba(138,60,31,0.1)] p-6 md:p-8 rounded-2xl max-w-lg mx-auto w-full transform hover:scale-[1.02] transition-transform duration-300 shrink-0">
+          <div className="flex items-center justify-center w-10 h-10 md:w-14 md:h-14 bg-[#f8f6f0] rounded-full mx-auto mb-3 md:mb-4 border border-[#d6c7af]">
+            <Lock className="w-5 h-5 md:w-7 md:h-7 text-[#8a3c1f]" />
           </div>
-          <h3 className="text-base md:text-2xl font-bold text-secondary mb-1 md:mb-2">Acceso Ilimitado</h3>
-          <p className="text-[11px] md:text-base text-tertiary mb-3 md:mb-6 leading-tight md:leading-normal">
+          <h3 className="font-headline font-black text-lg md:text-2xl text-[#201004] mb-1 md:mb-2 uppercase">Acceso Ilimitado</h3>
+          <p className="text-xs md:text-base text-[#8a6a4b] mb-4 md:mb-6 leading-relaxed font-medium">
             Realiza todas las consultas que necesites en cualquier momento. Pagas una sola vez y lo usas para siempre.
           </p>
-          <div className="text-xl md:text-3xl font-bold text-accent drop-shadow-sm mb-3 md:mb-6">
-             $24.990 <span className="text-[10px] md:text-sm font-normal text-tertiary">ARS</span>
+          <div className="font-headline font-black text-2xl md:text-4xl text-[#556b3e] mb-4 md:mb-6 drop-shadow-sm">
+             $24.990 <span className="text-xs md:text-sm font-bold text-[#8a6a4b] uppercase">ARS</span>
           </div>
           <button 
             onClick={() => {
               trackEvent('guru_unlock_clicked');
               purchaseGuruAccess();
             }}
-            className="w-full bg-gradient-to-r from-[#d6c7af] to-[#c2b092] text-[#2c241b] hover:from-[#c2b092] hover:to-[#a99473] font-bold py-2 md:py-4 px-4 md:px-6 rounded-xl transition-all shadow-lg hover:shadow-xl text-xs md:text-lg flex items-center justify-center gap-2 mb-3 md:mb-4"
+            className="w-full bg-[#8a3c1f] hover:bg-[#723219] text-white font-bold py-3 md:py-4 px-4 md:px-6 rounded-xl transition-all shadow-md text-sm md:text-lg flex items-center justify-center gap-2 mb-4 md:mb-5"
           >
-            <BookOpen className="w-3 h-3 md:w-5 h-5" /> Desbloquear Sabiduría
+            <BookOpen className="w-4 h-4 md:w-5 md:h-5" /> Desbloquear Sabiduría
           </button>
           
-          <div className="pt-2 md:pt-4 border-t border-white/5">
-             <p className="text-[10px] md:text-xs text-tertiary mb-1 md:mb-2 text-left">¿Ya pagaste con MercadoPago? Ingresa tu código:</p>
+          <div className="pt-4 md:pt-6 border-t border-[#d6c7af]">
+             <p className="text-[10px] md:text-xs text-[#8a6a4b] mb-2 font-bold uppercase text-left">¿Ya pagaste con MercadoPago? Ingresa tu código:</p>
              <div className="flex gap-2">
                 <input 
                   type="text" 
                   value={unlockCode}
                   onChange={e => setUnlockCode(e.target.value)}
                   placeholder="GURU-XXXX"
-                  className="flex-1 min-w-0 bg-[#3d3326]/50 border border-[#d6c7af]/20 rounded-xl px-2 py-1 md:px-4 md:py-2 text-xs md:text-sm text-secondary placeholder-tertiary focus:outline-none focus:border-primary/50 transition-colors uppercase"
+                  className="flex-1 min-w-0 bg-[#f8f6f0] border border-[#d6c7af] rounded-lg px-3 py-2 md:px-4 md:py-3 text-xs md:text-sm text-[#201004] font-bold placeholder:text-[#8a6a4b]/50 focus:outline-none focus:border-[#556b3e] transition-colors uppercase shadow-inner"
                 />
                 <button 
                   onClick={handleUnlockCode}
                   disabled={isUnlocking || !unlockCode.trim()}
-                  className="bg-primary/20 hover:bg-primary/30 text-primary font-bold py-1 px-3 md:py-2 md:px-4 rounded-xl transition-colors shrink-0 disabled:opacity-50 text-[11px] md:text-base"
+                  className="bg-[#e5dfbe] hover:bg-[#d6c7af] text-[#8a3c1f] font-bold py-2 px-3 md:py-2 md:px-5 rounded-lg transition-colors shrink-0 disabled:opacity-50 text-[11px] md:text-sm border border-[#d6c7af]"
                 >
                   {isUnlocking ? '...' : 'Activar'}
                 </button>
              </div>
-             {unlockError && <p className="text-red-400 text-xs mt-1 md:mt-2">{unlockError}</p>}
+             {unlockError && <p className="text-red-600 font-bold text-xs mt-2 text-left">{unlockError}</p>}
           </div>
         </div>
       </div>
@@ -333,31 +333,31 @@ export function GuruAI({ onSelectRecipe }: { onSelectRecipe?: (recipe: Recipe) =
         <>
           <div className="flex items-center gap-4 mb-6 shrink-0">
             <div className="relative">
-              <div className="bg-primary/20 p-3 rounded-full border border-primary/30">
-                <Sparkles className="w-8 h-8 text-primary" />
+              <div className="bg-white p-3 rounded-full border border-[#d6c7af] shadow-sm">
+                <Sparkles className="w-8 h-8 text-[#556b3e]" />
               </div>
-              <div className="absolute bottom-0 right-0 w-4 h-4 bg-green-500 border-2 border-[#1c1813] rounded-full shadow-[0_0_8px_rgba(34,197,94,0.6)]"></div>
+              <div className="absolute bottom-0 right-0 w-4 h-4 bg-green-500 border-2 border-white rounded-full shadow-sm"></div>
             </div>
             <div className="flex flex-col">
-              <h2 className="font-headline text-3xl md:text-4xl text-primary text-shadow-glow leading-none">
-                Guía Botánico
+              <h2 className="font-headline font-black text-3xl md:text-4xl text-[#556b3e] leading-none uppercase tracking-tight">
+                Gurú Botánico
               </h2>
-              <span className="text-sm text-green-500/80 font-medium mt-1">En línea</span>
+              <span className="text-sm text-[#4ade80] font-bold mt-1">En línea</span>
             </div>
             <button
               onClick={() => setHiddenMessageCount(messages.length)}
               title="Limpiar pantalla"
-              className="ml-auto p-2 text-tertiary hover:text-primary transition-colors hover:bg-primary/10 rounded-full"
+              className="ml-auto p-2 text-[#8a6a4b] hover:text-[#8a3c1f] transition-colors hover:bg-white rounded-full border border-transparent hover:border-[#e5dfbe]"
             >
               <Trash2 className="w-5 h-5" />
             </button>
           </div>
 
-          <div className="flex-1 overflow-y-auto glass-panel ghost-border rounded-xl p-4 md:p-6 mb-4 space-y-4">
+          <div className="flex-1 overflow-y-auto bg-white border border-[#e5dfbe] shadow-[0_4px_15px_rgba(0,0,0,0.05)] rounded-xl p-4 md:p-6 mb-4 space-y-4">
             {messages.slice(hiddenMessageCount).length === 0 && (
               <div className="flex justify-start">
-                <div className="max-w-[85%] rounded-2xl p-4 glass-panel text-secondary rounded-bl-sm border border-white/5">
-                  <div className="markdown-body text-sm md:text-base prose prose-invert max-w-none">
+                <div className="max-w-[85%] rounded-2xl p-4 bg-[#f8f6f0] text-[#201004] border border-[#d6c7af] shadow-sm rounded-bl-sm">
+                  <div className="markdown-body font-medium text-sm md:text-base prose prose-stone max-w-none">
                      <p>Las raíces me han hablado de tu llegada. Aquí estoy para compartir el conocimiento de las hojas, las cortezas y la tierra. ¿Qué te aqueja o qué buscas aprender hoy, caminante?</p>
                   </div>
                 </div>
@@ -365,13 +365,13 @@ export function GuruAI({ onSelectRecipe }: { onSelectRecipe?: (recipe: Recipe) =
             )}
             {messages.slice(hiddenMessageCount).map((msg, idx) => (
               <div key={idx} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-                <div className={`max-w-[85%] rounded-2xl p-4 ${
+                <div className={`max-w-[85%] rounded-2xl p-4 shadow-sm border ${
                   msg.role === 'user' 
-                    ? 'bg-primary/20 text-secondary rounded-br-sm border border-primary/10' 
-                    : 'glass-panel text-secondary rounded-bl-sm border border-white/5'
+                    ? 'bg-[#556b3e] text-white rounded-br-sm border-[#485c34]' 
+                    : 'bg-[#f8f6f0] text-[#201004] rounded-bl-sm border-[#d6c7af]'
                 }`}>
                    {msg.role === 'model' ? (
-                     <div className="markdown-body text-sm md:text-base prose prose-invert max-w-none">
+                     <div className="markdown-body text-sm md:text-base prose prose-stone max-w-none">
                         <Markdown
                           urlTransform={(value) => value}
                           components={{
@@ -381,7 +381,7 @@ export function GuruAI({ onSelectRecipe }: { onSelectRecipe?: (recipe: Recipe) =
                                  return (
                                    <button 
                                      type="button"
-                                     className="text-primary hover:text-primary/80 underline decoration-primary/50 underline-offset-2 font-medium transition-colors"
+                                     className="text-[#8a3c1f] hover:text-[#5a2a15] font-bold underline decoration-[#8a3c1f]/50 underline-offset-2 transition-colors inline-block"
                                      onClick={() => {
                                        if (onSelectRecipe && !isNaN(recipeId)) {
                                           const recipe = allRecipes.find(r => r.id === recipeId);
@@ -393,7 +393,7 @@ export function GuruAI({ onSelectRecipe }: { onSelectRecipe?: (recipe: Recipe) =
                                    </button>
                                  );
                               }
-                              return <a href={href} target="_blank" rel="noopener noreferrer" {...props}>{children}</a>;
+                              return <a href={href} target="_blank" rel="noopener noreferrer" className="font-bold text-[#8a3c1f] hover:text-[#5a2a15]" {...props}>{children}</a>;
                             }
                           }}
                         >
@@ -408,8 +408,8 @@ export function GuruAI({ onSelectRecipe }: { onSelectRecipe?: (recipe: Recipe) =
             ))}
             {isLoading && (
               <div className="flex justify-start">
-                 <div className="glass-panel text-tertiary rounded-2xl rounded-bl-sm p-4 text-sm animate-pulse flex items-center gap-2 border border-white/5">
-                    <Leaf className="w-4 h-4 animate-spin-slow" />
+                 <div className="bg-[#f8f6f0] border border-[#d6c7af] text-[#8a6a4b] rounded-2xl rounded-bl-sm p-4 text-sm animate-pulse flex items-center gap-2 shadow-sm font-medium">
+                    <Leaf className="w-4 h-4 animate-spin-slow text-[#556b3e]" />
                     Escribiendo...
                  </div>
               </div>
@@ -423,16 +423,16 @@ export function GuruAI({ onSelectRecipe }: { onSelectRecipe?: (recipe: Recipe) =
                value={input}
                onChange={(e) => setInput(e.target.value)}
                onKeyDown={(e) => e.key === 'Enter' && handleSend()}
-               placeholder="Escribe un mensaje..."
-               className="w-full bg-[#3d3326]/50 border border-[#d6c7af]/20 rounded-xl px-4 py-4 pr-12 text-secondary placeholder-tertiary focus:outline-none focus:border-primary/50 transition-colors shadow-inner"
+               placeholder="Escribe un mensaje al gurú..."
+               className="w-full bg-white border border-[#d6c7af] rounded-full px-4 sm:px-6 py-3 sm:py-4 pr-14 text-[#201004] font-medium text-sm sm:text-base placeholder:text-[#8a6a4b]/60 focus:outline-none focus:border-[#556b3e] focus:ring-2 focus:ring-[#556b3e]/20 transition-all shadow-sm"
                disabled={isLoading}
              />
              <button
                onClick={handleSend}
                disabled={!input.trim() || isLoading}
-               className="absolute right-3 top-1/2 -translate-y-1/2 p-2 bg-primary/10 hover:bg-primary/20 text-primary rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+               className="absolute right-2 top-1/2 -translate-y-1/2 w-10 h-10 md:w-12 md:h-12 bg-[#8a3c1f] hover:bg-[#723219] text-white rounded-full flex items-center justify-center transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-sm"
              >
-               <Send className="w-5 h-5" />
+               <Send className="w-5 h-5 ml-1" />
              </button>
           </div>
         </>

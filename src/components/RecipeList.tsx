@@ -27,8 +27,8 @@ export function RecipeList({ recipes, onSelectRecipe, favorites, toggleFavorite 
   return (
     <div className="relative pt-8 pb-24">
       {/* Shelf background pattern */}
-      <div className="absolute inset-0 bg-[#3a2215] rounded-xl shadow-[inset_0_10px_40px_rgba(30,15,5,0.9)] border-t border-[#ffffff15] pointer-events-none overflow-hidden">
-        <div className="absolute top-0 w-full h-10 bg-gradient-to-b from-[#5c3716] to-transparent bg-[url('https://www.transparenttextures.com/patterns/wood-pattern.png')] mix-blend-overlay opacity-60"></div>
+      <div className="absolute inset-0 bg-[#e5dfbe] rounded-xl shadow-[inset_0_10px_40px_rgba(138,60,31,0.1)] border border-[#d6c7af] pointer-events-none overflow-hidden z-0">
+        <div className="absolute top-0 w-full h-10 bg-gradient-to-b from-[#d6c7af] to-transparent bg-[url('https://www.transparenttextures.com/patterns/wood-pattern.png')] opacity-60"></div>
         <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/wood-pattern.png')] opacity-30 mix-blend-overlay"></div>
       </div>
 
@@ -43,30 +43,22 @@ export function RecipeList({ recipes, onSelectRecipe, favorites, toggleFavorite 
                 animate={{ opacity: 1, scale: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: index * 0.03 }}
                 onClick={() => onSelectRecipe(recipe)}
-                className="relative group cursor-pointer w-[160px] h-[240px] flex flex-col items-center"
+                className="relative group cursor-pointer flex flex-col items-center"
               >
-                {/* Drop shadow on shelf */}
-                <div className="absolute bottom-[-5px] w-[110%] h-6 bg-black/60 blur-[6px] rounded-[100%] transition-opacity duration-300 group-hover:opacity-80"></div>
-                
-                {/* Jar Body with Image */}
-                <div className="relative w-full h-[240px] flex flex-col items-center justify-end transition-transform duration-300 group-hover:-translate-y-3">
+                {/* Polaroid Card container */}
+                <div className="bg-[#fcfbf8] w-[140px] md:w-[160px] p-2 pb-14 rounded-sm shadow-[0_4px_10px_rgba(0,0,0,0.08)] border border-[#e5dfbe] flex flex-col relative transition-all duration-300 group-hover:-translate-y-2 group-hover:shadow-[0_12px_25px_rgba(138,60,31,0.15)] group-hover:rotate-1">
                   
-                  {/* The Image */}
-                  <div className="absolute inset-x-0 bottom-[60px] top-0 flex items-center justify-center">
+                  {/* Photo Area with dark background matching the jars */}
+                  <div className="relative w-full aspect-[4/5] overflow-hidden rounded-sm bg-[#0a0502] flex items-center justify-center">
                     <img 
                       loading="lazy"
                       src={`https://firebasestorage.googleapis.com/v0/b/remedios-ancestrasel.firebasestorage.app/o/frascos%2Fbotica-frasco-${recipe.id.toString().padStart(3, '0')}.${recipe.id >= 1001 ? 'jpg' : 'png'}?alt=media`} 
                       alt={recipe.title} 
-                      className={`w-full max-h-full object-contain opacity-90 drop-shadow-2xl transition-all duration-300 group-hover:opacity-100 group-hover:drop-shadow-[0_15px_15px_rgba(255,255,255,0.1)] ${recipe.id >= 1001 ? 'mix-blend-screen' : ''}`}
+                      className="w-[95%] h-[95%] object-contain drop-shadow-xl transition-all duration-500 group-hover:scale-105"
                       onError={(e) => {
-                        // Fallback generic dark jar if the image is missing
-                        (e.target as HTMLImageElement).src = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 150"><rect width="100" height="150" fill="%231a0f08" rx="20"/><rect x="30" y="-10" width="40" height="30" fill="%230a0502" rx="5"/></svg>';
-                        (e.target as HTMLImageElement).classList.remove('mix-blend-screen');
+                        (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1615554867919-482245b73e3a?q=80&w=400&auto=format&fit=crop';
                       }}
                     />
-                    
-                    {/* Inner jar warm glow to create glass effect from behind */}
-                    <div className="absolute inset-0 bg-gradient-to-tr from-[#d4af37]/10 to-transparent mix-blend-overlay pointer-events-none rounded-[20px]"></div>
                   </div>
 
                   {/* Favorite Button */}
@@ -75,10 +67,10 @@ export function RecipeList({ recipes, onSelectRecipe, favorites, toggleFavorite 
                       e.stopPropagation();
                       toggleFavorite(recipe.id);
                     }}
-                    className={`absolute -right-1 top-4 z-20 w-8 h-8 rounded-full flex items-center justify-center transition-all bg-[#1a0f08] border border-[#d4af37]/30 shadow-xl ${
+                    className={`absolute right-1 top-1 z-20 w-8 h-8 rounded-full flex items-center justify-center transition-all bg-[#0a0502]/40 backdrop-blur-sm border border-[#d4af37]/30 hover:bg-[#0a0502]/80 ${
                       isFav 
                         ? 'text-[#d4af37]' 
-                        : 'text-white/30 hover:text-white/60'
+                        : 'text-white/50 hover:text-white'
                     }`}
                   >
                     <svg className="w-[14px] h-[14px] fill-current" viewBox="0 0 24 24">
@@ -90,17 +82,13 @@ export function RecipeList({ recipes, onSelectRecipe, favorites, toggleFavorite 
                     </svg>
                   </button>
 
-                  {/* Info Label Below Jar */}
-                  <div className="w-full flex flex-col items-center mt-auto text-center translate-y-4">
-                     <span className="font-accent italic text-[#d4af37] text-[10px] tracking-[0.15em] font-medium mb-1 drop-shadow-md">Nº {recipe.id.toString().padStart(3, '0')}</span>
-                     <span className="font-sans font-bold text-[#f4ead0]/60 text-[8px] uppercase tracking-widest line-clamp-1 w-full max-w-[120px] mb-1">
-                        {getShortPurpose(recipe.purpose)}
-                     </span>
-                     <h3 className="font-headline font-bold text-[#fdfaf2] text-[12px] leading-tight line-clamp-2 w-full max-w-[130px] drop-shadow-md">
+                  {/* Text on Polaroid */}
+                  <div className="absolute inset-x-0 bottom-2 md:bottom-3 flex flex-col items-center text-center px-1">
+                     <span className="font-accent italic text-[#8a3c1f] text-[9px] md:text-[10px] tracking-widest block mb-0.5">Nº {recipe.id.toString().padStart(3, '0')}</span>
+                     <h3 className="font-headline font-bold text-[#3a2211] text-[11px] md:text-[12px] leading-tight line-clamp-2 px-1">
                         {recipe.title}
                      </h3>
                   </div>
-
                 </div>
               </motion.div>
             );

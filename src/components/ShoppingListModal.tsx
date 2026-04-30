@@ -5,6 +5,7 @@ import { useState, useEffect } from 'react';
 interface ShoppingListModalProps {
   onClose: () => void;
   recipes: Recipe[];
+  onClear?: () => void;
 }
 
 interface IngredientGroup {
@@ -12,7 +13,7 @@ interface IngredientGroup {
   items: { name: string; la: string; recipeIds: number[]; recipeTitles: string[] }[];
 }
 
-export function ShoppingListModal({ onClose, recipes }: ShoppingListModalProps) {
+export function ShoppingListModal({ onClose, recipes, onClear }: ShoppingListModalProps) {
   const [checkedItems, setCheckedItems] = useState<Record<string, boolean>>(() => {
     try {
       const saved = localStorage.getItem('grimorio_shopping_checks');
@@ -165,6 +166,20 @@ export function ShoppingListModal({ onClose, recipes }: ShoppingListModalProps) 
           <div className="absolute top-4 right-4 md:top-6 md:right-6 z-50 flex items-center justify-end gap-3 w-full pointer-events-none">
              {recipes.length > 0 && (
                  <>
+                    {onClear && (
+                      <button
+                         onClick={() => {
+                            if (window.confirm("¿Estás seguro de vaciar la lista por completo?")) {
+                               setCheckedItems({});
+                               onClear();
+                            }
+                         }}
+                         className="pointer-events-auto bg-[#e5dfbe] text-[#8a3c1f] hover:bg-[#d8ceaa] border border-[#8a3c1f]/20 px-4 h-10 md:h-11 rounded-full flex items-center justify-center transition-all shadow-sm font-bold text-sm"
+                         title="Vaciar Lista"
+                      >
+                         Vaciar Lista
+                      </button>
+                    )}
                     <button
                        onClick={handleShareWhatsApp}
                        className="pointer-events-auto bg-[#4ade80] text-white hover:bg-[#3bcf6d] w-10 h-10 md:w-11 md:h-11 rounded-full flex items-center justify-center transition-all shadow-sm"

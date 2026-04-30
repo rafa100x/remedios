@@ -50,7 +50,7 @@ export default function App() {
     trackEvent('completed_tutorial');
   };
 
-  const { favorites, toggleFavorite, shoppingList, toggleShoppingList, ratings, rateRecipe } = useUserData();
+  const { favorites, toggleFavorite, shoppingList, toggleShoppingList, clearShoppingList, ratings, rateRecipe } = useUserData();
 
   const allRecipes = useMemo(() => categories.flatMap(c => c.recipes), []);
 
@@ -210,9 +210,9 @@ export default function App() {
       />
 
       {searchQuery.trim() ? (
-        <main className="max-w-7xl mx-auto px-4 md:px-12 py-12 relative z-10 bg-[#1a0f08] min-h-screen">
-          <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/dark-leather.png')] opacity-30 mix-blend-overlay pointer-events-none z-0"></div>
-          <h2 className="font-headline text-4xl text-[#d4af37] mb-8 relative z-10 text-center border-b border-[#d4af37]/20 pb-4">Resultados de la búsqueda</h2>
+        <main className="max-w-7xl mx-auto px-4 md:px-12 py-12 relative z-10 bg-[#f8f6f0] min-h-screen">
+          <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cream-paper.png')] opacity-60 mix-blend-multiply pointer-events-none z-0"></div>
+          <h2 className="font-headline font-black text-4xl text-[#556b3e] mb-8 relative z-10 text-center border-b border-[#d6c7af] pb-4 drop-shadow-sm uppercase tracking-tight">Resultados de la búsqueda</h2>
           <RecipeList
             recipes={searchResults}
             onSelectRecipe={setSelectedRecipe}
@@ -221,9 +221,9 @@ export default function App() {
           />
         </main>
       ) : view === 'favorites' ? (
-        <main className="max-w-7xl mx-auto px-4 md:px-12 py-12 relative z-10 bg-[#1a0f08] min-h-screen">
-          <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/dark-leather.png')] opacity-30 mix-blend-overlay pointer-events-none z-0"></div>
-          <h2 className="font-headline text-4xl text-[#d4af37] mb-8 relative z-10 text-center border-b border-[#d4af37]/20 pb-4">Fórmulas Guardadas</h2>
+        <main className="max-w-7xl mx-auto px-4 md:px-12 py-12 relative z-10 bg-[#f8f6f0] min-h-screen">
+          <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cream-paper.png')] opacity-60 mix-blend-multiply pointer-events-none z-0"></div>
+          <h2 className="font-headline font-black text-4xl text-[#556b3e] mb-8 relative z-10 text-center border-b border-[#d6c7af] pb-4 drop-shadow-sm uppercase tracking-tight">Fórmulas Guardadas</h2>
           <RecipeList
             recipes={favoriteRecipes}
             onSelectRecipe={setSelectedRecipe}
@@ -233,7 +233,7 @@ export default function App() {
         </main>
       ) : view === 'library' ? (
         <main className="w-full">
-            <Library onSelectBook={setSelectedBook} onShowDownloads={() => setShowDownloads(true)} />
+            <Library onSelectBook={setSelectedBook} onShowDownloads={() => setShowDownloads(true)} onShowMainAppContent={() => setView('home')} />
         </main>
       ) : view === 'profile' ? (
         <main className="w-full">
@@ -244,15 +244,14 @@ export default function App() {
             <AdminDashboard />
         </main>
       ) : view === 'guru' ? (
-        <main className="w-full flex-1 relative z-10 bg-[#1a0f08] flex flex-col min-h-0">
-            <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/dark-leather.png')] opacity-30 mix-blend-overlay pointer-events-none z-0"></div>
+        <main className="w-full flex-1 relative z-10 bg-[#f8f6f0] flex flex-col min-h-0">
+            <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cream-paper.png')] opacity-60 mix-blend-multiply pointer-events-none z-0"></div>
             <div className="relative z-10 flex-1 flex flex-col min-h-0">
                <GuruAI onSelectRecipe={setSelectedRecipe} />
             </div>
         </main>
       ) : !selectedCategory ? (
         <>
-          <Hero onNavigateToLibrary={handleShowLibrary} />
           <Cabinet onSelectCategory={setSelectedCategory} />
         </>
       ) : (
@@ -310,6 +309,7 @@ export default function App() {
         <ShoppingListModal 
           recipes={shoppingRecipes}
           onClose={() => setShowShoppingList(false)}
+          onClear={clearShoppingList}
         />
       )}
 
