@@ -62,6 +62,7 @@ function RecipeImage({ src, alt, fallbackSrc, onImageLoaded, isPriority }: { src
 export function RecipeList({ recipes, onSelectRecipe, favorites, toggleFavorite }: RecipeListProps) {
   const [isPreparing, setIsPreparing] = useState(true);
   const [loadedCount, setLoadedCount] = useState(0);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   const waitThreshold = recipes.length;
   const recipesKey = recipes.map(r => r.id).join('-');
@@ -74,6 +75,20 @@ export function RecipeList({ recipes, onSelectRecipe, favorites, toggleFavorite 
     
     setIsPreparing(true);
     setLoadedCount(0);
+    
+    if (containerRef.current) {
+        // give it a short timeout to let the container render, then scroll to it
+        setTimeout(() => {
+            if (containerRef.current) {
+                const elementPosition = containerRef.current.getBoundingClientRect().top + window.scrollY;
+                const offsetPosition = elementPosition - 120; // accounting for the fixed header
+                window.scrollTo({
+                    top: offsetPosition,
+                    behavior: 'smooth'
+                });
+            }
+        }, 100);
+    }
 
     // If it takes more than 5 seconds, fallback
     const timer = setTimeout(() => setIsPreparing(false), 5000);
@@ -102,16 +117,16 @@ export function RecipeList({ recipes, onSelectRecipe, favorites, toggleFavorite 
   };
 
   return (
-    <div className="relative pt-8 pb-24 min-h-[400px]">
+    <div ref={containerRef} className="relative pt-8 pb-24 min-h-[400px]">
       <AnimatePresence>
         {isPreparing && (
           <motion.div 
             initial={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.5 }}
-            className="absolute inset-0 z-50 flex flex-col items-center justify-center bg-[#f8f6f0]/90 backdrop-blur-sm rounded-xl border border-[#d6c7af]"
+            className="absolute inset-0 z-50 bg-[#f8f6f0]/90 backdrop-blur-sm rounded-xl border border-[#d6c7af]"
           >
-            <div className="flex flex-col items-center">
+            <div className="absolute top-32 left-0 right-0 flex flex-col items-center justify-start">
               <Leaf className="w-16 h-16 text-[#8a3c1f] opacity-80 animate-pulse mb-6 drop-shadow-sm" />
               <div className="flex items-center gap-2 text-[#8a3c1f] font-accent italic text-2xl tracking-wider">
                 <div className="w-5 h-5 border-2 border-[#8a3c1f] border-t-transparent rounded-full animate-spin"></div>

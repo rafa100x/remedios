@@ -98,8 +98,8 @@ Responde directo al punto en 1 o 2 líneas como mucho (tipo mensaje de móvil).
     return unsubscribe;
   }, [user]);
 
-  const handleSend = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSend = async (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
     if (!newMessage.trim() || !user) return;
 
     if (user.uid === 'demo-user') {
