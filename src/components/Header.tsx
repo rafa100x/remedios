@@ -180,7 +180,7 @@ export function Header({ searchQuery, setSearchQuery, onShowFavorites, onShowSho
         MOBILE BOTTOM NAVIGATION BAR 
         Highly accessible, large text, fixed to bottom.
       */}
-      <div className="sm:hidden fixed bottom-0 left-0 right-0 z-50 bg-[#1a0f08] border-t border-[#8a6a4b]/30 h-[70px] pb-safe pt-1 px-2 flex justify-around items-start shadow-[0_-10px_30px_rgba(0,0,0,0.3)]">
+      <div className="sm:hidden fixed bottom-0 left-0 right-0 z-50 bg-[#1a0f08] border-t border-[#8a6a4b]/30 min-h-[70px] pb-safe pt-2 px-2 flex justify-around items-start shadow-[0_-10px_30px_rgba(0,0,0,0.3)]">
           
           <button onClick={onHome} className={`flex flex-col items-center p-2 min-w-[60px] ${!isFavoritesView && !isLibraryView && !searchQuery ? 'text-[#d4af37]' : 'text-[#f4ead0]/60'}`}>
              <Home className="w-6 h-6 mb-1" />

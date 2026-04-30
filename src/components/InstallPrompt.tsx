@@ -70,7 +70,7 @@ export function InstallPrompt() {
            initial={{ y: 150, opacity: 0 }}
            animate={{ y: 0, opacity: 1 }}
            exit={{ y: 150, opacity: 0 }}
-           className="fixed bottom-4 left-4 right-4 sm:left-1/2 sm:-translate-x-1/2 sm:w-[350px] bg-[#f8f6f0] border border-[#d6c7af] rounded-2xl shadow-[0_10px_40px_rgba(138,60,31,0.2)] p-4 sm:p-5 z-[100] flex items-start gap-4"
+           className="fixed bottom-[90px] left-4 right-4 sm:bottom-6 sm:left-1/2 sm:-translate-x-1/2 sm:w-[350px] bg-[#f8f6f0] border border-[#d6c7af] rounded-2xl shadow-[0_10px_40px_rgba(138,60,31,0.2)] p-4 sm:p-5 z-[100] flex items-start gap-4 pb-safe"
         >
           <div className="w-12 h-12 bg-[#8a3c1f]/10 rounded-xl flex items-center justify-center shrink-0 border border-[#8a3c1f]/20 shadow-inner">
             <Download className="w-6 h-6 text-[#8a3c1f]" />
