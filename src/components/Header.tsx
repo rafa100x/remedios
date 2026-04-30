@@ -31,10 +31,10 @@ export function Header({ searchQuery, setSearchQuery, onShowFavorites, onShowSho
         Desktop: Full nav
         Mobile: Logo, Search, and User Profile 
       */}
-      <header className={`fixed top-0 left-0 right-0 z-40 bg-[#fdfaf2] shadow-sm border-b border-[#d6c7af] px-4 md:px-8 flex flex-col sm:flex-row items-center justify-between transition-all ${hideSearch ? 'h-[70px] sm:h-20' : 'h-[110px] sm:h-20'}`}>
+      <header className="fixed top-0 left-0 right-0 z-40 bg-[#fdfaf2] shadow-sm border-b border-[#d6c7af] px-4 md:px-8 flex flex-col sm:flex-row items-center justify-between transition-all pt-safe" style={{ paddingBottom: '0.5rem' }}>
         
         {/* Top Row (Mobile & Desktop) */}
-        <div className="w-full sm:w-auto flex items-center justify-between py-3 sm:py-0">
+        <div className="w-full sm:w-auto flex items-center justify-between py-2 sm:py-0 sm:h-20">
           <button onClick={onHome} className="font-headline text-2xl md:text-3xl font-bold text-[#201004] hover:text-[#8a3c1f] transition-colors">
             El Grimorio
           </button>
