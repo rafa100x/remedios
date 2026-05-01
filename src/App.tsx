@@ -1,4 +1,5 @@
 import { useState, useMemo, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Category, Recipe, categories } from './data/recipes';
 import { Hero } from './components/Hero';
 import { Cabinet } from './components/Cabinet';
@@ -22,6 +23,7 @@ import { GuruAI } from './components/GuruAI';
 import { CommunityChat } from './components/CommunityChat';
 import { TutorialModal } from './components/TutorialModal';
 import { InstallPrompt } from './components/InstallPrompt';
+import { Toaster } from 'sonner';
 
 export default function App() {
   const { user } = useAuth();
@@ -212,60 +214,71 @@ export default function App() {
         hideSearch={isChatView}
       />
 
-      {searchQuery.trim() ? (
-        <main className="max-w-7xl mx-auto px-4 md:px-12 py-12 relative z-10 bg-[#f8f6f0] min-h-screen">
-          <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cream-paper.png')] opacity-60 mix-blend-multiply pointer-events-none z-0"></div>
-          <h2 className="font-headline font-black text-4xl text-[#556b3e] mb-8 relative z-10 text-center border-b border-[#d6c7af] pb-4 drop-shadow-sm uppercase tracking-tight">Resultados de la búsqueda</h2>
-          <RecipeList
-            recipes={searchResults}
-            onSelectRecipe={setSelectedRecipe}
-            favorites={favorites}
-            toggleFavorite={toggleFavorite}
-          />
-        </main>
-      ) : view === 'favorites' ? (
-        <main className="max-w-7xl mx-auto px-4 md:px-12 py-12 relative z-10 bg-[#f8f6f0] min-h-screen">
-          <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cream-paper.png')] opacity-60 mix-blend-multiply pointer-events-none z-0"></div>
-          <h2 className="font-headline font-black text-4xl text-[#556b3e] mb-8 relative z-10 text-center border-b border-[#d6c7af] pb-4 drop-shadow-sm uppercase tracking-tight">Fórmulas Guardadas</h2>
-          <RecipeList
-            recipes={favoriteRecipes}
-            onSelectRecipe={setSelectedRecipe}
-            favorites={favorites}
-            toggleFavorite={toggleFavorite}
-          />
-        </main>
-      ) : view === 'library' ? (
-        <main className="w-full">
-            <Library onSelectBook={setSelectedBook} onShowDownloads={() => setShowDownloads(true)} onShowMainAppContent={() => setView('home')} />
-        </main>
-      ) : view === 'profile' ? (
-        <main className="w-full">
-            <ProfileView />
-        </main>
-      ) : view === 'admin' ? (
-        <main className="w-full">
-            <AdminDashboard />
-        </main>
-      ) : view === 'guru' ? (
-        <main className="w-full flex-1 relative z-10 bg-[#f8f6f0] flex flex-col min-h-0 pb-[calc(70px+env(safe-area-inset-bottom))] sm:pb-0">
-            <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cream-paper.png')] opacity-60 mix-blend-multiply pointer-events-none z-0"></div>
-            <div className="relative z-10 flex-1 flex flex-col min-h-0">
-               <GuruAI onSelectRecipe={setSelectedRecipe} />
-            </div>
-        </main>
-      ) : !selectedCategory ? (
-        <>
-          <Cabinet onSelectCategory={setSelectedCategory} />
-        </>
-      ) : (
-        <CategoryDetail 
-          category={selectedCategory} 
-          onBack={() => setSelectedCategory(null)}
-          onSelectRecipe={setSelectedRecipe}
-          favorites={favorites}
-          toggleFavorite={toggleFavorite}
-        />
-      )}
+      <AnimatePresence mode="wait">
+        <motion.div
+           key={searchQuery.trim() ? 'search' : selectedCategory ? 'category' : view}
+           initial={{ opacity: 0, y: 10 }}
+           animate={{ opacity: 1, y: 0 }}
+           exit={{ opacity: 0, y: -10 }}
+           transition={{ duration: 0.3 }}
+           className={`w-full ${isChatView ? 'flex-1 min-h-0 flex flex-col' : ''}`}
+        >
+          {searchQuery.trim() ? (
+            <main className="max-w-7xl mx-auto px-4 md:px-12 py-12 relative z-10 bg-[#f8f6f0] min-h-screen">
+              <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cream-paper.png')] opacity-60 mix-blend-multiply pointer-events-none z-0"></div>
+              <h2 className="font-headline font-black text-4xl text-[#556b3e] mb-8 relative z-10 text-center border-b border-[#d6c7af] pb-4 drop-shadow-sm uppercase tracking-tight">Resultados de la búsqueda</h2>
+              <RecipeList
+                recipes={searchResults}
+                onSelectRecipe={setSelectedRecipe}
+                favorites={favorites}
+                toggleFavorite={toggleFavorite}
+              />
+            </main>
+          ) : view === 'favorites' ? (
+            <main className="max-w-7xl mx-auto px-4 md:px-12 py-12 relative z-10 bg-[#f8f6f0] min-h-screen">
+              <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cream-paper.png')] opacity-60 mix-blend-multiply pointer-events-none z-0"></div>
+              <h2 className="font-headline font-black text-4xl text-[#556b3e] mb-8 relative z-10 text-center border-b border-[#d6c7af] pb-4 drop-shadow-sm uppercase tracking-tight">Fórmulas Guardadas</h2>
+              <RecipeList
+                recipes={favoriteRecipes}
+                onSelectRecipe={setSelectedRecipe}
+                favorites={favorites}
+                toggleFavorite={toggleFavorite}
+              />
+            </main>
+          ) : view === 'library' ? (
+            <main className="w-full">
+                <Library onSelectBook={setSelectedBook} onShowDownloads={() => setShowDownloads(true)} onShowMainAppContent={() => setView('home')} />
+            </main>
+          ) : view === 'profile' ? (
+            <main className="w-full">
+                <ProfileView />
+            </main>
+          ) : view === 'admin' ? (
+            <main className="w-full">
+                <AdminDashboard />
+            </main>
+          ) : view === 'guru' ? (
+            <main className="w-full flex-1 relative z-10 bg-[#f8f6f0] flex flex-col min-h-0 pb-[calc(70px+env(safe-area-inset-bottom))] sm:pb-0">
+                <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cream-paper.png')] opacity-60 mix-blend-multiply pointer-events-none z-0"></div>
+                <div className="relative z-10 flex-1 flex flex-col min-h-0">
+                   <GuruAI onSelectRecipe={setSelectedRecipe} />
+                </div>
+            </main>
+          ) : !selectedCategory ? (
+            <>
+              <Cabinet onSelectCategory={setSelectedCategory} />
+            </>
+          ) : (
+            <CategoryDetail 
+              category={selectedCategory} 
+              onBack={() => setSelectedCategory(null)}
+              onSelectRecipe={setSelectedRecipe}
+              favorites={favorites}
+              toggleFavorite={toggleFavorite}
+            />
+          )}
+        </motion.div>
+      </AnimatePresence>
 
       {selectedRecipe && (
         <RecipeModal 
@@ -329,6 +342,18 @@ export default function App() {
       )}
 
       <InstallPrompt />
+      <Toaster 
+        theme="light"
+        position="bottom-center"
+        toastOptions={{
+          style: {
+            background: '#fcfbf9',
+            color: '#3a2211',
+            border: '1px solid #d6c7af',
+            fontFamily: 'system-ui, -apple-system, sans-serif'
+          }
+        }} 
+      />
     </div>
   );
 }

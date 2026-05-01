@@ -249,7 +249,7 @@ Responde directo al punto en 1 o 2 líneas como mucho (tipo mensaje de móvil).
       </div>
 
       {/* INPUT AREA */}
-      <div className="shrink-0 bg-[#f8f6f0] border-t border-[#e5dfbe] p-2 md:p-3 relative z-20">
+      <div className="shrink-0 relative z-20 pt-2">
          <AnimatePresence>
            {mentionSearch !== null && filteredUsers.length > 0 && (
              <motion.div 
@@ -301,47 +301,45 @@ Responde directo al punto en 1 o 2 líneas como mucho (tipo mensaje de móvil).
            )}
          </AnimatePresence>
 
-         <div className="max-w-4xl mx-auto flex gap-2 items-end">
-            <div className="flex-1 bg-white border border-[#d6c7af] rounded-2xl md:rounded-3xl shadow-sm focus-within:border-[#556b3e] focus-within:ring-2 focus-within:ring-[#556b3e]/20 transition-all flex min-h-[44px] md:min-h-[50px] overflow-hidden">
-               <textarea 
-                 name="tribuMsgInput"
-                 id="tribuMsgInput"
-                 autoComplete="chrome-off"
-                 autoCorrect="off"
-                 spellCheck="true"
-                 data-1p-ignore="true"
-                 data-lpignore="true"
-                 data-bwignore="true"
-                 enterKeyHint="send"
-                 className="w-full bg-transparent text-[#201004] px-4 py-3 md:py-3.5 focus:outline-none resize-none max-h-32 placeholder:text-[#8a6a4b]/60 font-medium text-sm md:text-base leading-tight"
-                 placeholder="Escribe un mensaje a la tribu..."
-                 value={newMessage}
-                 onChange={(e) => {
-                    const val = e.target.value;
-                    setNewMessage(val);
-                    const match = val.match(/@(\S*)$/);
-                    if (match) {
-                        setMentionSearch(match[1].toLowerCase());
-                    } else {
-                        setMentionSearch(null);
-                    }
-                 }}
-                 onKeyDown={(e) => {
-                    if (e.key === 'Enter' && !e.shiftKey) {
-                        e.preventDefault();
-                        if (newMessage.trim()) handleSend();
-                    }
-                 }}
-                 rows={1}
-                 style={{ height: 'auto' }}
-                 autoFocus
-               />
-            </div>
+         <div className="shrink-0 relative">
+            <textarea 
+              name="tribuMsgInput"
+              id="tribuMsgInput"
+              autoComplete="chrome-off"
+              autoCorrect="off"
+              spellCheck="true"
+              data-1p-ignore="true"
+              data-lpignore="true"
+              data-bwignore="true"
+              enterKeyHint="send"
+              className="w-full bg-white border border-[#d6c7af] rounded-3xl pl-4 pr-14 sm:pl-6 sm:pr-16 py-3 sm:py-3.5 focus:outline-none resize-none max-h-32 placeholder:text-[#8a6a4b]/60 font-medium text-sm sm:text-base leading-tight shadow-sm focus:border-[#556b3e] focus:ring-2 focus:ring-[#556b3e]/20 transition-all"
+              placeholder="Escribe un mensaje a la tribu..."
+              value={newMessage}
+              onChange={(e) => {
+                 const val = e.target.value;
+                 setNewMessage(val);
+                 const match = val.match(/@(\S*)$/);
+                 if (match) {
+                     setMentionSearch(match[1].toLowerCase());
+                 } else {
+                     setMentionSearch(null);
+                 }
+              }}
+              onKeyDown={(e) => {
+                 if (e.key === 'Enter' && !e.shiftKey) {
+                     e.preventDefault();
+                     if (newMessage.trim()) handleSend();
+                 }
+              }}
+              rows={1}
+              style={{ height: 'auto', minHeight: '48px' }}
+              autoFocus
+            />
             <button 
               type="button"
               onClick={() => handleSend()}
               disabled={!newMessage.trim()}
-              className="w-11 h-11 md:w-12 md:h-12 bg-[#8a3c1f] text-white hover:bg-[#6e2e15] rounded-full flex items-center justify-center transition-all disabled:opacity-50 disabled:bg-[#d6c7af] shrink-0 shadow-sm"
+              className="absolute right-2 top-1/2 -translate-y-1/2 w-10 h-10 md:w-11 md:h-11 bg-[#8a3c1f] text-white hover:bg-[#6e2e15] rounded-full flex items-center justify-center transition-all disabled:opacity-50 disabled:bg-[#d6c7af] shadow-sm"
             >
               <Send className="w-5 h-5 ml-1" />
             </button>

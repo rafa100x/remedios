@@ -52,6 +52,7 @@ const BOTICARIO_FACTS = [
 export function RecipeModal({ recipe, onClose, rating, onRate, isFavorite, onToggleFavorite, isShopping = false, onToggleShopping = () => {} }: RecipeModalProps) {
   const [isGenerating, setIsGenerating] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [isReadingMode, setIsReadingMode] = useState(false);
 
   // Derive "Dónde conseguir" based on ingredients roughly
   const getSourcing = () => {
@@ -170,7 +171,7 @@ export function RecipeModal({ recipe, onClose, rating, onRate, isFavorite, onTog
           className="relative w-full h-full md:h-[92vh] max-w-6xl shadow-2xl md:rounded-lg overflow-hidden bg-[#fdfaf2] flex flex-col"
         >
           {/* Top Actions - Floating on top of the scrollable content */}
-          <div className="absolute top-[calc(env(safe-area-inset-top,0px)+16px)] right-4 md:top-8 md:right-8 z-50 flex items-center gap-2 md:gap-3">
+          <div className="absolute top-12 md:top-8 right-4 md:right-8 z-50 flex items-center gap-2 md:gap-3" style={{ top: 'max(48px, calc(env(safe-area-inset-top, 0px) + 16px))' }}>
              <button
                 onClick={handleShareWhatsApp}
                 className="bg-[#25D366]/90 backdrop-blur aspect-square border border-[#25D366]/30 text-white hover:bg-[#128C7E] w-10 h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center transition-all shadow-md"
@@ -178,6 +179,15 @@ export function RecipeModal({ recipe, onClose, rating, onRate, isFavorite, onTog
              >
                 <svg className="w-5 h-5 md:w-6 md:h-6" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M17.498 14.382c-.301-.15-1.767-.867-2.04-.966-.274-.101-.473-.15-.673.15-.197.295-.771.963-.944 1.162-.175.195-.349.21-.646.06-.297-.15-1.265-.462-2.406-1.485-.888-.79-1.486-1.76-1.656-2.059-.173-.298-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 00-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z" />
+                </svg>
+             </button>
+             <button
+                onClick={() => setIsReadingMode(!isReadingMode)}
+                className={`backdrop-blur aspect-square border text-[#8a6a4b] w-10 h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center transition-all shadow-md ${isReadingMode ? 'bg-[#8a3c1f] text-white border-[#8a3c1f]' : 'bg-[#f4ead0]/90 border-[#8a6a4b]/30 hover:bg-white hover:text-[#2c1600]'}`}
+                title={isReadingMode ? "Desactivar Modo Lectura" : "Modo Lectura"}
+             >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
                 </svg>
              </button>
              <button
@@ -213,6 +223,7 @@ export function RecipeModal({ recipe, onClose, rating, onRate, isFavorite, onTog
                    <div className="max-w-5xl mx-auto flex flex-col md:flex-row items-center md:items-stretch justify-between gap-8 md:gap-12 relative z-10">
                        
                        {/* Left side: The Jar */}
+                       {!isReadingMode && (
                        <div className="shrink-0 flex items-center justify-center pl-2 md:pl-4">
                           <div className="w-32 md:w-40 lg:w-48 aspect-[4/5] bg-[#0a0502] rounded-sm p-3 shadow-xl border border-[#d6c7af] flex items-center justify-center relative transform -rotate-1 z-10">
                              <ImageLoader 
@@ -224,9 +235,10 @@ export function RecipeModal({ recipe, onClose, rating, onRate, isFavorite, onTog
                              />
                           </div>
                        </div>
+                       )}
 
                        {/* Right side: Titles & Actions */}
-                       <div className="flex-1 flex flex-col justify-center text-center md:text-left w-full">
+                       <div className={`flex-1 flex flex-col justify-center text-center md:text-left w-full ${isReadingMode ? 'items-center md:items-center py-6' : ''}`}>
                           <span className="inline-block font-accent italic font-bold tracking-widest text-[#8a3c1f] text-sm md:text-base mb-2">
                             RECETA NO. {recipe.id.toString().padStart(3, '0')}
                           </span>
@@ -234,6 +246,8 @@ export function RecipeModal({ recipe, onClose, rating, onRate, isFavorite, onTog
                             {recipe.title}
                           </h1>
                           
+                          {!isReadingMode && (
+                          <>
                           {/* Simplified Rating */}
                           <div className="flex items-center justify-center md:justify-start gap-3 mb-6">
                              <span className="font-bold text-[#8a6a4b] uppercase tracking-wider text-xs md:text-sm">Eficacia Probada:</span>
@@ -282,11 +296,13 @@ export function RecipeModal({ recipe, onClose, rating, onRate, isFavorite, onTog
                                 {isFavorite ? 'Guardada ✓' : 'Guardar Receta'}
                              </button>
                           </div>
+                          </>
+                          )}
                        </div>
                    </div>
                    
                    {/* Categorías/Tags de la receta */}
-                   {(() => {
+                   {!isReadingMode && (() => {
                         const words = recipe.purpose.toLowerCase();
                         const titleWords = recipe.title.toLowerCase();
                         const combinedInfo = words + " " + titleWords;
@@ -343,18 +359,19 @@ export function RecipeModal({ recipe, onClose, rating, onRate, isFavorite, onTog
                              <div className="w-6 h-[1px] bg-[#8a6a4b]/50"></div>
                              LA AFECCIÓN
                          </h3>
-                         <p className="font-body text-[#3a2211] text-[20px] md:text-2xl font-light leading-snug italic">
+                         <p className={`font-body text-[#3a2211] font-light leading-snug italic ${isReadingMode ? 'text-[24px] md:text-3xl' : 'text-[20px] md:text-2xl'}`}>
                             "{recipe.purpose}"
                          </p>
                      </section>
 
                      <section>
-                         <h3 className="flex items-center gap-2 md:gap-3 font-accent italic text-[#8a6a4b] text-lg md:text-xl mb-4 md:mb-6">
+                         <h3 className={`flex items-center gap-2 md:gap-3 font-accent italic text-[#8a6a4b] mb-4 md:mb-6 ${isReadingMode ? 'text-xl md:text-2xl' : 'text-lg md:text-xl'}`}>
                              <div className="w-6 h-[1px] bg-[#8a6a4b]/50"></div>
                              LOS BOTÁNICOS
                          </h3>
 
                          {/* Botanical Photo */}
+                         {!isReadingMode && (
                          <div className="w-full h-40 md:h-56 mb-6 md:mb-8 rounded-sm overflow-hidden border border-[#d6c7af] shadow-md relative bg-[#e9deb8]">
                              <div className="absolute inset-0 bg-black/10 mix-blend-multiply z-10 pointer-events-none"></div>
                              <ImageLoader 
@@ -365,17 +382,18 @@ export function RecipeModal({ recipe, onClose, rating, onRate, isFavorite, onTog
                                 renderLoader={true}
                              />
                          </div>
+                         )}
 
                          <ul className="space-y-3 md:space-y-4">
                             {recipe.ingredients.map((ing, i) => (
                                 <li key={i} className="flex flex-col border-b border-[#8a6a4b]/20 pb-3">
                                    <div className="flex items-baseline justify-between gap-2">
                                      <div className="flex items-baseline gap-2">
-                                       <span className="font-headline font-bold text-[#2a1308] text-[18px] md:text-xl">{ing.es}</span>
-                                       <span className="font-accent italic text-[#8a6a4b] text-[13px] md:text-sm">/ {ing.la}</span>
+                                       <span className={`font-headline font-bold text-[#2a1308] ${isReadingMode ? 'text-[22px] md:text-2xl' : 'text-[18px] md:text-xl'}`}>{ing.es}</span>
+                                       <span className={`font-accent italic text-[#8a6a4b] ${isReadingMode ? 'text-[15px] md:text-base' : 'text-[13px] md:text-sm'}`}>/ {ing.la}</span>
                                      </div>
                                      {ing.quantity && (
-                                       <span className="font-body text-[#4a2e15] font-medium text-[14px] md:text-base text-right">
+                                       <span className={`font-body text-[#4a2e15] font-medium text-right ${isReadingMode ? 'text-[16px] md:text-lg' : 'text-[14px] md:text-base'}`}>
                                          {ing.quantity}
                                        </span>
                                      )}
@@ -386,6 +404,7 @@ export function RecipeModal({ recipe, onClose, rating, onRate, isFavorite, onTog
                      </section>
 
                      {/* Sourcing Section */}
+                     {!isReadingMode && (
                      <section className="bg-[#e9deb8] p-5 md:p-6 rounded-sm border border-[#8a6a4b]/30 shadow-inner relative overflow-hidden">
                          <div className="absolute -right-4 -top-4 text-[#8a6a4b]/10">
                             <svg className="w-20 md:w-24 h-20 md:h-24" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"/></svg>
@@ -396,26 +415,27 @@ export function RecipeModal({ recipe, onClose, rating, onRate, isFavorite, onTog
                          </h4>
                          <p className="font-body text-[#4a2e15] text-base md:text-lg font-medium relative z-10">{getSourcing()}</p>
                      </section>
+                     )}
                  </div>
 
                  {/* Right Column (Preparation, Dosage, Warning, Fun Fact) */}
                  <div className="w-full lg:w-7/12 space-y-10 md:space-y-12">
                      <section>
-                         <h3 className="flex items-center gap-2 md:gap-3 font-accent italic text-[#8a6a4b] text-lg md:text-xl mb-3 md:mb-4">
+                         <h3 className={`flex items-center gap-2 md:gap-3 font-accent italic text-[#8a6a4b] mb-3 md:mb-4 ${isReadingMode ? 'text-xl md:text-2xl' : 'text-lg md:text-xl'}`}>
                              <div className="w-6 h-[1px] bg-[#8a6a4b]/50"></div>
                              LA PREPARACIÓN
                          </h3>
-                         <p className="font-body text-[#3a2211] text-[18px] md:text-xl leading-relaxed whitespace-pre-wrap">
+                         <p className={`font-body text-[#3a2211] leading-relaxed whitespace-pre-wrap ${isReadingMode ? 'text-[22px] md:text-3xl' : 'text-[18px] md:text-xl'}`}>
                              {recipe.instructions}
                          </p>
                      </section>
 
                      <section>
-                         <h3 className="flex items-center gap-2 md:gap-3 font-accent italic text-[#8a6a4b] text-lg md:text-xl mb-3 md:mb-4">
+                         <h3 className={`flex items-center gap-2 md:gap-3 font-accent italic text-[#8a6a4b] mb-3 md:mb-4 ${isReadingMode ? 'text-xl md:text-2xl' : 'text-lg md:text-xl'}`}>
                              <div className="w-6 h-[1px] bg-[#8a6a4b]/50"></div>
                              EL TRATAMIENTO
                          </h3>
-                         <p className="font-body text-[#3a2211] text-[18px] md:text-xl font-medium leading-relaxed bg-[#8a6a4b]/5 p-4 md:p-5 rounded-sm border-l-[3px] md:border-l-4 border-[#8a6a4b]">
+                         <p className={`font-body text-[#3a2211] font-medium leading-relaxed bg-[#8a6a4b]/5 p-4 md:p-5 rounded-sm border-l-[3px] md:border-l-4 border-[#8a6a4b] ${isReadingMode ? 'text-[22px] md:text-3xl' : 'text-[18px] md:text-xl'}`}>
                              {recipe.dosage}
                          </p>
                      </section>
@@ -426,13 +446,14 @@ export function RecipeModal({ recipe, onClose, rating, onRate, isFavorite, onTog
                               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
                               Recomendación Estricta
                            </h4>
-                           <p className="font-body text-[#591c1c] text-base md:text-lg italic">
+                           <p className={`font-body text-[#591c1c] italic ${isReadingMode ? 'text-[20px] md:text-2xl' : 'text-base md:text-lg'}`}>
                                {recipe.notes}
                            </p>
                        </section>
                      )}
 
                      {/* Dato de Boticario */}
+                     {!isReadingMode && (
                      <section className="mt-12 md:mt-16 bg-[#2a1308] text-[#f4ead0] p-6 sm:p-8 md:p-10 rounded-xl relative overflow-hidden shadow-2xl">
                          <div className="absolute top-0 right-0 p-6 md:p-8 opacity-10 pointer-events-none">
                             <svg className="w-24 md:w-32 h-24 md:h-32 fill-current" viewBox="0 0 24 24"><path d="M12 2L2 22h20L12 2zm0 4.14L18.17 19H5.83L12 6.14zM11 10h2v5h-2v-5zm0 7h2v2h-2v-2z"/></svg>
@@ -449,6 +470,7 @@ export function RecipeModal({ recipe, onClose, rating, onRate, isFavorite, onTog
                               </div>
                          </div>
                      </section>
+                     )}
 
                  </div>
              </div>
