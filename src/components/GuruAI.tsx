@@ -144,7 +144,7 @@ export function GuruAI({ onSelectRecipe }: { onSelectRecipe?: (recipe: Recipe) =
       let responseStream;
       try {
         responseStream = await ai.models.generateContentStream({
-          model: "gemini-3-flash-preview",
+          model: "gemini-2.5-flash",
           contents: validContents,
           config: {
             systemInstruction: INSTRUCTION,
