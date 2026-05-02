@@ -6,6 +6,7 @@ import Markdown from 'react-markdown';
 import { trackEvent } from '../lib/analytics';
 import { doc, getDoc, setDoc, updateDoc, serverTimestamp } from 'firebase/firestore';
 import { db } from '../lib/firebase';
+import { reportApiError } from '../lib/errorHandler';
 import { Recipe, categories } from '../data/recipes';
 import { CommunityChat } from './CommunityChat';
 
@@ -154,7 +155,8 @@ export function GuruAI({ onSelectRecipe }: { onSelectRecipe?: (recipe: Recipe) =
         setMessages(prev => [...prev, { role: 'model', content: '' }]);
       } catch (err: any) {
         console.error('Gemini error:', err);
-        setMessages(prev => [...prev, { role: 'model', content: `El oráculo de las raíces (IA) no pudo responder. Error: ${err.message || String(err)}` }]);
+        reportApiError('GuruAI - generateContentStream', err, user?.email);
+        setMessages(prev => [...prev, { role: 'model', content: `El oráculo de las raíces necesita descansar un momento (Error de conexión). Por favor, intenta de nuevo en unos minutos.` }]);
         setIsLoading(false);
         return;
       }

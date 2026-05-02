@@ -31,7 +31,7 @@ export function Cabinet({ onSelectCategory }: CabinetProps) {
           <p className="font-accent italic text-xl text-[#8a3c1f] max-w-lg mx-auto">Selecciona la categoría para abrir el recetario de la abuela.</p>
         </div>
 
-        <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-2.5">
           {categories.map((category, index) => {
             const decoration = CategoryDecorations[category.id] || CategoryDecorations[0];
             const Icon = decoration.Icon;
@@ -46,7 +46,7 @@ export function Cabinet({ onSelectCategory }: CabinetProps) {
                 onClick={() => onSelectCategory(category)}
                 className="group relative cursor-pointer"
               >
-                <div className="relative overflow-hidden flex min-h-[80px] flex-row items-center justify-between px-5 py-3 md:py-4 bg-[#fcfaf5] hover:bg-white rounded-xl shadow-[0_2px_10px_rgba(0,0,0,0.02)] border border-[#e5dfbe] transition-all duration-300 transform hover:-translate-y-0.5 hover:shadow-[0_8px_20px_rgba(138,60,31,0.08)] gap-3">
+                <div className="relative overflow-hidden flex min-h-[70px] flex-row items-center justify-between px-4 py-2.5 bg-[#fcfaf5] hover:bg-white rounded-xl shadow-[0_2px_10px_rgba(0,0,0,0.02)] border border-[#e5dfbe] transition-all duration-300 transform hover:-translate-y-0.5 hover:shadow-[0_8px_20px_rgba(138,60,31,0.08)] gap-2.5">
                   
                   {/* Background Image Watermark */}
                   <div className="absolute right-0 top-0 bottom-0 w-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none fade-mask">
@@ -54,27 +54,27 @@ export function Cabinet({ onSelectCategory }: CabinetProps) {
                      <div className="absolute inset-0 bg-gradient-to-r from-[#fcfaf5] via-[#fcfaf5]/80 to-transparent group-hover:from-white group-hover:via-white/80"></div>
                   </div>
 
-                  <div className="flex flex-row items-center gap-4 z-10 w-full relative">
-                    <div className="w-12 h-12 md:w-14 md:h-14 shrink-0 rounded-full bg-[#fdfaf2] flex items-center justify-center border-2 border-[#d6c7af] shadow-inner group-hover:border-[#8a3c1f] transition-colors duration-500 relative overflow-hidden">
+                  <div className="flex flex-row items-center gap-3 z-10 w-full relative">
+                    <div className="w-10 h-10 md:w-12 md:h-12 shrink-0 rounded-full bg-[#fdfaf2] flex items-center justify-center border-2 border-[#d6c7af] shadow-inner group-hover:border-[#8a3c1f] transition-colors duration-500 relative overflow-hidden">
                       <div className="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/wood-pattern.png')] mix-blend-multiply"></div>
-                      <Icon className="w-6 h-6 md:w-7 md:h-7 text-[#8a3c1f] relative z-10 group-hover:scale-110 transition-transform duration-500" />
+                      <Icon className="w-5 h-5 md:w-6 md:h-6 text-[#8a3c1f] relative z-10 group-hover:scale-110 transition-transform duration-500" />
                     </div>
                     
                     <div className="flex flex-col flex-1">
-                      <div className="flex items-center gap-2 mb-0.5">
-                        <span className="font-accent italic font-bold tracking-wider text-[#8a6a4b] text-[10px] md:text-xs uppercase">
+                      <div className="flex items-center gap-1.5 mb-0.5">
+                        <span className="font-accent italic font-bold tracking-wider text-[#8a6a4b] text-[9px] md:text-[10px] uppercase">
                           {category.id === 0 ? "Colección Especial" : `Recetas ${(category.range[0]).toString().padStart(3, '0')} a ${(category.range[1]).toString().padStart(3, '0')}`}
                         </span>
                       </div>
-                      <h3 className="font-headline font-black text-[#201004] text-base md:text-lg lg:text-xl uppercase tracking-tight leading-tight group-hover:text-[#556b3e] transition-colors duration-300">
+                      <h3 className="font-headline font-black text-[#201004] text-[14px] md:text-[16px] leading-[1.1] uppercase tracking-tight group-hover:text-[#556b3e] transition-colors duration-300">
                         {category.name}
                       </h3>
                     </div>
                   </div>
                   
                   <div className="flex items-center justify-end z-10 shrink-0 relative">
-                    <div className="w-10 h-10 md:w-12 md:h-12 rounded-full border border-[#d6c7af] flex items-center justify-center group-hover:bg-[#556b3e] group-hover:border-transparent transition-all duration-300 bg-white shadow-sm">
-                      <svg className="w-5 h-5 md:w-6 md:h-6 text-[#8a6a4b] group-hover:text-white transition-colors duration-300 transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <div className="w-8 h-8 rounded-full border border-[#d6c7af] flex items-center justify-center group-hover:bg-[#556b3e] group-hover:border-transparent transition-all duration-300 bg-white shadow-sm">
+                      <svg className="w-4 h-4 text-[#8a6a4b] group-hover:text-white transition-colors duration-300 transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                       </svg>
                     </div>

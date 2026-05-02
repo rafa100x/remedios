@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { collection, query, orderBy, limit, onSnapshot, addDoc, serverTimestamp } from 'firebase/firestore';
 import { db } from '../lib/firebase';
+import { reportApiError } from '../lib/errorHandler';
 import { Send, CornerDownRight, X, Bot, Users } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { GoogleGenAI } from '@google/genai';
@@ -111,6 +112,7 @@ Responde directo al punto en 1 o 2 líneas como mucho (tipo mensaje de móvil).
       }
     } catch (e:any) {
       console.error(e);
+      reportApiError('CommunityChat - generateSimulatedResponse', e, user?.email);
       alert("Error al generar respuesta simulada: " + e.message);
     } finally {
       setIsGeneratingResponse(null);
