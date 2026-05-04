@@ -44,11 +44,19 @@ interface AnalyticsEvent {
   userAgent?: string;
 }
 
+type GuruChat = {
+  id: string;
+  userId: string;
+  messages: { role: string; content: string }[];
+  updatedAt: any;
+};
+
 export function AdminDashboard() {
   const { isAdmin, user } = useAuth();
   const [usersList, setUsersList] = useState<UserRecord[]>([]);
   const [usersCount, setUsersCount] = useState<number | null>(null);
   const [intents, setIntents] = useState<Intent[]>([]);
+  const [guruChats, setGuruChats] = useState<GuruChat[]>([]);
   const [analyticsEvents, setAnalyticsEvents] = useState<AnalyticsEvent[]>([]);
   const [loading, setLoading] = useState(true);
   const [processingId, setProcessingId] = useState<string | null>(null);
@@ -209,13 +217,25 @@ export function AdminDashboard() {
          setGuruUsersCount(guruSnap.size);
          
          let gm = 0;
+         const chats: GuruChat[] = [];
          guruSnap.docs.forEach(d => {
              const data = d.data();
              if (data.messages && Array.isArray(data.messages)) {
                 gm += data.messages.length;
              }
+             chats.push({
+               id: d.id,
+               userId: data.userId || d.id,
+               messages: data.messages || [],
+               updatedAt: data.updatedAt
+             });
          });
          setGuruTotalMessages(gm);
+         setGuruChats(chats.sort((a, b) => {
+           const timeA = a.updatedAt?.toMillis ? a.updatedAt.toMillis() : 0;
+           const timeB = b.updatedAt?.toMillis ? b.updatedAt.toMillis() : 0;
+           return timeB - timeA;
+         }));
       } catch(e) {
          console.error(e);
       } finally {
@@ -885,6 +905,68 @@ REGLAS MUY IMPORTANTES:
             </div>
          )}
       </div>
+      <div className="glass-panel ghost-border p-8 rounded-xl shadow-sm relative overflow-hidden mt-8">
+         <h3 className="text-2xl font-bold text-primary mb-6">Conversaciones del Gurú ({guruChats.length})</h3>
+         {guruChats.length === 0 ? (
+            <p className="text-tertiary">No hay conversaciones con el Gurú aún.</p>
+         ) : (
+            <div className="overflow-x-auto w-full">
+              <table className="w-full min-w-[700px]">
+                <thead>
+                  <tr className="border-b-2 border-outline-variant/30 text-left text-sm font-bold text-secondary uppercase tracking-wider">
+                    <th className="pb-3 px-4 w-1/3">Usuario / ID</th>
+                    <th className="pb-3 px-4 w-1/6">Última Actividad</th>
+                    <th className="pb-3 px-4 w-1/6">Mensajes Totales</th>
+                    <th className="pb-3 px-4 w-1/3">Detalles</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {guruChats.map((chat) => (
+                    <React.Fragment key={chat.id}>
+                      <tr 
+                        className="border-b border-outline-variant/20 hover:bg-surface-container/50 transition-colors cursor-pointer"
+                        onClick={() => toggleUserExpanded('guru_' + chat.id)}
+                      >
+                        <td className="py-3 px-4 font-medium text-primary break-all">
+                           {usersList.find(u => u.id === chat.userId)?.email || 'Usuario ' + chat.userId}
+                        </td>
+                        <td className="py-3 px-4 text-secondary text-sm">
+                           {formatDate(chat.updatedAt)}
+                        </td>
+                        <td className="py-3 px-4 text-accent text-sm font-bold">
+                           {chat.messages.length}
+                        </td>
+                        <td className="py-3 px-4 text-right font-bold text-accent text-lg flex items-center justify-end gap-2">
+                           <span className="text-sm font-normal text-tertiary">{expandedUserId === 'guru_' + chat.id ? '▼ Ocultar chat' : '► Ver mensajes'}</span>
+                        </td>
+                      </tr>
+                      {expandedUserId === 'guru_' + chat.id && (
+                        <tr className="bg-surface-container/20">
+                          <td colSpan={4} className="p-4 border-b border-outline-variant/20">
+                            <h4 className="font-bold text-secondary mb-3">Historial de Mensajes</h4>
+                            {chat.messages.length === 0 ? (
+                              <p className="text-sm text-tertiary">No hay mensajes.</p>
+                            ) : (
+                              <div className="space-y-3 text-sm max-h-96 overflow-y-auto pr-2 custom-scrollbar">
+                                {chat.messages.map((msj, idx) => (
+                                  <div key={idx} className={`p-3 rounded-lg ${msj.role === 'user' ? 'bg-primary/10 ml-8 border border-primary/20' : 'bg-surface/50 mr-8 border border-outline-variant/30'}`}>
+                                    <span className="block text-xs font-bold uppercase mb-1 text-tertiary">{msj.role === 'user' ? 'Usuario' : 'Gurú'}</span>
+                                    <p className="text-primary whitespace-pre-wrap">{msj.content}</p>
+                                  </div>
+                                ))}
+                              </div>
+                            )}
+                          </td>
+                        </tr>
+                      )}
+                    </React.Fragment>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+         )}
+      </div>
+
     </div>
     </ErrorBoundary>
   );
