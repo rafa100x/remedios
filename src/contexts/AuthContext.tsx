@@ -10,6 +10,7 @@ interface AuthContextType {
   hasGuruAccess: boolean;
   bookProgress: Record<string, string>;
   bookmarks: Record<string, string[]>;
+  exp: number;
   loading: boolean;
   signIn: () => Promise<void>;
   logOut: () => Promise<void>;
@@ -19,6 +20,7 @@ interface AuthContextType {
   purchaseGuruAccess: () => Promise<void>;
   updateProgress: (bookId: string, chapterId: string) => Promise<void>;
   toggleBookmark: (bookId: string, chapterId: string) => Promise<void>;
+  awardExp: (points: number) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -30,6 +32,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [hasGuruAccess, setHasGuruAccess] = useState(false);
   const [bookProgress, setBookProgress] = useState<Record<string, string>>({});
   const [bookmarks, setBookmarks] = useState<Record<string, string[]>>({});
+  const [exp, setExp] = useState(0);
   const [loading, setLoading] = useState(true);
 
   const [isDemo] = useState(() => {
@@ -60,6 +63,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
               setHasGuruAccess(isUserAdmin || !!data.hasGuruAccess);
               setBookProgress(data.bookProgress || {});
               setBookmarks(data.bookmarks || {});
+              setExp(data.exp || 0);
               
               // Handle admin document creation to bypass rules token issues
               if (isUserAdmin) {
@@ -148,6 +152,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                 hasGuruAccess: isUserAdmin,
                 bookProgress: {},
                 bookmarks: {},
+                exp: 0,
                 createdAt: serverTimestamp(),
                 updatedAt: serverTimestamp(),
                 lastLoginAt: serverTimestamp(),
@@ -159,6 +164,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                 setHasGuruAccess(isUserAdmin);
                 setBookProgress({});
                 setBookmarks({});
+                setExp(0);
                 const newSessionId = Date.now().toString();
                 sessionStorage.setItem('grimorio_session_id', newSessionId);
                 sessionStorage.setItem('grimorio_session_start', newSessionId);
@@ -186,6 +192,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           setHasGuruAccess(false);
           setBookProgress({});
           setBookmarks({});
+          setExp(0);
           setLoading(false);
         } else {
           setUser(null);
@@ -194,6 +201,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           setHasGuruAccess(false);
           setBookProgress({});
           setBookmarks({});
+          setExp(0);
           setLoading(false);
         }
       }
@@ -201,6 +209,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     return unsubscribe;
   }, [isDemo]);
+
+  const awardExp = async (points: number) => {
+    if (!user || user.uid === 'demo-user') return;
+    try {
+      const userRef = doc(db, 'users', user.uid);
+      await setDoc(userRef, {
+        exp: increment(points)
+      }, { merge: true });
+    } catch (err) {
+      console.error('Error awarding exp:', err);
+    }
+  };
 
   const updateProgress = async (bookId: string, chapterId: string) => {
     if (!user) return;
@@ -320,7 +340,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   return (
-    <AuthContext.Provider value={{ user, isAdmin, purchasedBooks, hasGuruAccess, bookProgress, bookmarks, loading, signIn, signInWithEmail, registerWithEmail, logOut, simulatePurchase, purchaseGuruAccess, updateProgress, toggleBookmark }}>
+    <AuthContext.Provider value={{ user, isAdmin, purchasedBooks, hasGuruAccess, bookProgress, bookmarks, exp, loading, signIn, signInWithEmail, registerWithEmail, logOut, simulatePurchase, purchaseGuruAccess, updateProgress, toggleBookmark, awardExp }}>
       {!loading && children}
     </AuthContext.Provider>
   );

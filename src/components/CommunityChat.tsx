@@ -23,7 +23,7 @@ interface ChatMessage {
 }
 
 export function CommunityChat() {
-  const { user, isAdmin } = useAuth();
+  const { user, isAdmin, awardExp } = useAuth();
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [newMessage, setNewMessage] = useState('');
   const [replyingTo, setReplyingTo] = useState<ChatMessage | null>(null);
@@ -96,6 +96,9 @@ Responde directo al punto en 1 o 2 líneas como mucho (tipo mensaje de móvil).
       const response = await ai.models.generateContent({
           model: 'gemini-2.5-flash',
           contents: prompt,
+          config: {
+            temperature: 0.9,
+          }
       });
       let text = response.text || "";
       if (text) {
@@ -166,6 +169,7 @@ Responde directo al punto en 1 o 2 líneas como mucho (tipo mensaje de móvil).
       setNewMessage('');
       setReplyingTo(null);
       setMentionSearch(null);
+      awardExp(10);
     } catch (err: any) {
       console.error("Failed to send message", err);
       alert("Error al enviar mensaje: " + (err.message || String(err)));

@@ -33,7 +33,7 @@ IMPORTANTE:
 - Advierte que tus recomendaciones son de enfoque natural y no reemplazan la visita a un médico tradicional.`;
 
 export function GuruAI({ onSelectRecipe }: { onSelectRecipe?: (recipe: Recipe) => void }) {
-  const { user, hasGuruAccess, purchaseGuruAccess } = useAuth();
+  const { user, hasGuruAccess, purchaseGuruAccess, awardExp } = useAuth();
   const [messages, setMessages] = useState<{role: 'user' | 'model', content: string}[]>([]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -118,6 +118,7 @@ export function GuruAI({ onSelectRecipe }: { onSelectRecipe?: (recipe: Recipe) =
             updatedAt: serverTimestamp()
           }, { merge: true });
           console.log("Successfully updated chat doc.");
+          awardExp(15);
         } catch (err: any) {
           console.error('Initial chat save error at setDoc1:', err);
           setMessages(prev => [...prev, { role: 'model', content: `No pude enviar tu mensaje (Error BD). Detalles: ${err.message || String(err)}` }]);

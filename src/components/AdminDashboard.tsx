@@ -56,6 +56,9 @@ export function AdminDashboard() {
   const [analyticsError, setAnalyticsError] = useState<string | null>(null);
   const [expandedUserId, setExpandedUserId] = useState<string | null>(null);
   const [confirmAction, setConfirmAction] = useState<string | null>(null);
+  const [communityMessagesCount, setCommunityMessagesCount] = useState(0);
+  const [guruUsersCount, setGuruUsersCount] = useState(0);
+  const [guruTotalMessages, setGuruTotalMessages] = useState(0);
 
   const formatDate = (dateObj: any, onlyDate = false) => {
     if (!dateObj) return '-';
@@ -192,6 +195,29 @@ export function AdminDashboard() {
           console.error('Error fetching analytics:', err);
           setAnalyticsError(err.message || 'Error desconocido');
         }
+      }
+      
+      try {
+         const communitySnap = await getDocs(collection(db, 'community_messages'));
+         setCommunityMessagesCount(communitySnap.size);
+      } catch(e) {
+         console.error(e);
+      }
+
+      try {
+         const guruSnap = await getDocs(collection(db, 'guru_chats'));
+         setGuruUsersCount(guruSnap.size);
+         
+         let gm = 0;
+         guruSnap.docs.forEach(d => {
+             const data = d.data();
+             if (data.messages && Array.isArray(data.messages)) {
+                gm += data.messages.length;
+             }
+         });
+         setGuruTotalMessages(gm);
+      } catch(e) {
+         console.error(e);
       } finally {
         setLoading(false);
       }
@@ -335,23 +361,41 @@ export function AdminDashboard() {
                 // Shuffle and pick 5 users
                 const selectedUsers = mockUsers.sort(() => 0.5 - Math.random()).slice(0, 5);
 
+                const topics = [
+                  "remedios para dormir, insomnio, ansiedad o estrés y técnicas de relajación",
+                  "dolores musculares, golpes, reuma, artritis o dolores de cabeza",
+                  "hierbas para la digestión, acidez, el hígado o malestares estomacales",
+                  "limpiezas energéticas, sahumerios, usos de la ruda, romero, copal o palo santo",
+                  "preguntas sobre cómo cuidar plantas, cómo trasplantar, o en qué luna cosechar",
+                  "dar la bienvenida a nuevos miembros, saludar a la comunidad, compartir cómo llegaron al grupo",
+                  "compartir una foto de una planta y preguntar su nombre o propiedades",
+                  "pedir una receta casera de las abuelas para el resfriado, tos o dolor de garganta",
+                  "recomendar un té, ungüento o tintura madre que a alguien le funcionó muy bien"
+                ];
+                const randomTopic = topics[Math.floor(Math.random() * Math.random() * topics.length)]; // Doble random para mas caos, o solo uno? Mejor no, solo Math.random()
+
                 const ai = new GoogleGenAI({ apiKey: GEMINI_API_KEY });
                 
                 const prompt = `
 Genera una conversación realista y fluida para un foro/comunidad online de medicina natural y herboristería, en español.
 Queremos entre 6 y 10 mensajes. Los participantes son gente normal (no expertos), así que el lenguaje debe ser súper casual, corto, cotidiano, como si fuera un grupo de WhatsApp o un foro muy relajado. NO uses signos de exclamación exagerados (¡!) y mantén las frases breves, como lo haría alguien desde su celular.
+
+El tema principal o el tipo de mensajes de esta tanda DEBE ESTAR RELACIONADO A: "${topics[Math.floor(Math.random() * topics.length)]}".
+(Puedes incluir otras cosas, pero que gire en torno a eso o que el primer mensaje empiece con ese tema).
+
 Usa estos nombres de usuario para los autores, elige 5 de ellos aleatoriamente: ${selectedUsers.map(u => u.userName).join(', ')}.
 
 REGLAS MUY IMPORTANTES:
-1. Las frases deben ser cotidianas: "alguien probó...", "yo uso esto y me sirve", "sabes si funciona?". NADA de lenguaje robótico ni formal.
-2. Algunos deben ser preguntas iniciales y otros deben ser respuestas a esos mensajes.
-3. Para marcar que un mensaje responde a otro, usa el campo "replyToId" apuntando al "id" del mensaje previo, y llena "replyToName" (nombre de a quien responde) y "replyToText" (un mini resumen de la frase original, de 5-6 palabras).
-4. Genera SOLAMENTE una lista en JSON con este formato exacto, sin markdown extra:
+1. Las frases deben ser muy variadas y creativas en cada ejecución. NUNCA repitas el mismo ejemplo en cada ejecución.
+2. Formatos típicos: "alguien probó...", "yo uso esto y me sirve", "sabes si funciona?", "hola soy nuevo!", "re lindo este espacio".
+3. Algunos mensajes deben ser preguntas iniciales y otros deben ser respuestas a esos mensajes, o saludos sueltos.
+4. Para marcar que un mensaje responde a otro, usa el campo "replyToId" apuntando al "id" del mensaje previo, y llena "replyToName" (nombre de a quien responde) y "replyToText" (un mini resumen de la frase original, de 5-6 palabras).
+5. Genera SOLAMENTE una lista en JSON con este formato exacto, sin markdown extra, REEMPLAZA los textos por el contenido real generado:
 [
   { 
     "id": "gen_msg_1", 
     "userName": "<Nombre>",
-    "text": "alguien probó pasiflora para la ansiedad? ando medio mal estos dias",
+    "text": "<Texto generado casual, NUNCA usar ejemplos fijos aquí>",
     "replyToId": null,
     "replyToName": null,
     "replyToText": null
@@ -359,10 +403,10 @@ REGLAS MUY IMPORTANTES:
   { 
     "id": "gen_msg_2", 
     "userName": "<Otro Nombre>",
-    "text": "yo la tomo en té antes de dormir y me re sirve la verdad",
+    "text": "<Una respuesta al mensaje anterior>",
     "replyToId": "gen_msg_1",
     "replyToName": "<El nombre anterior>",
-    "replyToText": "alguien probó pasiflora para la ansiedad?"
+    "replyToText": "<Mini resumen del texto al que responde>"
   }
 ]
 `;
@@ -370,6 +414,9 @@ REGLAS MUY IMPORTANTES:
                 const response = await ai.models.generateContent({
                     model: 'gemini-2.5-flash',
                     contents: prompt,
+                    config: {
+                      temperature: 0.9,
+                    }
                 });
                 
                 let text = response.text || "[]";
@@ -476,7 +523,7 @@ REGLAS MUY IMPORTANTES:
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
         <div className="glass-panel ghost-border p-6 rounded-xl flex flex-col items-center shadow-sm">
           <Users className="w-8 h-8 text-primary mb-2" />
           <h3 className="text-lg font-bold text-secondary mb-1">Usuarios</h3>
@@ -487,6 +534,22 @@ REGLAS MUY IMPORTANTES:
                {loading ? '...' : (usersCount !== null ? usersCount : '0')}
             </p>
           )}
+        </div>
+        
+        <div className="glass-panel ghost-border p-6 rounded-xl flex flex-col items-center shadow-sm">
+          <svg className="w-8 h-8 text-primary mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z" /></svg>
+          <h3 className="text-lg font-bold text-secondary mb-1">Msjes Tribu</h3>
+          <p className="text-4xl font-headline text-accent">
+             {loading ? '...' : communityMessagesCount}
+          </p>
+        </div>
+
+        <div className="glass-panel ghost-border p-6 rounded-xl flex flex-col items-center shadow-sm">
+          <svg className="w-8 h-8 text-primary mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" /></svg>
+          <h3 className="text-lg font-bold text-secondary mb-1 text-center">Usuarios / Msjes (Gurú)</h3>
+          <p className="text-2xl font-headline text-accent">
+             {loading ? '...' : `${guruUsersCount} / ${guruTotalMessages}`}
+          </p>
         </div>
         
         <div className="glass-panel ghost-border p-6 rounded-xl flex flex-col items-center shadow-sm relative overflow-hidden">
