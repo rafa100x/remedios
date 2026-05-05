@@ -32,6 +32,7 @@ interface UserRecord {
   lastLoginAt?: any;
   createdAt?: any;
   sessions?: SessionRecord[];
+  hasGuruAccess?: boolean;
 }
 
 interface AnalyticsEvent {
@@ -284,6 +285,24 @@ export function AdminDashboard() {
     }
   };
 
+  const handleDeleteIntent = async (intentId: string) => {
+    if (confirmAction !== `delete_${intentId}`) {
+        setConfirmAction(`delete_${intentId}`);
+        return;
+    }
+    setConfirmAction(null);
+    setProcessingId(intentId);
+    try {
+      await deleteDoc(doc(db, 'purchaseIntents', intentId));
+      setIntents(intents.filter(i => i.id !== intentId));
+    } catch(err) {
+      console.error(err);
+      alert('Error eliminando: ' + String(err));
+    } finally {
+      setProcessingId(null);
+    }
+  };
+
   const exportUsersCSV = () => {
     const headers = ['Email', 'Fecha Registro', 'Ultimo Ingreso', 'Total Sesiones'];
     const rows = usersList.map(u => [
@@ -345,6 +364,14 @@ export function AdminDashboard() {
      recipesCount[recipeName] = (recipesCount[recipeName] || 0) + 1;
   });
   const sortedRecipes = Object.entries(recipesCount).sort((a,b) => b[1] - a[1]);
+
+  const favoriteEvents = analyticsEvents.filter(e => e.eventName === 'add_favorite');
+  const favCount: Record<string, number> = {};
+  favoriteEvents.forEach(e => {
+     const recipeName = String(e.params?.event_label || 'Desconocida');
+     favCount[recipeName] = (favCount[recipeName] || 0) + 1;
+  });
+  const sortedFavorites = Object.entries(favCount).sort((a,b) => b[1] - a[1]);
 
   const libraryIntentCount = analyticsEvents.filter(e => e.eventName === 'view_library').length;
 
@@ -589,14 +616,9 @@ REGLAS MUY IMPORTANTES:
           <p className="text-4xl font-headline text-accent">{libraryIntentCount}</p>
         </div>
 
-        <div className="glass-panel ghost-border p-6 rounded-xl flex flex-col items-center shadow-sm">
-          <Activity className="w-8 h-8 text-primary mb-2" />
-          <h3 className="text-lg font-bold text-secondary mb-1">Total Eventos</h3>
-          <p className="text-4xl font-headline text-accent">{analyticsEvents.length}</p>
-        </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+      <div className="grid grid-cols-1 gap-6 mb-8">
         <div className="glass-panel ghost-border p-8 rounded-xl shadow-sm relative overflow-hidden">
           <h3 className="text-2xl font-bold text-primary mb-6">Métricas de Contenido</h3>
           
@@ -641,80 +663,21 @@ REGLAS MUY IMPORTANTES:
                 </ul>
               )}
             </div>
+            <div>
+              <h4 className="text-lg font-bold text-secondary mb-3 border-b border-[#d6c7af]/10 pb-2">Recetas Más Guardadas (Favoritos)</h4>
+              {sortedFavorites.length === 0 ? <p className="text-sm text-tertiary">No hay recetas guardadas aún.</p> : (
+                <ul className="space-y-2">
+                  {sortedFavorites.slice(0, 5).map(([name, count]) => (
+                    <li key={'fav-'+name} className="flex justify-between items-center text-sm">
+                      <span className="text-tertiary truncate mr-2" title={name}>{name}</span>
+                      <span className="text-accent font-bold bg-[#d6c7af]/5 px-2 py-0.5 rounded">{count}</span>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
           </div>
         </div>
-
-        <div className="glass-panel ghost-border p-8 rounded-xl shadow-sm relative overflow-hidden">
-          <h3 className="text-2xl font-bold text-primary mb-6">Búsquedas Recientes</h3>
-          {searchEvents.length === 0 ? (
-             <p className="text-secondary italic text-sm">Realiza una búsqueda para verla registrada aquí.</p>
-          ) : (
-             <div className="overflow-x-auto max-h-[500px] overflow-y-auto">
-               <table className="w-full text-left border-collapse min-w-full">
-                  <thead className="sticky top-0 bg-[#2b1f18] z-10 shadow-sm">
-                    <tr className="border-b border-[#d6c7af]/20 text-tertiary/70 text-sm">
-                      <th className="py-3 px-4 font-medium">Término</th>
-                      <th className="py-3 px-4 font-medium">Usuario</th>
-                      <th className="py-3 px-4 font-medium">Fecha</th>
-                    </tr>
-                  </thead>
-                  <tbody className="text-sm text-tertiary">
-                    {searchEvents.map((event) => (
-                      <tr key={event.id} className="border-b border-[#d6c7af]/10 hover:bg-[#d6c7af]/5 transition-colors">
-                        <td className="py-3 px-4 font-medium text-secondary">
-                          "{event.params?.search_term || 'N/A'}"
-                        </td>
-                        <td className="py-3 px-4">
-                          <span className="truncate max-w-[150px] inline-block" title={event.userEmail}>
-                            {event.userEmail !== 'anonymous' ? event.userEmail : 'Anónimo'}
-                          </span>
-                        </td>
-                        <td className="py-3 px-4">{formatDate(event.timestamp)}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-               </table>
-             </div>
-          )}
-        </div>
-      </div>
-
-      <div className="glass-panel ghost-border p-8 rounded-xl shadow-sm relative overflow-hidden mb-8">
-        <h3 className="text-2xl font-bold text-primary mb-6">Registro de Actividad</h3>
-        {analyticsError && (
-           <p className="text-red-500 text-sm mb-4 bg-red-500/10 p-3 rounded">
-             Error al cargar métricas: {analyticsError}
-           </p>
-        )}
-        {analyticsEvents.length === 0 ? (
-           <p className="text-secondary italic text-sm">El historial acaba de activarse y empieza desde cero ahora. Navega un poco para llenarlo.</p>
-        ) : (
-           <div className="space-y-3">
-              {analyticsEvents.slice(0, 15).map(event => (
-                <div key={event.id} className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-[#d6c7af]/10 pb-3 last:border-0 last:pb-0">
-                  <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-full bg-[#d6c7af]/10 flex items-center justify-center">
-                      <Activity className="w-4 h-4 text-tertiary" />
-                    </div>
-                    <div>
-                      <p className="text-sm font-bold text-secondary capitalize">{String(event.eventName || 'unknown').replace(/_/g, ' ')}</p>
-                      <p className="text-xs text-tertiary truncate max-w-[200px]" title={event.userEmail}>
-                        {event.userEmail !== 'anonymous' ? String(event.userEmail) : 'Usuario Anónimo'}
-                      </p>
-                    </div>
-                  </div>
-                  <div className="text-right mt-2 sm:mt-0">
-                    <p className="text-xs text-tertiary">{formatDate(event.timestamp)}</p>
-                    {event.params?.event_label && (
-                      <p className="text-xs text-accent mt-0.5 truncate max-w-[200px]" title={event.params.event_label}>
-                        {event.params.event_label}
-                      </p>
-                    )}
-                  </div>
-                </div>
-              ))}
-           </div>
-        )}
       </div>
 
       <div className="glass-panel ghost-border p-8 rounded-xl shadow-sm relative overflow-hidden mb-8">
@@ -755,7 +718,7 @@ REGLAS MUY IMPORTANTES:
                      <td className="py-3 px-4 text-tertiary text-sm">
                         {formatDate(intent.createdAt)}
                      </td>
-                     <td className="py-3 px-4 text-right">
+                     <td className="py-3 px-4 text-right flex justify-end gap-2">
                        {isPending && (
                          <button
                            onClick={() => handleMarkAsPurchased(intent)}
@@ -765,6 +728,13 @@ REGLAS MUY IMPORTANTES:
                            {processingId === intent.id ? 'Marcando...' : confirmAction === `confirm_${intent.id}` ? '¿Seguro?' : 'Marcar Comprado'}
                          </button>
                        )}
+                       <button
+                         onClick={() => handleDeleteIntent(intent.id)}
+                         disabled={processingId === intent.id}
+                         className="bg-red-900/60 hover:bg-red-900 text-[#fdfaf2] text-sm font-bold py-2 px-4 rounded-lg transition-colors disabled:opacity-50"
+                       >
+                         {confirmAction === `delete_${intent.id}` ? '¿Confirmar?' : 'Eliminar'}
+                       </button>
                      </td>
                    </tr>
                  )})}
@@ -793,6 +763,7 @@ REGLAS MUY IMPORTANTES:
                 <thead>
                   <tr className="border-b border-outline-variant/40 text-tertiary">
                     <th className="py-3 px-4 font-bold">Email</th>
+                    <th className="py-3 px-4 font-bold text-center">Gurú</th>
                     <th className="py-3 px-4 font-bold">Último Ingreso</th>
                     <th className="py-3 px-4 font-bold">Registro</th>
                     <th className="py-3 px-4 font-bold text-right">Sesiones Totales</th>
@@ -807,6 +778,9 @@ REGLAS MUY IMPORTANTES:
                       >
                         <td className="py-3 px-4 font-medium text-primary flex items-center justify-between">
                            {user.email}
+                        </td>
+                        <td className="py-3 px-4 text-center">
+                           {user.hasGuruAccess ? <span className="text-secondary font-bold">Sí</span> : <span className="text-tertiary">No</span>}
                         </td>
                         <td className="py-3 px-4 text-secondary text-sm">
                            {formatDate(user.lastLoginAt)}
