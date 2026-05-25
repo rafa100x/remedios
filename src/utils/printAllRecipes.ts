@@ -1,4 +1,5 @@
 import { categories, Category, Recipe, Ingredient } from '../data/recipes';
+import { watermarkBase64 } from './watermarkBase64';
 
 // SVG Icons for the boxes
 const leafIcon = `<svg viewBox="0 0 24 24" width="18" height="18" stroke="#689f38" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="margin-right:6px; flex-shrink:0"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></svg>`;
@@ -81,19 +82,22 @@ export const printAllRecipesAsBook = () => {
       background-color: white;
     }
 
-    .watermark-img {
+    .watermark-text {
       position: absolute;
       top: 50%;
       left: 50%;
-      transform: translate(-50%, -50%);
-      width: 70%;
-      opacity: 0.15;
-      z-index: 9999;
-      mix-blend-mode: multiply;
-      filter: grayscale(100%);
+      transform: translate(-50%, -50%) rotate(-45deg);
+      font-size: 110px;
+      font-family: 'Cinzel', serif;
+      color: rgba(141, 110, 99, 0.18);
+      z-index: 0;
       pointer-events: none;
+      white-space: nowrap;
+      text-transform: uppercase;
+      font-weight: bold;
       -webkit-print-color-adjust: exact;
       print-color-adjust: exact;
+      user-select: none;
     }
     
     .recipe-content {
@@ -372,7 +376,7 @@ export const printAllRecipesAsBook = () => {
       </head>
       <body>
         <div class="cover">
-          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Hippocrates_Rubens.jpg/800px-Hippocrates_Rubens.jpg" class="watermark-img" alt="" />
+          <div class="watermark-text">Maestro Ancestral</div>
           <img src="https://cdn.shopify.com/s/files/1/0988/7904/5945/files/mockup-producto-principal_d05515f3-5c0a-4718-8b0a-bc2d0054df44.jpg?v=1775521634" style="max-width: 80%; max-height: 50vh; object-fit: contain; margin-bottom: 30px; position: relative; z-index: 10;" />
           <h1 style="position: relative; z-index: 10;">El Gran Grimorio</h1>
           <h2 style="position: relative; z-index: 10;">Colección Completa de Remedios Naturales</h2>
@@ -380,7 +384,7 @@ export const printAllRecipesAsBook = () => {
         </div>
         
         <div class="disclaimer-page" style="page-break-after: always; padding: 20px 40px; position: relative; max-width: 900px; margin: 0 auto; height: 100vh; display: flex; flex-direction: column; justify-content: center; box-sizing: border-box; background-color: white;">
-          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Hippocrates_Rubens.jpg/800px-Hippocrates_Rubens.jpg" class="watermark-img" alt="" />
+          <div class="watermark-text">Maestro Ancestral</div>
           <div style="position: relative; z-index: 10;">
             <h2 style="text-align: center; font-family:'Cinzel', serif; font-size:24pt; color:#2c1600; margin-bottom:40px; border-bottom: 2px solid #8d6e63; padding-bottom: 10px;">Avisos Legales y Derechos de Autor</h2>
             <div style="font-size: 11pt; line-height: 1.6; color: #3e2723; background-color: #fdfaf2; border-left: 4px solid #8d6e63; padding: 20px; margin-bottom: 30px;">
@@ -398,7 +402,7 @@ export const printAllRecipesAsBook = () => {
         </div>
 
         <div class="index-page-container">
-          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Hippocrates_Rubens.jpg/800px-Hippocrates_Rubens.jpg" class="watermark-img" alt="" />
+          <div class="watermark-text">Maestro Ancestral</div>
           <div style="position: relative; z-index: 10;">
             <div class="top-header">ÍNDICE DE AFECCIONES Y TRATAMIENTOS</div>
           <h2 style="font-family:'Cinzel', serif; font-size:24pt; text-align:center; color:#2c1600; border-bottom:1px solid #8d6e63; padding-bottom:10px; margin-bottom:20px;">Índice por Afección</h2>
@@ -453,7 +457,7 @@ export const printAllRecipesAsBook = () => {
 
       html += `
         <div class="recipe-page">
-          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Hippocrates_Rubens.jpg/800px-Hippocrates_Rubens.jpg" class="watermark-img" alt="" />
+          <div class="watermark-text">Maestro Ancestral</div>
           <div class="recipe-content">
             <div class="top-header">LOS ${allRecipes.length} REMEDIOS NATURALES OLVIDADOS DE LA ABUELA</div>
             
