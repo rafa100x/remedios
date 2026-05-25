@@ -69,6 +69,11 @@ export function RecipeModal({ recipe, onClose, rating, onRate, isFavorite, onTog
     return Array.from(places).join(' • ');
   };
 
+  const conditionPremium = `Esta formulación responde positivamente a los desequilibrios propios de ${recipe.purpose.toLowerCase()}. El tratamiento continuado ayuda a restablecer los ciclos naturales del organismo promoviendo un alivio prolongado y desde la raíz anatómica del problema, actuando en sinergia con las defensas naturales y no suprimiendo únicamente los síntomas superficiales.`;
+  const originPremium = recipe.ingredients.length > 0 
+    ? `Los componentes principales, en particular ${recipe.ingredients[0].es.toLowerCase()}, deben adquirirse preferentemente en boticas especializadas, herbolarios certificados o directamente de cultivos de comercio justo libres de agrotóxicos. Es vital asegurar que el producto presente un color vívido, sin moho visible, y aromas pungentes para garantizar una alta concentración de principios biológicamente activos y potenciar el tratamiento.`
+    : `Los componentes de este preparado deben conseguirse de fuentes botánicas puras y rastreables. Asegurar la trazabilidad y la recolección estacional es clave para garantizar la viabilidad clínica del tratamiento y la óptima extracción de los componentes activos de cada hierba.`;
+
    const fact = BOTICARIO_FACTS[recipe.id % BOTICARIO_FACTS.length];
 
    const handleShareWhatsApp = () => {
@@ -362,12 +367,19 @@ export function RecipeModal({ recipe, onClose, rating, onRate, isFavorite, onTog
                          <p className={`font-body text-[#3a2211] font-light leading-snug italic ${isReadingMode ? 'text-[24px] md:text-3xl' : 'text-[20px] md:text-2xl'}`}>
                             "{recipe.purpose}"
                          </p>
+
+                         {!isReadingMode && (
+                           <div className="mt-4 bg-[#fbe9e7] border-l-4 border-[#ff8a65] p-4 rounded-r shadow-sm">
+                             <h4 className="font-bold text-[#d84315] text-sm md:text-base mb-1">Afección y Tratamiento Clínico</h4>
+                             <p className="text-[#bf360c] text-sm md:text-base leading-relaxed">{conditionPremium}</p>
+                           </div>
+                         )}
                      </section>
 
                      <section>
                          <h3 className={`flex items-center gap-2 md:gap-3 font-accent italic text-[#8a6a4b] mb-4 md:mb-6 ${isReadingMode ? 'text-xl md:text-2xl' : 'text-lg md:text-xl'}`}>
                              <div className="w-6 h-[1px] bg-[#8a6a4b]/50"></div>
-                             LOS BOTÁNICOS
+                             LOS BOTÁNICOS SELECTOS
                          </h3>
 
                          {/* Botanical Photo */}
@@ -414,6 +426,11 @@ export function RecipeModal({ recipe, onClose, rating, onRate, isFavorite, onTog
                              Adquisición de Insumos
                          </h4>
                          <p className="font-body text-[#4a2e15] text-base md:text-lg font-medium relative z-10">{getSourcing()}</p>
+                         
+                         <div className="mt-4 bg-[#efebe9] border-l-4 border-[#8d6e63] p-4 rounded-r shadow-sm relative z-10">
+                           <h4 className="font-bold text-[#5d4037] text-sm md:text-base mb-1">Origen y Adquisición Selecta</h4>
+                           <p className="text-[#4e342e] text-sm md:text-base leading-relaxed">{originPremium}</p>
+                         </div>
                      </section>
                      )}
                  </div>
@@ -423,7 +440,7 @@ export function RecipeModal({ recipe, onClose, rating, onRate, isFavorite, onTog
                      <section>
                          <h3 className={`flex items-center gap-2 md:gap-3 font-accent italic text-[#8a6a4b] mb-3 md:mb-4 ${isReadingMode ? 'text-xl md:text-2xl' : 'text-lg md:text-xl'}`}>
                              <div className="w-6 h-[1px] bg-[#8a6a4b]/50"></div>
-                             LA PREPARACIÓN
+                             LA PREPARACIÓN MAGISTRAL
                          </h3>
                          <p className={`font-body text-[#3a2211] leading-relaxed whitespace-pre-wrap ${isReadingMode ? 'text-[22px] md:text-3xl' : 'text-[18px] md:text-xl'}`}>
                              {recipe.instructions}
@@ -433,10 +450,11 @@ export function RecipeModal({ recipe, onClose, rating, onRate, isFavorite, onTog
                      <section>
                          <h3 className={`flex items-center gap-2 md:gap-3 font-accent italic text-[#8a6a4b] mb-3 md:mb-4 ${isReadingMode ? 'text-xl md:text-2xl' : 'text-lg md:text-xl'}`}>
                              <div className="w-6 h-[1px] bg-[#8a6a4b]/50"></div>
-                             EL TRATAMIENTO
+                             EL TRATAMIENTO Y DOSIS CRÍTICA
                          </h3>
                          <p className={`font-body text-[#3a2211] font-medium leading-relaxed bg-[#8a6a4b]/5 p-4 md:p-5 rounded-sm border-l-[3px] md:border-l-4 border-[#8a6a4b] ${isReadingMode ? 'text-[22px] md:text-3xl' : 'text-[18px] md:text-xl'}`}>
                              {recipe.dosage}
+                             <br/><br/><span className="text-sm md:text-base font-normal italic text-[#5a2a15]">Para asegurar la correcta metabolización del remedio, consúmase sistemáticamente según las vías señaladas por el practicante.</span>
                          </p>
                      </section>
 
@@ -444,10 +462,12 @@ export function RecipeModal({ recipe, onClose, rating, onRate, isFavorite, onTog
                        <section className="mt-8 border-t border-red-900/10 pt-6 md:pt-8">
                            <h4 className="font-headline font-bold text-red-900 text-[12px] md:text-sm uppercase tracking-widest mb-2 md:mb-3 flex items-center gap-2">
                               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
-                              Recomendación Estricta
+                              Recomendaciones Estrictas
                            </h4>
                            <p className={`font-body text-[#591c1c] italic ${isReadingMode ? 'text-[20px] md:text-2xl' : 'text-base md:text-lg'}`}>
                                {recipe.notes}
+                               <br/><br/>
+                               <strong>Aviso Clínico:</strong> Conserve el preparado protegido de la radiación lumínica y la humedad. En caso de presentar incompatibilidades gástricas, sistémicas o alergias cruzadas, suspender la administración de forma inmediata y contactarse con un profesional facultativo o herbolario de confianza.
                            </p>
                        </section>
                      )}

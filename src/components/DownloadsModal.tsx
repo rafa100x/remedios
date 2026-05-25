@@ -1,6 +1,7 @@
 import { motion, AnimatePresence } from 'motion/react';
-import { Download, FileText, Gift, X, ArrowLeft, Eye } from 'lucide-react';
+import { Download, FileText, Gift, X, ArrowLeft, Eye, Printer } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import { printAllRecipesAsBook } from '../utils/printAllRecipes';
 
 interface DownloadsModalProps {
   onClose: () => void;
@@ -106,6 +107,29 @@ export function DownloadsModal({ onClose }: DownloadsModalProps) {
                />
              ) : (
                <div className="p-6 md:p-10 space-y-12 relative z-10">
+                  {/* Grimorio Imprimible */}
+                  <section className="mb-8">
+                     <div className="flex items-center gap-3 mb-6 border-b border-[#8a6a4b]/20 pb-3">
+                         <Printer className="w-6 h-6 text-[#2c1600]" />
+                         <h3 className="font-headline text-2xl font-bold text-[#3a2215]">Impresión Especial</h3>
+                     </div>
+                     <div className="grid grid-cols-1 gap-4">
+                         <button 
+                            onClick={() => printAllRecipesAsBook()}
+                            className="text-left flex flex-col sm:flex-row items-start sm:items-center justify-between w-full bg-gradient-to-r from-[#2c1600] to-[#5a3a22] border border-[#2c1600] rounded-xl p-5 md:p-6 shadow-xl hover:scale-[1.01] transition-transform group"
+                         >
+                             <div className="flex flex-col pr-4 mb-4 sm:mb-0">
+                                <span className="font-headline text-2xl font-bold text-[#fdfaf2] leading-tight mb-2">El Gran Grimorio (Todas las Recetas)</span>
+                                <span className="text-sm text-[#d6c7af] max-w-2xl">Versión especial formateada para imprimir o guardar como PDF. Ideal para encuadernar y armar tu propio libro físico con todas las imágenes y recetas generadas.</span>
+                             </div>
+                             <div className="shrink-0 flex items-center justify-center gap-2 bg-[#d4af37] text-[#2c1600] px-5 py-3 rounded-full font-bold group-hover:bg-[#ffe38a] transition-colors w-full sm:w-auto">
+                                <Printer className="w-5 h-5" />
+                                <span>Ver / Imprimir</span>
+                             </div>
+                         </button>
+                     </div>
+                  </section>
+
                   {/* Material Principal */}
                   <section>
                      <div className="flex items-center gap-3 mb-6 border-b border-[#8a6a4b]/20 pb-3">
