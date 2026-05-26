@@ -32,7 +32,7 @@ export default function App() {
   const [selectedBook, setSelectedBook] = useState<any>(null); // Type any for now to avoid importing interface if not exported
   const [readingBookId, setReadingBookId] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
-  const [view, setView] = useState<'home' | 'favorites' | 'library' | 'profile' | 'admin' | 'guru'>('home');
+  const [view, setView] = useState<'home' | 'favorites' | 'library' | 'profile' | 'admin' | 'guru'>('library');
   const [showShoppingList, setShowShoppingList] = useState(false);
   const [showInfo, setShowInfo] = useState(false);
   const [showDownloads, setShowDownloads] = useState(false);

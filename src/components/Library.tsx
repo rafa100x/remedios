@@ -64,6 +64,26 @@ export const PREMIUM_BOOKS: PremiumBook[] = [
         coverUrl: 'https://cdn.shopify.com/s/files/1/0988/7904/5945/files/maestro-botiquin-v1_6597c620-dc38-4363-afca-cfd434e80ef5.jpg?v=1776702782',
         paymentLink: 'https://mpago.la/22TKgMQ',
         badge: '¡Disponible!'
+    },
+    {
+        id: 'purga_ancestral',
+        title: 'Protocolo de Purga Ancestral',
+        subtitle: 'Desparasitación y Detox de Metales',
+        description: 'Guía exclusiva de 20 páginas con protocolos intensivos para limpiar el organismo a un nivel celular. Fórmulas herbolarias para la expulsión de parásitos intestinales indetectables y la quelación natural de metales pesados y toxinas, ideal para una recuperación y desintoxicación profunda.',
+        price: '$ 7.999 ARS',
+        coverUrl: 'https://cdn.shopify.com/s/files/1/0988/7904/5945/files/ChatGPT_Image_26_may_2026_12_14_01_p.m..png?v=1779808614',
+        paymentLink: 'https://mpago.la/2fj9Sth',
+        badge: '¡Nuevo!'
+    },
+    {
+        id: 'antibioticos_naturales',
+        title: 'Antibióticos Naturales Olvidados',
+        subtitle: 'Alternativas botánicas potentes',
+        description: 'Guía de 20 páginas con los antibióticos y antivirales más potentes que nos brinda la naturaleza. Aprende a preparar alternativas naturales de amplio espectro para combatir infecciones, hongos y bacterias cuando el cuerpo desarrolla resistencia a las medicinas convencionales.',
+        price: '$ 6.999 ARS',
+        coverUrl: 'https://cdn.shopify.com/s/files/1/0988/7904/5945/files/ChatGPT_Image_26_may_2026_12_15_04_p.m..png?v=1779808614',
+        paymentLink: 'https://mpago.la/2k1oJug',
+        badge: '¡Nuevo!'
     }
 ];
 
@@ -117,64 +137,48 @@ export function Library({ onSelectBook, onShowDownloads, onShowMainAppContent }:
                             className="relative group cursor-pointer w-[200px] sm:w-[240px] flex flex-col items-center"
                         >
                             {/* Drop shadow on shelf */}
-                            <div className="absolute bottom-[-10px] w-[110%] h-8 bg-black/80 blur-[8px] rounded-[100%] transition-opacity duration-300 group-hover:opacity-100"></div>
+                            <div className="absolute bottom-[80px] w-[90%] h-6 bg-black/60 blur-[6px] rounded-[100%] transition-opacity duration-300 group-hover:opacity-100"></div>
                             
                             {/* Book Body */}
-                            <div className={`relative w-full aspect-[2.5/3.5] rounded-r-md rounded-l-sm transition-transform duration-500 group-hover:-translate-y-4 group-hover:rotate-1 flex flex-col items-center shadow-[inset_4px_0_10px_rgba(255,255,255,0.3),_8px_8px_20px_rgba(0,0,0,0.8)] overflow-hidden border-l-[6px] ${isUnlocked ? 'border-[#3a1a0f]' : 'border-[#1a0f08]'}`}>
+                            <div className={`relative w-full aspect-[2.5/3.5] rounded-r-md rounded-l-sm transition-[transform,shadow] duration-500 group-hover:-translate-y-4 group-hover:rotate-1 shadow-2xl overflow-hidden border-l-[6px] ${isUnlocked ? 'border-[#a85934] shadow-[0_0_40px_rgba(212,175,55,0.3)] ring-1 ring-white/20' : 'border-[#1a0f08]'}`}>
                                 
-                                {book.badge && (
-                                    <div className="absolute top-0 right-0 z-30">
-                                        <div className="bg-gradient-to-br from-[#d4af37] to-[#aa7c11] text-[#fff] text-[11px] font-bold py-1.5 px-6 shadow border-b border-l border-[#f4ead0]/40 rounded-bl-lg font-accent uppercase tracking-wider relative overflow-hidden">
-                                            <div className="absolute inset-0 bg-white/20 w-full h-full animate-[sheen_2s_infinite]"></div>
-                                            {book.badge}
-                                        </div>
-                                    </div>
-                                )}
-
                                 {/* Book Cover Image */}
-                                <div className={`absolute inset-0 ${isUnlocked ? 'bg-[#5c2a16]' : 'bg-[#2a1308]'}`}>
-                                    <img src={book.coverUrl} alt={book.title} loading="lazy" className={`w-full h-full object-cover transition-all duration-300 ${isUnlocked ? 'opacity-100' : 'opacity-80 saturate-50'}`} />
-                                    <div className={`absolute inset-0 bg-gradient-to-t ${isUnlocked ? 'from-[#3a1a0f] via-transparent to-transparent' : 'from-[#1a0f08] via-transparent to-transparent'}`}></div>
-                                    <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/leather.png')] opacity-20 mix-blend-overlay"></div>
+                                <div className={`absolute inset-0 ${isUnlocked ? 'bg-[#5c2a16]' : 'bg-[#f4ead0]'}`}>
+                                    <img src={book.coverUrl} alt={book.title} loading="lazy" className={`w-full h-full object-cover transition-all duration-300 ${isUnlocked ? 'opacity-100 brightness-110 contrast-[1.05]' : 'opacity-100 saturate-[0.9] brightness-[0.98]'}`} />
+                                    <div className={`absolute inset-0 bg-gradient-to-t ${isUnlocked ? 'from-black/10 via-transparent to-transparent' : 'from-black/30 via-transparent to-transparent'}`}></div>
+                                    <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/leather.png')] opacity-10 mix-blend-overlay"></div>
                                 </div>
                                 
                                 {/* Book Spine reflection */}
-                                <div className="absolute top-0 left-0 bottom-0 w-4 bg-gradient-to-r from-white/20 to-transparent pointer-events-none"></div>
+                                <div className="absolute top-0 left-0 bottom-0 w-4 bg-gradient-to-r from-white/40 to-transparent pointer-events-none"></div>
 
-                                {/* Book Content */}
-                                <div className="relative z-10 w-full h-full flex flex-col justify-end p-4 text-center">
-                                    {/* Only show standard title if there's no badge, assuming badge ones are custom covers */}
-                                    {!book.badge && (
-                                        <div className="space-y-2 mt-4 mb-auto">
-                                            <div className="mx-auto w-8 h-[2px] bg-[#d6c7af]/50"></div>
-                                            <h3 className={`font-headline text-xl font-bold leading-tight drop-shadow-md ${isUnlocked ? 'text-white' : 'text-[#fdfaf2]'}`}>
-                                                {book.title}
-                                            </h3>
-                                            <div className="mx-auto w-12 h-[1px] bg-[#d6c7af]/30"></div>
-                                        </div>
-                                    )}
-                                    
-                                    <div className={`mb-4 ${book.badge ? 'mt-auto' : ''}`}>
-                                       <div className={`w-12 h-12 mx-auto rounded-full border flex items-center justify-center backdrop-blur-sm shadow-xl transition-transform ${
-                                           isUnlocked ? 'bg-[#5c2a16]/80 border-[#d6c7af]/80 scale-110 group-hover:scale-125 text-white' : 'bg-[#1a0f08]/80 border-[#8a6a4b]/50 group-hover:scale-110 text-[#d6c7af]'
-                                       }`}>
-                                          {isUnlocked ? <BookOpen className="w-5 h-5" /> : <Lock className="w-5 h-5" />}
-                                       </div>
-                                       <span className={`block mt-3 font-accent italic text-sm tracking-wider ${isUnlocked ? 'text-white' : 'text-[#d6c7af]'}`}>
-                                           {isUnlocked ? 'Volumen Abierto' : 'Descubre más'}
-                                       </span>
-                                       {!isUnlocked && (
-                                            <>
-                                                <span className="block mt-1 font-headline font-bold text-[#d4af37] drop-shadow-md text-sm">
-                                                    {book.price}
-                                                </span>
-                                                <span className="block mt-1 text-[10px] text-[#f4ead0]/60 uppercase tracking-widest">
-                                                    (Toca para ver info)
-                                                </span>
-                                            </>
-                                       )}
+                                {/* Content for non-badge books if title is empty, but we removed it since it's hardcoded into the images generally now. We will just render it if we want. */}
+                                {!book.badge && (
+                                    <div className="absolute inset-x-0 bottom-0 p-4 text-center pb-6">
+                                        <h3 className={`font-headline text-lg font-bold leading-tight drop-shadow-md pb-2 ${isUnlocked ? 'text-white' : 'text-white/40'}`}>
+                                            {book.title}
+                                        </h3>
                                     </div>
-                                </div>
+                                )}
+                            </div>
+
+                            {/* Icons and Text BELOW the book to avoid obscuring the title */}
+                            <div className="w-full flex-col items-center justify-center mt-6 z-20 h-[100px] flex">
+                               <div className={`w-12 h-12 rounded-full border flex items-center justify-center backdrop-blur-sm shadow-md transition-all duration-300 ${
+                                   isUnlocked ? 'bg-gradient-to-br from-[#8a3c1f] to-[#4a2411] border-[#d4af37]/60 scale-110 group-hover:scale-125 text-[#f4ead0] shadow-[0_0_15px_rgba(212,175,55,0.4)]' : 'bg-[#e5dfbe]/80 border-[#d6c7af]/80 group-hover:scale-110 text-[#8a3c1f]'
+                               }`}>
+                                  {isUnlocked ? <BookOpen className="w-5 h-5" /> : <Lock className="w-5 h-5" />}
+                               </div>
+
+                               <span className={`block mt-3 font-accent font-bold tracking-wider text-center text-sm transition-colors ${isUnlocked ? 'text-[#8a3c1f] drop-shadow-sm' : 'text-[#8a3c1f]/70'}`}>
+                                   {isUnlocked ? 'MIRA EL LIBRO' : 'DESCUBRIR INFO'}
+                               </span>
+                               
+                               {!isUnlocked && (
+                                    <span className="block mt-1 font-headline font-semibold text-[#8a3c1f] text-center text-xs">
+                                        {book.price}
+                                    </span>
+                               )}
                             </div>
                         </motion.div>
                     );
