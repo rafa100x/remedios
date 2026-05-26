@@ -46,7 +46,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         const adminEmails = ['rafaelvidetta@gmail.com', 'rafaelvidetta32@gmail.com', 'marc.zbrun@gmail.com'];
         const isUserAdmin = adminEmails.includes((user.email || '').trim().toLowerCase()) || user.uid === 'jEFywPT0xVP7lA1U6wN095uP3Bn2' || user.uid === 'T6n6G9x3NfR11IUMC79ynxrb7qk1';
         setIsAdmin(isUserAdmin);
-        const allPremiumBooks = ['presion', 'arte_preparar', 'menopausia', 'botiquin'];
+        const allPremiumBooks = ['presion', 'arte_preparar', 'menopausia', 'botiquin', 'purga_ancestral', 'antibioticos_naturales'];
         
         if (isUserAdmin) {
           setPurchasedBooks(allPremiumBooks);
