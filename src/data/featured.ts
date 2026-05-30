@@ -158,6 +158,21 @@ export const featuredCategory: Category = {
       "notes": "El fuego fuerte quema la miel rápido y la vuelve amarga. Controlar rigurosamente el hervor.",
       "imagePrompt": "Round amber-colored lozenges or hard candies on natural parchment paper.",
       "imageUrl": "https://plus.unsplash.com/premium_photo-1675806653372-520f92b77bb2?q=80&w=1200&auto=format&fit=crop"
+    },
+    {
+      "id": 1011,
+      "title": "Tintura de Semillas de Calabaza Para Vejiga Hiperactiva",
+      "purpose": "Las semillas de calabaza (Cucurbita pepo) son valoradas por su gran riqueza en antioxidantes, ácidos grasos y compuestos bioactivos que pueden ayudar con los síntomas de la vejiga hiperactiva, disminuyendo la necesidad frecuente de orinar por la noche.",
+      "ingredients": [
+        { "es": "Semillas de calabaza crudas y orgánicas (sin cáscara ni sal)", "la": "Cucurbita pepo", "quantity": "1 taza" },
+        { "es": "Gasa, muselina o paño tipo quesero", "la": "Filtro", "quantity": "1 unidad" },
+        { "es": "Frasco de vidrio oscuro con tapa", "la": "Envase", "quantity": "1 unidad" }
+      ],
+      "instructions": "Tritura las semillas de calabaza en un mortero o procesador hasta formar una masa o pasta. Lleva la pasta al baño maría, removiendo constantemente para facilitar la extracción del aceite. Evita que la mezcla supere los 50°C. Cuando la pasta adquiera un brillo aceitoso (aprox. 5 mins), retírala del fuego. Coloca la pasta en el centro de la tela fina, envuelve y exprime firmemente sobre un bowl para extraer el aceite. Vierte el aceite en el frasco oscuro y guarda en lugar fresco.",
+      "dosage": "Comienza con 10 a 20 gotas diluidas en agua, dos a tres veces al día. Ajusta la dosis según tu tolerancia y efectos observados.",
+      "notes": "Levantarse varias veces a orinar destruye el sueño. Si los síntomas persisten o empeoran, consulta a un profesional de salud.",
+      "imagePrompt": "A close up photo of an amber dropper bottle and fresh green pumpkin seeds on a wooden table.",
+      "imageUrl": "https://images.unsplash.com/photo-1599598425947-330026206a05?q=80&w=1200&auto=format&fit=crop"
     }
   ]
 };
